@@ -118,7 +118,7 @@ static NSMutableSet *jsqMessagesCollectionViewCellActions = nil;
     self.avatarViewSize = CGSizeZero;
     
     UIFont *topLabelFont = [UIFont preferredFontForTextStyle:UIFontTextStyleCaption1];
-    self.cellTopLabel.textAlignment = NSTextAlignmentCenter;
+    self.cellTopLabel.textAlignment = NSTextAlignmentLeft;
     self.cellTopLabel.font = topLabelFont;
     self.cellTopLabel.textColor = [UIColor lightGrayColor];
     self.cellTopLabel.numberOfLines = 0;
@@ -142,6 +142,14 @@ static NSMutableSet *jsqMessagesCollectionViewCellActions = nil;
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(jsq_handleTapGesture:)];
     [self addGestureRecognizer:tap];
     self.tapGestureRecognizer = tap;
+    
+    // Bottom border for top label (hidden if its height is 0)
+    CALayer* layer = self.cellTopLabel.layer;
+    CALayer *bottomBorder = [CALayer layer];
+    bottomBorder.borderColor = [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.1].CGColor;
+    bottomBorder.borderWidth = 1;
+    bottomBorder.frame = CGRectMake(0.0f, layer.frame.size.height-1.0f, layer.frame.size.width*2, 1.0f);
+    [layer addSublayer:bottomBorder];
 }
 
 - (void)configureAccessoryButton

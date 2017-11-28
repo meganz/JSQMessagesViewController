@@ -559,6 +559,8 @@ static void JSQInstallWorkaroundForSheetPresentationIssue26295020(void) {
     cell.messageBubbleTopLabel.attributedText = [collectionView.dataSource collectionView:collectionView attributedTextForMessageBubbleTopLabelAtIndexPath:indexPath];
     cell.cellBottomLabel.attributedText = [collectionView.dataSource collectionView:collectionView attributedTextForCellBottomLabelAtIndexPath:indexPath];
 
+    cell.cellTopLabel.textInsets = UIEdgeInsetsMake(13.0f, 0.0f, 0.0f, 0.0f);
+    
     CGFloat bubbleTopLabelInset = 30.0f;
 
     if (isOutgoingMessage) {
