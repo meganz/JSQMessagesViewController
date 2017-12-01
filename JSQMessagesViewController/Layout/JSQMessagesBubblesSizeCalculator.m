@@ -25,6 +25,7 @@
 
 #import "UIImage+JSQMessages.h"
 
+#import "NSString+MNZCategory.h"
 
 @interface JSQMessagesBubblesSizeCalculator ()
 
@@ -116,9 +117,14 @@
         CGFloat horizontalInsetsTotal = horizontalContainerInsets + horizontalFrameInsets + spacingBetweenAvatarAndBubble;
         CGFloat maximumTextWidth = [self textBubbleWidthForLayout:layout] - avatarSize.width - layout.messageBubbleLeftRightMargin - horizontalInsetsTotal;
 
+        UIFont *messageFont = layout.messageBubbleFont;
+        if ([[messageData text] mnz_isPureEmojiString]) {
+            messageFont = [UIFont mnz_defaultFontForPureEmojiStringWithEmojis:[[messageData text] mnz_emojiCount]];
+        }
+        
         CGRect stringRect = [[messageData text] boundingRectWithSize:CGSizeMake(maximumTextWidth, CGFLOAT_MAX)
                                                              options:(NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading)
-                                                          attributes:@{ NSFontAttributeName : layout.messageBubbleFont }
+                                                          attributes:@{ NSFontAttributeName : messageFont }
                                                              context:nil];
 
         CGSize stringSize = CGRectIntegral(stringRect).size;
