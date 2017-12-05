@@ -25,6 +25,7 @@
 
 #import "UIImage+JSQMessages.h"
 
+#import "MEGAChatMessage+MNZCategory.h"
 #import "NSString+MNZCategory.h"
 
 @interface JSQMessagesBubblesSizeCalculator ()
@@ -117,15 +118,25 @@
         CGFloat horizontalInsetsTotal = horizontalContainerInsets + horizontalFrameInsets + spacingBetweenAvatarAndBubble;
         CGFloat maximumTextWidth = [self textBubbleWidthForLayout:layout] - avatarSize.width - layout.messageBubbleLeftRightMargin - horizontalInsetsTotal;
 
+        CGRect stringRect;
         UIFont *messageFont = layout.messageBubbleFont;
         if ([[messageData text] mnz_isPureEmojiString]) {
             messageFont = [UIFont mnz_defaultFontForPureEmojiStringWithEmojis:[[messageData text] mnz_emojiCount]];
+            stringRect = [[messageData text] boundingRectWithSize:CGSizeMake(maximumTextWidth, CGFLOAT_MAX)
+                                                          options:(NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading)
+                                                       attributes:@{ NSFontAttributeName : messageFont }
+                                                          context:nil];
+        } else if (((MEGAChatMessage *)messageData).attributedText.length > 0) {
+            NSAttributedString *attributedString = ((MEGAChatMessage *)messageData).attributedText;
+            stringRect = [attributedString boundingRectWithSize:CGSizeMake(maximumTextWidth, CGFLOAT_MAX)
+                                                        options:(NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading)
+                                                        context:nil];
+        } else {
+            stringRect = [[messageData text] boundingRectWithSize:CGSizeMake(maximumTextWidth, CGFLOAT_MAX)
+                                                          options:(NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading)
+                                                       attributes:@{ NSFontAttributeName : messageFont }
+                                                          context:nil];
         }
-        
-        CGRect stringRect = [[messageData text] boundingRectWithSize:CGSizeMake(maximumTextWidth, CGFLOAT_MAX)
-                                                             options:(NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading)
-                                                          attributes:@{ NSFontAttributeName : messageFont }
-                                                             context:nil];
 
         CGSize stringSize = CGRectIntegral(stringRect).size;
 
