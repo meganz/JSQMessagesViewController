@@ -28,12 +28,12 @@
 
 + (instancetype)viewWithActivityIndicator
 {
-    UIColor *whiteColor = [UIColor whiteColor];
+    UIColor *lightGrayColor = [UIColor jsq_messageBubbleLightGrayColor];
     UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
-    spinner.color = [whiteColor jsq_colorByDarkeningColorWithValue:0.4f];
+    spinner.color = [lightGrayColor jsq_colorByDarkeningColorWithValue:0.4f];
     
     JSQMessagesMediaPlaceholderView *view = [[JSQMessagesMediaPlaceholderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 200.0f, 120.0f)
-                                                                                   backgroundColor:whiteColor
+                                                                                   backgroundColor:lightGrayColor
                                                                              activityIndicatorView:spinner];
     return view;
 }
