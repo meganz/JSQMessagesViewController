@@ -13,6 +13,7 @@
             <connections>
                 <outlet property="collectionView" destination="l9u-2b-4LK" id="bLP-6g-CkO"/>
                 <outlet property="inputToolbar" destination="BoD-Az-3DM" id="w74-g9-1qA"/>
+                <outlet property="toolbarHeightConstraint" destination="NvI-ha-YOZ" id="RQb-BT-tSl"/>
                 <outlet property="view" destination="mUa-cS-ru4" id="nki-T1-RTI"/>
             </connections>
         </placeholder>

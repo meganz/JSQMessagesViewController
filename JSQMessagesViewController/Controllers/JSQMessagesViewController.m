@@ -113,8 +113,6 @@ static void JSQInstallWorkaroundForSheetPresentationIssue26295020(void) {
 @property (weak, nonatomic) IBOutlet JSQMessagesCollectionView *collectionView;
 @property (strong, nonatomic) IBOutlet MEGAInputToolbar *inputToolbar;
 
-@property (nonatomic) NSLayoutConstraint *toolbarHeightConstraint;
-
 @property (strong, nonatomic) NSIndexPath *selectedIndexPathForMenu;
 
 @end
@@ -743,10 +741,15 @@ static void JSQInstallWorkaroundForSheetPresentationIssue26295020(void) {
                     senderId:[self.collectionView.dataSource senderId]
            senderDisplayName:[self.collectionView.dataSource senderDisplayName]
                         date:[NSDate date]];
+    self.toolbarHeightConstraint.constant = 100.0f;
 }
 
 - (void)messagesInputToolbar:(MEGAInputToolbar *)toolbar didPressAccessoryButton:(UIButton *)sender {
     [self didPressAccessoryButton:sender];
+}
+
+- (void)messagesInputToolbar:(MEGAInputToolbar *)toolbar needsResizeToHeight:(CGFloat)newToolbarHeight {
+    self.toolbarHeightConstraint.constant = newToolbarHeight;
 }
 
 - (NSString *)jsq_currentlyComposedMessageText
