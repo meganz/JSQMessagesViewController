@@ -38,8 +38,8 @@
 
 //  Toolbar
 #import "JSQMessagesComposerTextView.h"
-#import "JSQMessagesInputToolbar.h"
-#import "JSQMessagesToolbarContentView.h"
+#import "MEGAInputToolbar.h"
+#import "MEGAToolbarContentView.h"
 
 //  Model
 #import "JSQMessage.h"

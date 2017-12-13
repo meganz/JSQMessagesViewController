@@ -108,10 +108,10 @@ static void JSQInstallWorkaroundForSheetPresentationIssue26295020(void) {
 }
 
 
-@interface JSQMessagesViewController () <JSQMessagesInputToolbarDelegate>
+@interface JSQMessagesViewController () <MEGAInputToolbarDelegate>
 
 @property (weak, nonatomic) IBOutlet JSQMessagesCollectionView *collectionView;
-@property (strong, nonatomic) IBOutlet JSQMessagesInputToolbar *inputToolbar;
+@property (strong, nonatomic) IBOutlet MEGAInputToolbar *inputToolbar;
 
 @property (nonatomic) NSLayoutConstraint *toolbarHeightConstraint;
 
@@ -149,7 +149,7 @@ static void JSQInstallWorkaroundForSheetPresentationIssue26295020(void) {
 {
     self.view.backgroundColor = [UIColor whiteColor];
 
-    self.toolbarHeightConstraint.constant = self.inputToolbar.preferredDefaultHeight;
+    self.toolbarHeightConstraint.constant = self.inputToolbar.frame.size.height;
 
     self.collectionView.dataSource = self;
     self.collectionView.delegate = self;
@@ -239,7 +239,7 @@ static void JSQInstallWorkaroundForSheetPresentationIssue26295020(void) {
 {
     [super viewWillAppear:animated];
     if (!self.inputToolbar.contentView.textView.hasText) {
-        self.toolbarHeightConstraint.constant = self.inputToolbar.preferredDefaultHeight;
+        self.toolbarHeightConstraint.constant = self.inputToolbar.frame.size.height;
     }
     [self.view layoutIfNeeded];
     [self.collectionView.collectionViewLayout invalidateLayout];
@@ -736,32 +736,13 @@ static void JSQInstallWorkaroundForSheetPresentationIssue26295020(void) {
 
 #pragma mark - Input toolbar delegate
 
-- (void)messagesInputToolbar:(JSQMessagesInputToolbar *)toolbar didPressLeftBarButton:(UIButton *)sender
+- (void)messagesInputToolbar:(MEGAInputToolbar *)toolbar didPressSendButton:(UIButton *)sender
 {
-    if (toolbar.sendButtonLocation == JSQMessagesInputSendButtonLocationLeft) {
-        [self didPressSendButton:sender
-                 withMessageText:[self jsq_currentlyComposedMessageText]
-                        senderId:[self.collectionView.dataSource senderId]
-               senderDisplayName:[self.collectionView.dataSource senderDisplayName]
-                            date:[NSDate date]];
-    }
-    else {
-        [self didPressAccessoryButton:sender];
-    }
-}
-
-- (void)messagesInputToolbar:(JSQMessagesInputToolbar *)toolbar didPressRightBarButton:(UIButton *)sender
-{
-    if (toolbar.sendButtonLocation == JSQMessagesInputSendButtonLocationRight) {
-        [self didPressSendButton:sender
-                 withMessageText:[self jsq_currentlyComposedMessageText]
-                        senderId:[self.collectionView.dataSource senderId]
-               senderDisplayName:[self.collectionView.dataSource senderDisplayName]
-                            date:[NSDate date]];
-    }
-    else {
-        [self didPressAccessoryButton:sender];
-    }
+    [self didPressSendButton:sender
+             withMessageText:[self jsq_currentlyComposedMessageText]
+                    senderId:[self.collectionView.dataSource senderId]
+           senderDisplayName:[self.collectionView.dataSource senderDisplayName]
+                        date:[NSDate date]];
 }
 
 - (NSString *)jsq_currentlyComposedMessageText
