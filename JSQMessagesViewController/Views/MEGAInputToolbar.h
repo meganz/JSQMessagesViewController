@@ -31,6 +31,11 @@
 - (void)messagesInputToolbar:(MEGAInputToolbar *_Nonnull)toolbar
      didPressAccessoryButton:(UIButton *_Nonnull)sender;
 
+@optional
+
+- (void)messagesInputToolbar:(MEGAInputToolbar *_Nonnull)toolbar
+         needsResizeToHeight:(CGFloat)newToolbarHeight;
+
 @end
 
 /**
