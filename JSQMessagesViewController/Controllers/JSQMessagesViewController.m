@@ -745,6 +745,10 @@ static void JSQInstallWorkaroundForSheetPresentationIssue26295020(void) {
                         date:[NSDate date]];
 }
 
+- (void)messagesInputToolbar:(MEGAInputToolbar *)toolbar didPressAccessoryButton:(UIButton *)sender {
+    [self didPressAccessoryButton:sender];
+}
+
 - (NSString *)jsq_currentlyComposedMessageText
 {
     //  auto-accept any auto-correct suggestions

@@ -22,6 +22,15 @@
 - (void)messagesInputToolbar:(MEGAInputToolbar *_Nonnull)toolbar
           didPressSendButton:(UIButton *_Nonnull)sender;
 
+/**
+ *  Tells the delegate that one toolbar's `accessoryButton` has been pressed.
+ *
+ *  @param toolbar The object representing the toolbar sending this information.
+ *  @param sender  The button that received the touch event.
+ */
+- (void)messagesInputToolbar:(MEGAInputToolbar *_Nonnull)toolbar
+     didPressAccessoryButton:(UIButton *_Nonnull)sender;
+
 @end
 
 /**

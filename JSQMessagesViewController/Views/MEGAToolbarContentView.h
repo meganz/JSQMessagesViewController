@@ -20,4 +20,9 @@
  */
 @property (weak, nonatomic) IBOutlet UIButton *sendButton;
 
+@property (weak, nonatomic) IBOutlet UIButton *accessoryTextButton;
+@property (weak, nonatomic) IBOutlet UIButton *accessoryCameraButton;
+@property (weak, nonatomic) IBOutlet UIButton *accessoryImageButton;
+@property (weak, nonatomic) IBOutlet UIButton *accessoryUploadButton;
+
 @end

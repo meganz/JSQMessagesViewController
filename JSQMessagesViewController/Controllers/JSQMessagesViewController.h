@@ -194,7 +194,7 @@ NS_ASSUME_NONNULL_BEGIN
                       date:(NSDate *)date;
 
 /**
- *  This method is called when the user taps the accessory button on the `inputToolbar`.
+ *  This method is called when the user taps one accessory button on the `inputToolbar`.
  *
  *  @param sender The accessory button that was pressed by the user.
  */

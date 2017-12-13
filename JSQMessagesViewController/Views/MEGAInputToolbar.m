@@ -30,13 +30,8 @@ static void * kMEGAInputToolbarKeyValueObservingContext = &kMEGAInputToolbarKeyV
     [self addSubview:toolbarContentView];
     _contentView = toolbarContentView;
     
-    [self.contentView.sendButton removeTarget:self
-                                       action:NULL
-                             forControlEvents:UIControlEventTouchUpInside];
-    
-    [self.contentView.sendButton addTarget:self
-                                    action:@selector(jsq_sendButtonPressed:)
-                          forControlEvents:UIControlEventTouchUpInside];
+    [self removeTargets];
+    [self addTargets];
 
     [self updateSendButtonEnabledState];
     
@@ -54,10 +49,7 @@ static void * kMEGAInputToolbarKeyValueObservingContext = &kMEGAInputToolbarKeyV
 }
 
 - (void)dealloc {
-    [self.contentView.sendButton removeTarget:self
-                                       action:NULL
-                             forControlEvents:UIControlEventTouchUpInside];
-    
+    [self removeTargets];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -65,6 +57,10 @@ static void * kMEGAInputToolbarKeyValueObservingContext = &kMEGAInputToolbarKeyV
 
 - (void)jsq_sendButtonPressed:(UIButton *)sender {
     [self.delegate messagesInputToolbar:self didPressSendButton:sender];
+}
+
+- (void)mnz_accesoryButtonPressed:(UIButton *)sender {
+    [self.delegate messagesInputToolbar:self didPressAccessoryButton:sender];
 }
 
 #pragma mark - Input toolbar
@@ -78,6 +74,52 @@ static void * kMEGAInputToolbarKeyValueObservingContext = &kMEGAInputToolbarKeyV
 
 - (void)textViewTextDidChangeNotification:(NSNotification *)notification {
     [self updateSendButtonEnabledState];
+}
+
+#pragma mark - Targets
+
+- (void)addTargets {
+    [self.contentView.sendButton addTarget:self
+                                    action:@selector(jsq_sendButtonPressed:)
+                          forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.contentView.accessoryTextButton addTarget:self
+                                             action:@selector(mnz_accesoryButtonPressed:)
+                                   forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.contentView.accessoryCameraButton addTarget:self
+                                               action:@selector(mnz_accesoryButtonPressed:)
+                                     forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.contentView.accessoryImageButton addTarget:self
+                                              action:@selector(mnz_accesoryButtonPressed:)
+                                    forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.contentView.accessoryUploadButton addTarget:self
+                                               action:@selector(mnz_accesoryButtonPressed:)
+                                     forControlEvents:UIControlEventTouchUpInside];
+}
+
+- (void)removeTargets {
+    [self.contentView.sendButton removeTarget:self
+                                       action:NULL
+                             forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.contentView.accessoryTextButton removeTarget:self
+                                                action:NULL
+                                      forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.contentView.accessoryCameraButton removeTarget:self
+                                                  action:NULL
+                                        forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.contentView.accessoryImageButton removeTarget:self
+                                                 action:NULL
+                                       forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.contentView.accessoryUploadButton removeTarget:self
+                                                  action:NULL
+                                        forControlEvents:UIControlEventTouchUpInside];
 }
 
 @end
