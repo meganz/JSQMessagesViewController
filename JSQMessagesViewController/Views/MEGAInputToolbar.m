@@ -74,6 +74,20 @@ static void * kMEGAInputToolbarKeyValueObservingContext = &kMEGAInputToolbarKeyV
 
 - (void)textViewTextDidChangeNotification:(NSNotification *)notification {
     [self updateSendButtonEnabledState];
+    [self resizeToolbarIfNeeded];
+}
+
+- (void)resizeToolbarIfNeeded {
+    CGFloat originalTextViewHeight = 18.0f;
+    CGFloat originalToolbarHeight = 100.0f;
+    CGFloat maxTextViewHeight = 54.0f;
+    CGSize sizeThatFits = [self.contentView.textView sizeThatFits:self.contentView.textView.frame.size];
+    CGFloat textViewHeightNeeded = sizeThatFits.height;
+    if (textViewHeightNeeded > maxTextViewHeight) {
+        return;
+    }
+    CGFloat newToolbarHeight = originalToolbarHeight - originalTextViewHeight + textViewHeightNeeded;
+    [self.delegate messagesInputToolbar:self needsResizeToHeight:newToolbarHeight];
 }
 
 #pragma mark - Targets
