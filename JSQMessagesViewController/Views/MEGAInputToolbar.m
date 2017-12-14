@@ -39,6 +39,14 @@ static void * kMEGAInputToolbarKeyValueObservingContext = &kMEGAInputToolbarKeyV
                                              selector:@selector(textViewTextDidChangeNotification:)
                                                  name:UITextViewTextDidChangeNotification
                                                object:_contentView.textView];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(textViewTextDidBeginEditingNotification:)
+                                                 name:UITextViewTextDidBeginEditingNotification
+                                               object:_contentView.textView];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(textViewTextDidEndEditingNotification:)
+                                                 name:UITextViewTextDidEndEditingNotification
+                                               object:_contentView.textView];
 }
 
 - (MEGAToolbarContentView *)loadToolbarContentView {
@@ -75,6 +83,14 @@ static void * kMEGAInputToolbarKeyValueObservingContext = &kMEGAInputToolbarKeyV
 - (void)textViewTextDidChangeNotification:(NSNotification *)notification {
     [self updateSendButtonEnabledState];
     [self resizeToolbarIfNeeded];
+}
+
+- (void)textViewTextDidBeginEditingNotification:(NSNotification *)notification {
+    self.contentView.accessoryTextButton.tintColor = [UIColor mnz_green00BFA5];
+}
+
+- (void)textViewTextDidEndEditingNotification:(NSNotification *)notification {
+    self.contentView.accessoryTextButton.tintColor = [UIColor mnz_gray999999];
 }
 
 - (void)resizeToolbarIfNeeded {

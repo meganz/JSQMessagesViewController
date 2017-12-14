@@ -3,6 +3,13 @@
 
 #import "JSQMessagesComposerTextView.h"
 
+typedef NS_ENUM(NSUInteger, MEGAChatAccessoryButton) {
+    MEGAChatAccessoryButtonText = 10,
+    MEGAChatAccessoryButtonCamera,
+    MEGAChatAccessoryButtonImage,
+    MEGAChatAccessoryButtonUpload
+};
+
 /**
  *  A `MEGAToolbarContentView` represents the content displayed in a `MEGAInputToolbar`.
  *  These subviews consist of a text view and some buttons. One button is used as
