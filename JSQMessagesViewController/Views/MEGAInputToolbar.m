@@ -90,6 +90,11 @@ const CGFloat kImagePickerViewHeight = 383.0f;
                                              selector:@selector(textViewTextDidEndEditingNotification:)
                                                  name:UITextViewTextDidEndEditingNotification
                                                object:textContentView.textView];
+    
+    // Disable the image accessory button if the app does not have permission to access the multimedia files:
+    if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusDenied || [PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusRestricted) {
+        textContentView.accessoryImageButton.enabled = NO;
+    }
 }
 
 - (void)setupImagePickerView:(MEGAToolbarContentView *)imagePickerView {
@@ -128,9 +133,22 @@ const CGFloat kImagePickerViewHeight = 383.0f;
 - (void)mnz_accesoryButtonPressed:(UIButton *)sender {
     switch (sender.tag) {
         case MEGAChatAccessoryButtonImage:
-            if (!self.imagePickerView) {
-                [self.contentView removeFromSuperview];
-                _imagePickerView = [self loadToolbarImagePickerView];
+            if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusNotDetermined) {
+                [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
+                    if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusAuthorized) {
+                        if (!self.imagePickerView) {
+                            [self.contentView removeFromSuperview];
+                            _imagePickerView = [self loadToolbarImagePickerView];
+                        }
+                    } else {
+                        self.contentView.accessoryImageButton.enabled = NO;
+                    }
+                }];
+            } else {
+                if (!self.imagePickerView) {
+                    [self.contentView removeFromSuperview];
+                    _imagePickerView = [self loadToolbarImagePickerView];
+                }
             }
             break;
             
