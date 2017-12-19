@@ -113,6 +113,10 @@
 - (void)layoutSubviews
 {
     [super layoutSubviews];
+    
+    if (!self.heightConstraint) {
+        return;
+    }
 
     // calculate size needed for the text to be visible without scrolling
     CGSize sizeThatFits = [self sizeThatFits:self.frame.size];
