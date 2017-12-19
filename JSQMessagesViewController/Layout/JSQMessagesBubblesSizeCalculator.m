@@ -117,6 +117,10 @@
 
         CGFloat horizontalInsetsTotal = horizontalContainerInsets + horizontalFrameInsets + spacingBetweenAvatarAndBubble;
         CGFloat maximumTextWidth = [self textBubbleWidthForLayout:layout] - avatarSize.width - layout.messageBubbleLeftRightMargin - horizontalInsetsTotal;
+        const CGFloat kMaxBubbleWidth = 566.0f - horizontalInsetsTotal;
+        if (maximumTextWidth > kMaxBubbleWidth) {
+            maximumTextWidth = kMaxBubbleWidth;
+        }
 
         CGRect stringRect;
         UIFont *messageFont = layout.messageBubbleFont;
