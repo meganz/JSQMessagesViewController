@@ -74,7 +74,7 @@
                 <outlet property="accessoryTextButton" destination="S8o-QO-z7n" id="ytO-99-aB2"/>
                 <outlet property="accessoryUploadButton" destination="Mas-Ji-t8P" id="ykU-jV-TJX"/>
                 <outlet property="sendButton" destination="yqt-18-HR0" id="5gS-04-8WK"/>
-                <outlet property="textView" destination="FzB-DF-mS3" id="pX6-Ic-Tll"/>
+                <outlet property="textView" destination="FzB-DF-mS3" id="4Lm-7E-qbM"/>
             </connections>
             <point key="canvasLocation" x="26.5" y="53"/>
         </view>
