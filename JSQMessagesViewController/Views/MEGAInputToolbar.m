@@ -33,6 +33,16 @@ const CGFloat kImagePickerViewHeight = 383.0f;
     _contentView = [self loadToolbarTextContentView];
 }
 
+- (void)layoutSubviews {
+    if (self.frame.size.width > [UIScreen mainScreen].bounds.size.width) {
+        if (self.contentView) {
+            self.contentView.frame = self.frame = CGRectMake(0.0f, 0.0f, [UIScreen mainScreen].bounds.size.width, kTextContentViewHeight);
+        } else {
+            self.imagePickerView.frame = self.frame = CGRectMake(0.0f, 0.0f, [UIScreen mainScreen].bounds.size.width, kImagePickerViewHeight);
+        }
+    }
+}
+
 - (MEGAToolbarContentView *)loadToolbarTextContentView {
     NSArray *nibViews = [[NSBundle bundleForClass:[MEGAToolbarContentView class]] loadNibNamed:@"MEGAToolbarTextContentView"
                                                                                          owner:nil
