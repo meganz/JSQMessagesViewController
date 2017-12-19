@@ -5,11 +5,16 @@
 
 static void * kMEGAInputToolbarKeyValueObservingContext = &kMEGAInputToolbarKeyValueObservingContext;
 
+const CGFloat kTextContentViewHeight = 100.0f;
+const CGFloat kImagePickerViewHeight = 383.0f;
+
 
 
 @interface MEGAInputToolbar ()
 
 @property (assign, nonatomic) BOOL jsq_isObserving;
+@property (nonatomic) MEGAToolbarAssetPicker *assetPicker;
+@property (nonatomic) NSArray<PHAsset *> *assetsArray;
 
 @end
 
@@ -25,50 +30,108 @@ static void * kMEGAInputToolbarKeyValueObservingContext = &kMEGAInputToolbarKeyV
     [super awakeFromNib];
     self.jsq_isObserving = NO;
     
-    MEGAToolbarContentView *toolbarContentView = [self loadToolbarContentView];
-    toolbarContentView.frame = CGRectMake(0.0f, 0.0f, self.frame.size.width, toolbarContentView.frame.size.height);
-    [self addSubview:toolbarContentView];
-    _contentView = toolbarContentView;
+    _contentView = [self loadToolbarTextContentView];
+}
+
+- (MEGAToolbarContentView *)loadToolbarTextContentView {
+    NSArray *nibViews = [[NSBundle bundleForClass:[MEGAToolbarContentView class]] loadNibNamed:@"MEGAToolbarTextContentView"
+                                                                                         owner:nil
+                                                                                       options:nil];
+    MEGAToolbarContentView *textContentView = nibViews.firstObject;
+    [self setupTextContentView:textContentView];
+    return textContentView;
+}
+
+- (MEGAToolbarContentView *)loadToolbarImagePickerView {
+    NSArray *nibViews = [[NSBundle bundleForClass:[MEGAToolbarContentView class]] loadNibNamed:@"MEGAToolbarImagePickerView"
+                                                                                         owner:nil
+                                                                                       options:nil];
+    MEGAToolbarContentView *imagePickerView = nibViews.firstObject;
+    [self setupImagePickerView:imagePickerView];
+    return imagePickerView;
+}
+
+- (void)setupTextContentView:(MEGAToolbarContentView *)textContentView {
+    textContentView.frame = self.frame = CGRectMake(0.0f, 0.0f, self.frame.size.width, kTextContentViewHeight);
+    [self addSubview:textContentView];
+    [self removeTargetsFromView:textContentView];
+    [self addTargetsToView:textContentView];
+    [self.delegate messagesInputToolbar:self needsResizeToHeight:kTextContentViewHeight];
     
-    [self removeTargets];
-    [self addTargets];
+    textContentView.textView.placeHolderTextColor = [UIColor mnz_grayCCCCCC];
+    textContentView.textView.placeHolder = AMLocalizedString(@"writeAMessage", @"Message box label which shows that user can type message text in this textview");
+    textContentView.textView.font = [UIFont mnz_SFUIRegularWithSize:15.0f];
+    textContentView.textView.textColor = [UIColor mnz_black333333];
+    textContentView.textView.tintColor = [UIColor mnz_green00BFA5];
+    
+    textContentView.textView.placeHolder = AMLocalizedString(@"writeAMessage", @"Message box label which shows that user can type message text in this textview");
 
     [self updateSendButtonEnabledState];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(textViewTextDidChangeNotification:)
                                                  name:UITextViewTextDidChangeNotification
-                                               object:_contentView.textView];
+                                               object:textContentView.textView];
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(textViewTextDidBeginEditingNotification:)
                                                  name:UITextViewTextDidBeginEditingNotification
-                                               object:_contentView.textView];
+                                               object:textContentView.textView];
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(textViewTextDidEndEditingNotification:)
                                                  name:UITextViewTextDidEndEditingNotification
-                                               object:_contentView.textView];
+                                               object:textContentView.textView];
 }
 
-- (MEGAToolbarContentView *)loadToolbarContentView {
-    NSArray *nibViews = [[NSBundle bundleForClass:[MEGAToolbarContentView class]] loadNibNamed:NSStringFromClass([MEGAToolbarContentView class])
-                                                                                         owner:nil
-                                                                                       options:nil];
-    return nibViews.firstObject;
+- (void)setupImagePickerView:(MEGAToolbarContentView *)imagePickerView {
+    imagePickerView.frame = self.frame = CGRectMake(0.0f, 0.0f, self.frame.size.width, kImagePickerViewHeight);
+    [self addSubview:imagePickerView];
+    [self removeTargetsFromView:imagePickerView];
+    [self addTargetsToView:imagePickerView];
+    [self.delegate messagesInputToolbar:self needsResizeToHeight:kImagePickerViewHeight];
+
+    self.assetPicker = [[MEGAToolbarAssetPicker alloc] initWithCollectionView:imagePickerView.collectionView delegate:self];
+    imagePickerView.collectionView.dataSource = self.assetPicker;
+    imagePickerView.collectionView.delegate = self.assetPicker;
 }
 
 - (void)dealloc {
-    [self removeTargets];
+    if (self.contentView) {
+        [self removeTargetsFromView:self.contentView];
+    } else {
+        [self removeTargetsFromView:self.imagePickerView];
+    }
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 #pragma mark - Actions
 
 - (void)jsq_sendButtonPressed:(UIButton *)sender {
-    [self.delegate messagesInputToolbar:self didPressSendButton:sender];
+    if (self.contentView) {
+        [self.delegate messagesInputToolbar:self didPressSendButton:sender];
+    } else {
+        [self.delegate messagesInputToolbar:self didPressSendButton:sender toAttachAssets:self.assetsArray];
+        [self.assetPicker resetSelection];
+        [self mnz_accesoryButtonPressed:self.imagePickerView.accessoryTextButton];
+    }
 }
 
 - (void)mnz_accesoryButtonPressed:(UIButton *)sender {
-    [self.delegate messagesInputToolbar:self didPressAccessoryButton:sender];
+    switch (sender.tag) {
+        case MEGAChatAccessoryButtonImage:
+            if (!self.imagePickerView) {
+                [self.contentView removeFromSuperview];
+                _imagePickerView = [self loadToolbarImagePickerView];
+            }
+            break;
+            
+        default:
+            if (self.imagePickerView) {
+                [self.imagePickerView removeFromSuperview];
+                _contentView = [self loadToolbarTextContentView];
+            }
+            [self.delegate messagesInputToolbar:self didPressAccessoryButton:sender];
+            break;
+    }
 }
 
 #pragma mark - Input toolbar
@@ -76,6 +139,15 @@ static void * kMEGAInputToolbarKeyValueObservingContext = &kMEGAInputToolbarKeyV
 - (void)updateSendButtonEnabledState {
     self.contentView.sendButton.enabled = [self.contentView.textView hasText];
     self.contentView.sendButton.backgroundColor = [self.contentView.textView hasText] ? [UIColor mnz_green00BFA5] : [UIColor mnz_grayE2EAEA];
+}
+
+#pragma mark - MEGAToolbarAssetPickerDelegate
+
+- (void)assetPicker:(MEGAToolbarAssetPicker *)assetPicker didChangeSelectionTo:(NSArray<PHAsset *> *)assetsArray {
+    self.imagePickerView.sendButton.enabled = assetsArray.count > 0;
+    self.imagePickerView.sendButton.backgroundColor = assetsArray.count > 0 ? [UIColor mnz_green00BFA5] : [UIColor mnz_grayE2EAEA];
+    self.assetsArray = assetsArray;
+    self.imagePickerView.textView.text = [NSString stringWithFormat:AMLocalizedString(@"files", nil), assetsArray.count];
 }
 
 #pragma mark - Notifications
@@ -108,48 +180,48 @@ static void * kMEGAInputToolbarKeyValueObservingContext = &kMEGAInputToolbarKeyV
 
 #pragma mark - Targets
 
-- (void)addTargets {
-    [self.contentView.sendButton addTarget:self
-                                    action:@selector(jsq_sendButtonPressed:)
-                          forControlEvents:UIControlEventTouchUpInside];
+- (void)addTargetsToView:(MEGAToolbarContentView *)view {
+    [view.sendButton addTarget:self
+                        action:@selector(jsq_sendButtonPressed:)
+              forControlEvents:UIControlEventTouchUpInside];
+
+    [view.accessoryTextButton addTarget:self
+                                 action:@selector(mnz_accesoryButtonPressed:)
+                       forControlEvents:UIControlEventTouchUpInside];
     
-    [self.contentView.accessoryTextButton addTarget:self
-                                             action:@selector(mnz_accesoryButtonPressed:)
-                                   forControlEvents:UIControlEventTouchUpInside];
+    [view.accessoryCameraButton addTarget:self
+                                   action:@selector(mnz_accesoryButtonPressed:)
+                         forControlEvents:UIControlEventTouchUpInside];
     
-    [self.contentView.accessoryCameraButton addTarget:self
-                                               action:@selector(mnz_accesoryButtonPressed:)
-                                     forControlEvents:UIControlEventTouchUpInside];
+    [view.accessoryImageButton addTarget:self
+                                  action:@selector(mnz_accesoryButtonPressed:)
+                        forControlEvents:UIControlEventTouchUpInside];
     
-    [self.contentView.accessoryImageButton addTarget:self
-                                              action:@selector(mnz_accesoryButtonPressed:)
-                                    forControlEvents:UIControlEventTouchUpInside];
-    
-    [self.contentView.accessoryUploadButton addTarget:self
-                                               action:@selector(mnz_accesoryButtonPressed:)
-                                     forControlEvents:UIControlEventTouchUpInside];
+    [view.accessoryUploadButton addTarget:self
+                                   action:@selector(mnz_accesoryButtonPressed:)
+                         forControlEvents:UIControlEventTouchUpInside];
 }
 
-- (void)removeTargets {
-    [self.contentView.sendButton removeTarget:self
-                                       action:NULL
-                             forControlEvents:UIControlEventTouchUpInside];
+- (void)removeTargetsFromView:(MEGAToolbarContentView *)view {
+    [view.sendButton removeTarget:self
+                           action:NULL
+                 forControlEvents:UIControlEventTouchUpInside];
     
-    [self.contentView.accessoryTextButton removeTarget:self
-                                                action:NULL
-                                      forControlEvents:UIControlEventTouchUpInside];
+    [view.accessoryTextButton removeTarget:self
+                                    action:NULL
+                          forControlEvents:UIControlEventTouchUpInside];
     
-    [self.contentView.accessoryCameraButton removeTarget:self
-                                                  action:NULL
-                                        forControlEvents:UIControlEventTouchUpInside];
+    [view.accessoryCameraButton removeTarget:self
+                                      action:NULL
+                            forControlEvents:UIControlEventTouchUpInside];
     
-    [self.contentView.accessoryImageButton removeTarget:self
-                                                 action:NULL
-                                       forControlEvents:UIControlEventTouchUpInside];
+    [view.accessoryImageButton removeTarget:self
+                                     action:NULL
+                           forControlEvents:UIControlEventTouchUpInside];
     
-    [self.contentView.accessoryUploadButton removeTarget:self
-                                                  action:NULL
-                                        forControlEvents:UIControlEventTouchUpInside];
+    [view.accessoryUploadButton removeTarget:self
+                                      action:NULL
+                            forControlEvents:UIControlEventTouchUpInside];
 }
 
 @end

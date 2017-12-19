@@ -744,6 +744,10 @@ static void JSQInstallWorkaroundForSheetPresentationIssue26295020(void) {
     self.toolbarHeightConstraint.constant = 100.0f;
 }
 
+- (void)messagesInputToolbar:(MEGAInputToolbar *)toolbar didPressSendButton:(UIButton *)sender toAttachAssets:(NSArray<PHAsset *> *)assets {
+    NSAssert(NO, @"Error! required method not implemented in subclass. Need to implement %s", __PRETTY_FUNCTION__);
+}
+
 - (void)messagesInputToolbar:(MEGAInputToolbar *)toolbar didPressAccessoryButton:(UIButton *)sender {
     [self didPressAccessoryButton:sender];
 }
