@@ -4,8 +4,10 @@
 #import "UIColor+MNZCategory.h"
 
 NSString *CELL_ID = @"Photo";
-CGFloat kCellSquareSize = 93.0f;
-CGFloat kCellInset = 1.0f;
+const CGFloat kCellSquareSize = 93.0f;
+const CGFloat kCellInset = 1.0f;
+const NSUInteger kCellRows = 3;
+CGFloat kCollectionViewHeight;
 
 @interface MEGAToolbarAssetPicker ()
 
@@ -36,6 +38,10 @@ CGFloat kCellInset = 1.0f;
                                                 selector:@selector(reloadUI)
                                                     name:UIApplicationDidBecomeActiveNotification
                                                   object:nil];
+        
+        kCollectionViewHeight = (kCellRows+1)*kCellInset + kCellRows*kCellSquareSize;
+        CGFloat newY = _collectionView.frame.origin.y - kCollectionViewHeight + _collectionView.frame.size.height;
+        _collectionView.frame = CGRectMake(_collectionView.frame.origin.x, newY, _collectionView.frame.size.width, kCollectionViewHeight);
     }
     return self;
 }

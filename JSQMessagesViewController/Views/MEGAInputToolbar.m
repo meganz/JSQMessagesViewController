@@ -5,8 +5,11 @@
 
 static void * kMEGAInputToolbarKeyValueObservingContext = &kMEGAInputToolbarKeyValueObservingContext;
 
+extern const CGFloat kCellSquareSize;
+extern const CGFloat kCellInset;
+extern const NSUInteger kCellRows;
 const CGFloat kTextContentViewHeight = 100.0f;
-const CGFloat kImagePickerViewHeight = 383.0f;
+CGFloat kImagePickerViewHeight;
 
 
 
@@ -29,6 +32,8 @@ const CGFloat kImagePickerViewHeight = 383.0f;
 - (void)awakeFromNib {
     [super awakeFromNib];
     self.jsq_isObserving = NO;
+    
+    kImagePickerViewHeight =  kTextContentViewHeight + (kCellRows+1)*kCellInset + kCellRows*kCellSquareSize;
     
     _contentView = [self loadToolbarTextContentView];
 }
