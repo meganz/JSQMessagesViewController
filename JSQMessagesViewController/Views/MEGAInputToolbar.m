@@ -135,14 +135,16 @@ const CGFloat kImagePickerViewHeight = 383.0f;
         case MEGAChatAccessoryButtonImage:
             if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusNotDetermined) {
                 [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
-                    if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusAuthorized) {
-                        if (!self.imagePickerView) {
-                            [self.contentView removeFromSuperview];
-                            _imagePickerView = [self loadToolbarImagePickerView];
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusAuthorized) {
+                            if (!self.imagePickerView) {
+                                [self.contentView removeFromSuperview];
+                                _imagePickerView = [self loadToolbarImagePickerView];
+                            }
+                        } else {
+                            self.contentView.accessoryImageButton.enabled = NO;
                         }
-                    } else {
-                        self.contentView.accessoryImageButton.enabled = NO;
-                    }
+                    });
                 }];
             } else {
                 if (!self.imagePickerView) {
