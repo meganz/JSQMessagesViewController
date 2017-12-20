@@ -75,10 +75,6 @@ CGFloat kCollectionViewHeight;
         cell.backgroundView = [[UIImageView alloc] initWithImage:result];
         cell.backgroundView.contentMode = UIViewContentModeScaleAspectFill;
         cell.backgroundView.layer.masksToBounds = YES;
-        // Checkmark:
-        UIImageView *checkView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"check_mark"]];
-        checkView.frame = CGRectMake(kCellSquareSize-27.0f, 8.0f, 19.0f, 15.0f);
-        [cell.backgroundView addSubview:checkView];
         // Videos:
         if (currentAsset.mediaType == PHAssetMediaTypeVideo) {
             UIImageView *playView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"video_list"]];
@@ -97,12 +93,18 @@ CGFloat kCollectionViewHeight;
         cell.backgroundView.layer.borderColor = nil;
         cell.backgroundView.layer.borderWidth = 0.0;
         cell.backgroundView.layer.opacity = 1.0;
-        cell.backgroundView.subviews[0].hidden = YES;
+        // Remove checkmark if needed:
+        if (cell.contentView.subviews.count > 0) {
+            [cell.contentView.subviews[0] removeFromSuperview];
+        }
     } else {
         cell.backgroundView.layer.borderColor = [[UIColor mnz_redFF333A] CGColor];
         cell.backgroundView.layer.borderWidth = 2.0;
         cell.backgroundView.layer.opacity = 0.48;
-        cell.backgroundView.subviews[0].hidden = NO;
+        // Add checkmark:
+        UIImageView *checkView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"white_checkmark"]];
+        checkView.frame = CGRectMake(kCellSquareSize-24.0f, 7.0f, 12.0f, 12.0f);
+        [cell.contentView addSubview:checkView];
     }
     cell.backgroundColor = [UIColor mnz_redFF333A];
     
