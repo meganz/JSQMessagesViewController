@@ -3,6 +3,7 @@
 
 #import "MEGAToolbarAssetPicker.h"
 #import "MEGAToolbarContentView.h"
+#import "MEGAToolbarSelectedAssets.h"
 
 @class MEGAInputToolbar;
 

@@ -8,7 +8,9 @@ static void * kMEGAInputToolbarKeyValueObservingContext = &kMEGAInputToolbarKeyV
 extern const CGFloat kCellSquareSize;
 extern const CGFloat kCellInset;
 extern const NSUInteger kCellRows;
+const CGFloat kButtonBarHeight = 50.0f;
 const CGFloat kTextContentViewHeight = 100.0f;
+const CGFloat kSelectedAssetsViewHeight = 200.0f;
 CGFloat kImagePickerViewHeight;
 
 
@@ -17,6 +19,7 @@ CGFloat kImagePickerViewHeight;
 
 @property (assign, nonatomic) BOOL jsq_isObserving;
 @property (nonatomic) MEGAToolbarAssetPicker *assetPicker;
+@property (nonatomic) MEGAToolbarSelectedAssets *selectedAssets;
 @property (nonatomic) NSMutableArray<PHAsset *> *selectedAssetsArray;
 
 @end
@@ -33,7 +36,7 @@ CGFloat kImagePickerViewHeight;
     [super awakeFromNib];
     self.jsq_isObserving = NO;
     
-    kImagePickerViewHeight =  kTextContentViewHeight + (kCellRows+1)*kCellInset + kCellRows*kCellSquareSize;
+    kImagePickerViewHeight = kButtonBarHeight + (kCellRows+1)*kCellInset + kCellRows*kCellSquareSize;
     _selectedAssetsArray = [NSMutableArray new];
     
     _contentView = [self loadToolbarTextContentView];
@@ -105,14 +108,30 @@ CGFloat kImagePickerViewHeight;
 
 - (void)setupImagePickerView:(MEGAToolbarContentView *)imagePickerView {
     imagePickerView.frame = self.frame = CGRectMake(0.0f, 0.0f, self.frame.size.width, kImagePickerViewHeight);
+    if (self.selectedAssetsArray.count == 0) {
+        self.imagePickerView.selectedAssetsCollectionView.frame = CGRectMake(0.0f, 1.0f, self.frame.size.width, 0.0f);
+    } else {
+        self.imagePickerView.selectedAssetsCollectionView.frame = CGRectMake(0.0f, 1.0f, self.frame.size.width, kSelectedAssetsViewHeight - kButtonBarHeight);
+    }
     [self addSubview:imagePickerView];
     [self removeTargetsFromView:imagePickerView];
     [self addTargetsToView:imagePickerView];
     [self.delegate messagesInputToolbar:self needsResizeToHeight:kImagePickerViewHeight];
 
-    self.assetPicker = [[MEGAToolbarAssetPicker alloc] initWithCollectionView:imagePickerView.collectionView selectedAssetsArray:self.selectedAssetsArray delegate:self];
+    self.assetPicker = [[MEGAToolbarAssetPicker alloc]
+                        initWithCollectionView:imagePickerView.collectionView
+                        selectedAssetsArray:self.selectedAssetsArray
+                        delegate:self];
     imagePickerView.collectionView.dataSource = self.assetPicker;
     imagePickerView.collectionView.delegate = self.assetPicker;
+    
+    self.selectedAssets = [[MEGAToolbarSelectedAssets alloc]
+                           initWithCollectionView:imagePickerView.selectedAssetsCollectionView
+                           selectedAssetsArray:self.selectedAssetsArray
+                           delegate:self];
+    imagePickerView.selectedAssetsCollectionView.dataSource = self.selectedAssets;
+    imagePickerView.selectedAssetsCollectionView.delegate = self.selectedAssets;
+    [imagePickerView.selectedAssetsCollectionView reloadData];
 }
 
 - (void)dealloc {
@@ -132,7 +151,7 @@ CGFloat kImagePickerViewHeight;
     } else {
         [self.delegate messagesInputToolbar:self didPressSendButton:sender toAttachAssets:self.selectedAssetsArray];
         self.selectedAssetsArray = [NSMutableArray new];
-        [self.assetPicker resetSelection];
+        [self.assetPicker setSelectionTo:self.selectedAssetsArray];
         [self mnz_accesoryButtonPressed:self.imagePickerView.accessoryTextButton];
     }
 }
@@ -184,7 +203,20 @@ CGFloat kImagePickerViewHeight;
     self.imagePickerView.sendButton.enabled = selectedAssetsArray.count > 0;
     self.imagePickerView.sendButton.backgroundColor = selectedAssetsArray.count > 0 ? [UIColor mnz_green00BFA5] : [UIColor mnz_grayE2EAEA];
     self.selectedAssetsArray = selectedAssetsArray;
-    self.imagePickerView.textView.text = [NSString stringWithFormat:AMLocalizedString(@"files", nil), selectedAssetsArray.count];
+    if (assetPicker) {
+        [self.selectedAssets setSelectionTo:self.selectedAssetsArray];
+    } else {
+        [self.assetPicker setSelectionTo:self.selectedAssetsArray];
+    }
+    if (selectedAssetsArray.count == 0) {
+        kImagePickerViewHeight = kButtonBarHeight + (kCellRows+1)*kCellInset + kCellRows*kCellSquareSize;
+        self.imagePickerView.selectedAssetsCollectionView.frame = CGRectMake(0.0f, 1.0f, self.frame.size.width, 0.0f);
+    } else {
+        kImagePickerViewHeight = kSelectedAssetsViewHeight + (kCellRows+1)*kCellInset + kCellRows*kCellSquareSize;
+        self.imagePickerView.selectedAssetsCollectionView.frame = CGRectMake(0.0f, 1.0f, self.frame.size.width, kSelectedAssetsViewHeight - kButtonBarHeight);
+    }
+    self.imagePickerView.frame = self.frame = CGRectMake(0.0f, 0.0f, self.frame.size.width, kImagePickerViewHeight);
+    [self.delegate messagesInputToolbar:self needsResizeToHeight:kImagePickerViewHeight];
 }
 
 #pragma mark - Notifications

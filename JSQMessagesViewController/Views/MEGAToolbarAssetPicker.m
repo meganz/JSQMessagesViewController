@@ -1,9 +1,9 @@
 
 #import "MEGAToolbarAssetPicker.h"
 
+#import "NSString+MNZCategory.h"
 #import "UIColor+MNZCategory.h"
 
-NSString *CELL_ID = @"Photo";
 const CGFloat kCellSquareSize = 93.0f;
 const CGFloat kCellInset = 1.0f;
 const NSUInteger kCellRows = 3;
@@ -32,7 +32,7 @@ CGFloat kCollectionViewHeight;
         [self fetchAssets];
         _selectedAssetsArray = selectedAssetsArray;
 
-        [collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:CELL_ID];
+        [collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"assetCellId"];
         
         // Reload when returning to foreground:
         [[NSNotificationCenter defaultCenter]addObserver:self
@@ -47,8 +47,8 @@ CGFloat kCollectionViewHeight;
     return self;
 }
 
-- (void)resetSelection {
-    self.selectedAssetsArray = [NSMutableArray new];
+- (void)setSelectionTo:(NSMutableArray<PHAsset *> *)selectedAssetsArray {
+    self.selectedAssetsArray = selectedAssetsArray;
     [self.collectionView reloadData];
 }
 
@@ -66,7 +66,7 @@ CGFloat kCollectionViewHeight;
 #pragma mark - UICollectionViewDataSource
 
 - (nonnull __kindof UICollectionViewCell *)collectionView:(nonnull UICollectionView *)collectionView cellForItemAtIndexPath:(nonnull NSIndexPath *)indexPath {
-    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:CELL_ID forIndexPath:indexPath];
+    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"assetCellId" forIndexPath:indexPath];
     
     // UIImage from PHAsset:
     PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
@@ -82,7 +82,7 @@ CGFloat kCollectionViewHeight;
             playView.frame = CGRectMake(8.0f, kCellSquareSize-24.0f, 12.0f, 12.0f);
             [cell.backgroundView addSubview:playView];
             UILabel *durationLabel = [[UILabel alloc] initWithFrame:CGRectMake(21.0f, kCellSquareSize-25.0f, 48.0f, 15.0f)];
-            durationLabel.text = [self stringFromTimeInterval:currentAsset.duration];
+            durationLabel.text = [NSString mnz_stringFromTimeInterval:currentAsset.duration];
             durationLabel.font = [UIFont mnz_SFUIRegularWithSize:12.0f];
             durationLabel.textColor = [UIColor whiteColor];
             [cell.backgroundView addSubview:durationLabel];
@@ -144,20 +144,6 @@ CGFloat kCollectionViewHeight;
 
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
     return kCellInset/2;
-}
-
-#pragma mark - Utils
-
-- (NSString *)stringFromTimeInterval:(NSTimeInterval)interval {
-    NSInteger ti = (NSInteger)interval;
-    NSInteger seconds = ti % 60;
-    NSInteger minutes = (ti / 60) % 60;
-    NSInteger hours = (ti / 3600);
-    if (hours > 0) {
-        return [NSString stringWithFormat:@"%02ld:%02ld:%02ld", (long)hours, (long)minutes, (long)seconds];
-    } else {
-        return [NSString stringWithFormat:@"%02ld:%02ld", (long)minutes, (long)seconds];
-    }
 }
 
 @end
