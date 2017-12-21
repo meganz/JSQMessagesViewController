@@ -17,7 +17,7 @@ CGFloat kImagePickerViewHeight;
 
 @property (assign, nonatomic) BOOL jsq_isObserving;
 @property (nonatomic) MEGAToolbarAssetPicker *assetPicker;
-@property (nonatomic) NSArray<PHAsset *> *assetsArray;
+@property (nonatomic) NSMutableArray<PHAsset *> *selectedAssetsArray;
 
 @end
 
@@ -34,6 +34,7 @@ CGFloat kImagePickerViewHeight;
     self.jsq_isObserving = NO;
     
     kImagePickerViewHeight =  kTextContentViewHeight + (kCellRows+1)*kCellInset + kCellRows*kCellSquareSize;
+    _selectedAssetsArray = [NSMutableArray new];
     
     _contentView = [self loadToolbarTextContentView];
 }
@@ -109,7 +110,7 @@ CGFloat kImagePickerViewHeight;
     [self addTargetsToView:imagePickerView];
     [self.delegate messagesInputToolbar:self needsResizeToHeight:kImagePickerViewHeight];
 
-    self.assetPicker = [[MEGAToolbarAssetPicker alloc] initWithCollectionView:imagePickerView.collectionView delegate:self];
+    self.assetPicker = [[MEGAToolbarAssetPicker alloc] initWithCollectionView:imagePickerView.collectionView selectedAssetsArray:self.selectedAssetsArray delegate:self];
     imagePickerView.collectionView.dataSource = self.assetPicker;
     imagePickerView.collectionView.delegate = self.assetPicker;
 }
@@ -129,7 +130,8 @@ CGFloat kImagePickerViewHeight;
     if (self.contentView) {
         [self.delegate messagesInputToolbar:self didPressSendButton:sender];
     } else {
-        [self.delegate messagesInputToolbar:self didPressSendButton:sender toAttachAssets:self.assetsArray];
+        [self.delegate messagesInputToolbar:self didPressSendButton:sender toAttachAssets:self.selectedAssetsArray];
+        self.selectedAssetsArray = [NSMutableArray new];
         [self.assetPicker resetSelection];
         [self mnz_accesoryButtonPressed:self.imagePickerView.accessoryTextButton];
     }
@@ -178,11 +180,11 @@ CGFloat kImagePickerViewHeight;
 
 #pragma mark - MEGAToolbarAssetPickerDelegate
 
-- (void)assetPicker:(MEGAToolbarAssetPicker *)assetPicker didChangeSelectionTo:(NSArray<PHAsset *> *)assetsArray {
-    self.imagePickerView.sendButton.enabled = assetsArray.count > 0;
-    self.imagePickerView.sendButton.backgroundColor = assetsArray.count > 0 ? [UIColor mnz_green00BFA5] : [UIColor mnz_grayE2EAEA];
-    self.assetsArray = assetsArray;
-    self.imagePickerView.textView.text = [NSString stringWithFormat:AMLocalizedString(@"files", nil), assetsArray.count];
+- (void)assetPicker:(MEGAToolbarAssetPicker *)assetPicker didChangeSelectionTo:(NSMutableArray<PHAsset *> *)selectedAssetsArray {
+    self.imagePickerView.sendButton.enabled = selectedAssetsArray.count > 0;
+    self.imagePickerView.sendButton.backgroundColor = selectedAssetsArray.count > 0 ? [UIColor mnz_green00BFA5] : [UIColor mnz_grayE2EAEA];
+    self.selectedAssetsArray = selectedAssetsArray;
+    self.imagePickerView.textView.text = [NSString stringWithFormat:AMLocalizedString(@"files", nil), selectedAssetsArray.count];
 }
 
 #pragma mark - Notifications

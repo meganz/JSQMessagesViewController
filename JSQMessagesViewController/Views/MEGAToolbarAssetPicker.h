@@ -15,6 +15,7 @@
 @interface MEGAToolbarAssetPicker : NSObject <UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 
 - (instancetype)initWithCollectionView:(UICollectionView *)collectionView
+                   selectedAssetsArray:(NSMutableArray<PHAsset *> *)selectedAssetsArray
                               delegate:(id<MEGAToolbarAssetPickerDelegate>)delegate;
 - (void)resetSelection;
 

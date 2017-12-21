@@ -15,7 +15,7 @@ CGFloat kCollectionViewHeight;
 @property (nonatomic, weak) id<MEGAToolbarAssetPickerDelegate> delegate;
 
 @property (nonatomic) PHFetchResult *fetchResult;
-@property (nonatomic) NSMutableArray *selectedAssetsArray;
+@property (nonatomic) NSMutableArray<PHAsset *> *selectedAssetsArray;
 
 @end
 
@@ -24,12 +24,13 @@ CGFloat kCollectionViewHeight;
 #pragma mark - Initialization
 
 - (instancetype)initWithCollectionView:(UICollectionView *)collectionView
+                   selectedAssetsArray:(NSMutableArray<PHAsset *> *)selectedAssetsArray
                               delegate:(id<MEGAToolbarAssetPickerDelegate>)delegate {
     if (self = [super init]) {
         _collectionView = collectionView;
         _delegate = delegate;
         [self fetchAssets];
-        _selectedAssetsArray = [NSMutableArray new];
+        _selectedAssetsArray = selectedAssetsArray;
 
         [collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:CELL_ID];
         
