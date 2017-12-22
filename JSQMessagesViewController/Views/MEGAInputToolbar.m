@@ -109,9 +109,11 @@ CGFloat kImagePickerViewHeight;
 - (void)setupImagePickerView:(MEGAToolbarContentView *)imagePickerView {
     imagePickerView.frame = self.frame = CGRectMake(0.0f, 0.0f, self.frame.size.width, kImagePickerViewHeight);
     if (self.selectedAssetsArray.count == 0) {
-        self.imagePickerView.selectedAssetsCollectionView.frame = CGRectMake(0.0f, 1.0f, self.frame.size.width, 0.0f);
+        imagePickerView.selectedAssetsCollectionView.frame = CGRectMake(0.0f, 1.0f, self.frame.size.width, 0.0f);
     } else {
-        self.imagePickerView.selectedAssetsCollectionView.frame = CGRectMake(0.0f, 1.0f, self.frame.size.width, kSelectedAssetsViewHeight - kButtonBarHeight);
+        imagePickerView.selectedAssetsCollectionView.frame = CGRectMake(0.0f, 1.0f, self.frame.size.width, kSelectedAssetsViewHeight - kButtonBarHeight);
+        imagePickerView.sendButton.enabled = YES;
+        imagePickerView.sendButton.backgroundColor = [UIColor mnz_green00BFA5];
     }
     [self addSubview:imagePickerView];
     [self removeTargetsFromView:imagePickerView];
@@ -151,7 +153,7 @@ CGFloat kImagePickerViewHeight;
     } else {
         [self.delegate messagesInputToolbar:self didPressSendButton:sender toAttachAssets:self.selectedAssetsArray];
         self.selectedAssetsArray = [NSMutableArray new];
-        [self.assetPicker setSelectionTo:self.selectedAssetsArray];
+        [self assetPicker:nil didChangeSelectionTo:self.selectedAssetsArray];
         [self mnz_accesoryButtonPressed:self.imagePickerView.accessoryTextButton];
     }
 }
@@ -203,11 +205,8 @@ CGFloat kImagePickerViewHeight;
     self.imagePickerView.sendButton.enabled = selectedAssetsArray.count > 0;
     self.imagePickerView.sendButton.backgroundColor = selectedAssetsArray.count > 0 ? [UIColor mnz_green00BFA5] : [UIColor mnz_grayE2EAEA];
     self.selectedAssetsArray = selectedAssetsArray;
-    if (assetPicker) {
-        [self.selectedAssets setSelectionTo:self.selectedAssetsArray];
-    } else {
-        [self.assetPicker setSelectionTo:self.selectedAssetsArray];
-    }
+    [self.assetPicker setSelectionTo:self.selectedAssetsArray];
+    [self.selectedAssets setSelectionTo:self.selectedAssetsArray];
     if (selectedAssetsArray.count == 0) {
         kImagePickerViewHeight = kButtonBarHeight + (kCellRows+1)*kCellInset + kCellRows*kCellSquareSize;
         self.imagePickerView.selectedAssetsCollectionView.frame = CGRectMake(0.0f, 1.0f, self.frame.size.width, 0.0f);
