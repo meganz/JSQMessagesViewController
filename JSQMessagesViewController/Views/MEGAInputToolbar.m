@@ -50,6 +50,10 @@ CGFloat kImagePickerViewHeight;
             self.imagePickerView.frame = self.frame = CGRectMake(0.0f, 0.0f, [UIScreen mainScreen].bounds.size.width, kImagePickerViewHeight);
         }
     }
+    // Scroll to bottom of the text view:
+    if (self.contentView) {
+        [self.contentView.textView scrollRangeToVisible:NSMakeRange([self.contentView.textView.text length], 0)];
+    }
 }
 
 - (MEGAToolbarContentView *)loadToolbarTextContentView {
@@ -100,6 +104,9 @@ CGFloat kImagePickerViewHeight;
                                                  name:UITextViewTextDidEndEditingNotification
                                                object:textContentView.textView];
     
+    // Observe remote changes of the text within the textView, useful when the user edits the content of a message:
+    [textContentView.textView addObserver:self forKeyPath:@"text" options:NSKeyValueObservingOptionNew context:nil];
+    
     // Disable the image accessory button if the app does not have permission to access the multimedia files:
     if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusDenied || [PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusRestricted) {
         textContentView.accessoryImageButton.enabled = NO;
@@ -139,6 +146,7 @@ CGFloat kImagePickerViewHeight;
 - (void)dealloc {
     if (self.contentView) {
         [self removeTargetsFromView:self.contentView];
+        [self.contentView.textView removeObserver:self forKeyPath:@"text"];
     } else {
         [self removeTargetsFromView:self.imagePickerView];
     }
@@ -166,6 +174,7 @@ CGFloat kImagePickerViewHeight;
                     dispatch_async(dispatch_get_main_queue(), ^{
                         if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusAuthorized) {
                             if (!self.imagePickerView) {
+                                [self.contentView.textView removeObserver:self forKeyPath:@"text"];
                                 [self.contentView removeFromSuperview];
                                 _imagePickerView = [self loadToolbarImagePickerView];
                             }
@@ -176,6 +185,7 @@ CGFloat kImagePickerViewHeight;
                 }];
             } else {
                 if (!self.imagePickerView) {
+                    [self.contentView.textView removeObserver:self forKeyPath:@"text"];
                     [self.contentView removeFromSuperview];
                     _imagePickerView = [self loadToolbarImagePickerView];
                 }
@@ -239,9 +249,7 @@ CGFloat kImagePickerViewHeight;
     CGFloat maxTextViewHeight = 54.0f;
     CGSize sizeThatFits = [self.contentView.textView sizeThatFits:self.contentView.textView.frame.size];
     CGFloat textViewHeightNeeded = sizeThatFits.height;
-    if (textViewHeightNeeded > maxTextViewHeight) {
-        return;
-    }
+    textViewHeightNeeded = textViewHeightNeeded > maxTextViewHeight ? maxTextViewHeight : textViewHeightNeeded;
     CGFloat newToolbarHeight = originalToolbarHeight - originalTextViewHeight + textViewHeightNeeded;
     [self.delegate messagesInputToolbar:self needsResizeToHeight:newToolbarHeight];
 }
@@ -290,6 +298,12 @@ CGFloat kImagePickerViewHeight;
     [view.accessoryUploadButton removeTarget:self
                                       action:NULL
                             forControlEvents:UIControlEventTouchUpInside];
+}
+
+# pragma mark - KVO
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    [self textViewTextDidChangeNotification:nil];
 }
 
 @end
