@@ -46,10 +46,14 @@ CGFloat kImagePickerViewHeight;
 - (void)layoutSubviews {
     if (self.frame.size.width > [UIScreen mainScreen].bounds.size.width) {
         if (self.contentView) {
-            self.contentView.frame = self.frame = CGRectMake(0.0f, 0.0f, [UIScreen mainScreen].bounds.size.width, kTextContentViewHeight);
+            CGFloat newTextViewWidth = [UIScreen mainScreen].bounds.size.width-kTextViewHorizontalMargins;
+            self.contentView.frame = self.frame = CGRectMake(0.0f,
+                                                             0.0f,
+                                                             [UIScreen mainScreen].bounds.size.width,
+                                                             [self heightToFitInWidth:newTextViewWidth]);
             self.contentView.textView.frame = CGRectMake(self.contentView.textView.frame.origin.x,
                                                          self.contentView.textView.frame.origin.y,
-                                                         [UIScreen mainScreen].bounds.size.width-kTextViewHorizontalMargins,
+                                                         newTextViewWidth,
                                                          self.contentView.textView.frame.size.height);
         } else {
             self.imagePickerView.frame = self.frame = CGRectMake(0.0f, 0.0f, [UIScreen mainScreen].bounds.size.width, kImagePickerViewHeight);
@@ -249,14 +253,18 @@ CGFloat kImagePickerViewHeight;
 }
 
 - (void)resizeToolbarIfNeeded {
+    [self.delegate messagesInputToolbar:self needsResizeToHeight:[self heightToFitInWidth:self.contentView.textView.frame.size.width]];
+}
+
+- (CGFloat)heightToFitInWidth:(CGFloat)width {
     CGFloat originalTextViewHeight = 18.0f;
     CGFloat originalToolbarHeight = 100.0f;
     CGFloat maxTextViewHeight = 54.0f;
-    CGSize sizeThatFits = [self.contentView.textView sizeThatFits:self.contentView.textView.frame.size];
+    CGSize sizeThatFits = [self.contentView.textView sizeThatFits:CGSizeMake(width, self.contentView.textView.frame.size.height)];
     CGFloat textViewHeightNeeded = sizeThatFits.height;
     textViewHeightNeeded = textViewHeightNeeded > maxTextViewHeight ? maxTextViewHeight : textViewHeightNeeded;
     CGFloat newToolbarHeight = originalToolbarHeight - originalTextViewHeight + textViewHeightNeeded;
-    [self.delegate messagesInputToolbar:self needsResizeToHeight:newToolbarHeight];
+    return newToolbarHeight;
 }
 
 #pragma mark - Targets
