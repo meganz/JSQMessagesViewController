@@ -117,9 +117,16 @@
 
         CGFloat horizontalInsetsTotal = horizontalContainerInsets + horizontalFrameInsets + spacingBetweenAvatarAndBubble;
         CGFloat maximumTextWidth = [self textBubbleWidthForLayout:layout] - avatarSize.width - layout.messageBubbleLeftRightMargin - horizontalInsetsTotal;
-        const CGFloat kMaxBubbleWidth = 566.0f - horizontalInsetsTotal;
-        if (maximumTextWidth > kMaxBubbleWidth) {
-            maximumTextWidth = kMaxBubbleWidth;
+        
+        const CGFloat kMaxBubbleWidth = 566.0f;
+        CGFloat displaySize = [[UIScreen mainScreen] bounds].size.width - 92; // 75 + 17, by design
+        if (displaySize > kMaxBubbleWidth) {
+            displaySize = kMaxBubbleWidth;
+        }
+
+        displaySize -= horizontalInsetsTotal;
+        if (maximumTextWidth > displaySize) {
+            maximumTextWidth = displaySize;
         }
 
         CGRect stringRect;
