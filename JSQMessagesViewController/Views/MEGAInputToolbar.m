@@ -11,6 +11,7 @@ extern const NSUInteger kCellRows;
 const CGFloat kButtonBarHeight = 50.0f;
 const CGFloat kTextContentViewHeight = 100.0f;
 const CGFloat kSelectedAssetsViewHeight = 200.0f;
+const CGFloat kTextViewHorizontalMargins = 60.0f;
 CGFloat kImagePickerViewHeight;
 
 
@@ -46,6 +47,10 @@ CGFloat kImagePickerViewHeight;
     if (self.frame.size.width > [UIScreen mainScreen].bounds.size.width) {
         if (self.contentView) {
             self.contentView.frame = self.frame = CGRectMake(0.0f, 0.0f, [UIScreen mainScreen].bounds.size.width, kTextContentViewHeight);
+            self.contentView.textView.frame = CGRectMake(self.contentView.textView.frame.origin.x,
+                                                         self.contentView.textView.frame.origin.y,
+                                                         [UIScreen mainScreen].bounds.size.width-kTextViewHorizontalMargins,
+                                                         self.contentView.textView.frame.size.height);
         } else {
             self.imagePickerView.frame = self.frame = CGRectMake(0.0f, 0.0f, [UIScreen mainScreen].bounds.size.width, kImagePickerViewHeight);
         }
