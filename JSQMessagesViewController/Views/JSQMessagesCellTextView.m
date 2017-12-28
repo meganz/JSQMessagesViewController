@@ -85,4 +85,16 @@
     return [super canPerformAction:action withSender:sender];
 }
 
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
+    //  ignore longpress to prevent copy/define/etc. menu from showing
+    NSUInteger glyphIndex = [self.layoutManager glyphIndexForPoint:point inTextContainer:self.textContainer fractionOfDistanceThroughGlyph:nil];
+    NSUInteger characterIndex = [self.layoutManager characterIndexForGlyphAtIndex:glyphIndex];
+    if (characterIndex < self.textStorage.length) {
+        if ([self.textStorage attribute:NSLinkAttributeName atIndex:characterIndex effectiveRange:nil]) {
+            return self;
+        }
+    }
+    return nil;
+}
+
 @end
