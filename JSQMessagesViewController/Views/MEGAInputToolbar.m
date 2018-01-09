@@ -9,9 +9,9 @@ extern const CGFloat kCellSquareSize;
 extern const CGFloat kCellInset;
 extern const NSUInteger kCellRows;
 const CGFloat kButtonBarHeight = 50.0f;
-const CGFloat kTextContentViewHeight = 100.0f;
+const CGFloat kTextContentViewHeight = 80.0f;
 const CGFloat kSelectedAssetsViewHeight = 200.0f;
-const CGFloat kTextViewHorizontalMargins = 60.0f;
+const CGFloat kTextViewHorizontalMargins = 34.0f;
 CGFloat kImagePickerViewHeight;
 
 
@@ -258,12 +258,11 @@ CGFloat kImagePickerViewHeight;
 
 - (CGFloat)heightToFitInWidth:(CGFloat)width {
     CGFloat originalTextViewHeight = 18.0f;
-    CGFloat originalToolbarHeight = 100.0f;
     CGFloat maxTextViewHeight = 54.0f;
     CGSize sizeThatFits = [self.contentView.textView sizeThatFits:CGSizeMake(width, self.contentView.textView.frame.size.height)];
     CGFloat textViewHeightNeeded = sizeThatFits.height;
     textViewHeightNeeded = textViewHeightNeeded > maxTextViewHeight ? maxTextViewHeight : textViewHeightNeeded;
-    CGFloat newToolbarHeight = originalToolbarHeight - originalTextViewHeight + textViewHeightNeeded;
+    CGFloat newToolbarHeight = kTextContentViewHeight - originalTextViewHeight + textViewHeightNeeded;
     return newToolbarHeight;
 }
 

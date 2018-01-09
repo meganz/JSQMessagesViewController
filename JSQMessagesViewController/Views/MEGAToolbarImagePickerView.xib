@@ -37,7 +37,7 @@
                     </collectionViewFlowLayout>
                 </collectionView>
                 <button contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vcN-Cp-Dka">
-                    <rect key="frame" x="300" y="160" width="55" height="30"/>
+                    <rect key="frame" x="303" y="160" width="55" height="30"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                     <color key="backgroundColor" red="0.8862745098" green="0.91764705879999997" blue="0.91764705879999997" alpha="1" colorSpace="calibratedRGB"/>
                     <fontDescription key="fontDescription" name="SFUIText-Regular" family="SF UI Text" pointSize="15"/>
@@ -51,25 +51,25 @@
                     </userDefinedRuntimeAttributes>
                 </button>
                 <button opaque="NO" tag="10" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IWf-dn-Aam" userLabel="Text">
-                    <rect key="frame" x="25" y="160" width="30" height="30"/>
+                    <rect key="frame" x="17" y="160" width="30" height="30"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <color key="tintColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
                     <state key="normal" title="Button" image="button_text_active"/>
                 </button>
                 <button opaque="NO" tag="11" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8Dn-9A-nU1" userLabel="Camera">
-                    <rect key="frame" x="75" y="160" width="30" height="30"/>
+                    <rect key="frame" x="67" y="160" width="30" height="30"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <color key="tintColor" red="0.59215686270000001" green="0.59215686270000001" blue="0.59215686270000001" alpha="1" colorSpace="calibratedRGB"/>
                     <state key="normal" title="Button" image="button_camera_default"/>
                 </button>
                 <button opaque="NO" tag="12" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BDr-gM-ZHD" userLabel="Media">
-                    <rect key="frame" x="125" y="160" width="30" height="30"/>
+                    <rect key="frame" x="117" y="160" width="30" height="30"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <color key="tintColor" red="0.0" green="0.74901960784313726" blue="0.6470588235294118" alpha="1" colorSpace="calibratedRGB"/>
                     <state key="normal" title="Button" image="button_media_default"/>
                 </button>
                 <button opaque="NO" tag="13" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bvV-Qr-VYz" userLabel="Upload">
-                    <rect key="frame" x="175" y="160" width="30" height="30"/>
+                    <rect key="frame" x="167" y="160" width="30" height="30"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <color key="tintColor" red="0.59215686270000001" green="0.59215686270000001" blue="0.59215686270000001" alpha="1" colorSpace="calibratedRGB"/>
                     <state key="normal" title="Button" image="button_upload_default"/>
