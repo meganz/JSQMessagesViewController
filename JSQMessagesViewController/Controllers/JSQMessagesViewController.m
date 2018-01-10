@@ -107,6 +107,7 @@ static void JSQInstallWorkaroundForSheetPresentationIssue26295020(void) {
     }
 }
 
+extern const CGFloat kTextContentViewHeight;
 
 @interface JSQMessagesViewController () <MEGAInputToolbarDelegate>
 
@@ -741,7 +742,7 @@ static void JSQInstallWorkaroundForSheetPresentationIssue26295020(void) {
                     senderId:[self.collectionView.dataSource senderId]
            senderDisplayName:[self.collectionView.dataSource senderDisplayName]
                         date:[NSDate date]];
-    self.toolbarHeightConstraint.constant = 100.0f;
+    self.toolbarHeightConstraint.constant = kTextContentViewHeight;
 }
 
 - (void)messagesInputToolbar:(MEGAInputToolbar *)toolbar didPressSendButton:(UIButton *)sender toAttachAssets:(NSArray<PHAsset *> *)assets {
