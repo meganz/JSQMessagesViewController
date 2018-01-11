@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13770" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13770"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -92,10 +92,10 @@
                         <nil key="highlightedColor"/>
                     </label>
                     <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BbA-sv-fxi" userLabel="Accessory button">
-                        <rect key="frame" x="10" y="88" width="24" height="24"/>
+                        <rect key="frame" x="12" y="102" width="22" height="22"/>
                         <constraints>
-                            <constraint firstAttribute="width" constant="24" placeholder="YES" id="J3j-ZO-4ds"/>
-                            <constraint firstAttribute="height" constant="24" placeholder="YES" id="SWo-od-s3h"/>
+                            <constraint firstAttribute="width" constant="22" placeholder="YES" id="J3j-ZO-4ds"/>
+                            <constraint firstAttribute="height" constant="22" placeholder="YES" id="SWo-od-s3h"/>
                         </constraints>
                         <connections>
                             <action selector="didTapAccessoryButton:" destination="23f-xH-rkY" eventType="touchUpInside" id="Hxk-1U-a8W"/>
@@ -116,7 +116,7 @@
                 <constraint firstItem="7Uc-dI-YDD" firstAttribute="top" secondItem="X89-B1-aAd" secondAttribute="bottom" id="iiF-tn-5Ir"/>
                 <constraint firstItem="p52-YN-yLu" firstAttribute="top" secondItem="jxM-YD-sVG" secondAttribute="bottom" id="jBD-JV-AWk"/>
                 <constraint firstItem="jxM-YD-sVG" firstAttribute="leading" secondItem="23f-xH-rkY" secondAttribute="leading" id="qeB-G5-1Wq"/>
-                <constraint firstItem="BbA-sv-fxi" firstAttribute="centerY" secondItem="2zh-vR-QJW" secondAttribute="centerY" constant="-13" id="qvK-E0-5P8"/>
+                <constraint firstItem="BbA-sv-fxi" firstAttribute="centerY" secondItem="2zh-vR-QJW" secondAttribute="centerY" id="qvK-E0-5P8"/>
                 <constraint firstItem="p52-YN-yLu" firstAttribute="leading" secondItem="23f-xH-rkY" secondAttribute="leading" id="tTj-Mp-0va"/>
                 <constraint firstItem="X89-B1-aAd" firstAttribute="leading" secondItem="2zh-vR-QJW" secondAttribute="trailing" constant="2" id="vMz-Yi-B0w"/>
                 <constraint firstItem="2zh-vR-QJW" firstAttribute="leading" secondItem="BbA-sv-fxi" secondAttribute="trailing" constant="6" id="wHt-Ue-oPX"/>
