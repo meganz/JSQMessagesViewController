@@ -45,7 +45,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="244" height="94"/>
                             </imageView>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="vLY-aM-0Dr" customClass="JSQMessagesCellTextView">
-                                <rect key="frame" x="0.0" y="0.0" width="238" height="94"/>
+                                <rect key="frame" x="0.0" y="0.0" width="244" height="94"/>
                                 <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
@@ -58,7 +58,7 @@
                             <constraint firstItem="2qm-c6-OZf" firstAttribute="top" secondItem="vLY-aM-0Dr" secondAttribute="top" id="MOM-76-6ck"/>
                             <constraint firstItem="vLY-aM-0Dr" firstAttribute="top" secondItem="2zh-vR-QJW" secondAttribute="top" id="RiG-21-Bqc"/>
                             <constraint firstAttribute="bottom" secondItem="vLY-aM-0Dr" secondAttribute="bottom" id="UbF-Bl-Q7v"/>
-                            <constraint firstAttribute="trailing" secondItem="vLY-aM-0Dr" secondAttribute="trailing" constant="6" id="aVg-yy-8K7"/>
+                            <constraint firstAttribute="trailing" secondItem="vLY-aM-0Dr" secondAttribute="trailing" id="aVg-yy-8K7"/>
                             <constraint firstItem="2qm-c6-OZf" firstAttribute="leading" secondItem="vLY-aM-0Dr" secondAttribute="leading" id="hVf-ET-gcK"/>
                             <constraint firstItem="2qm-c6-OZf" firstAttribute="bottom" secondItem="vLY-aM-0Dr" secondAttribute="bottom" id="iIm-2e-QH5"/>
                             <constraint firstAttribute="width" constant="244" id="imD-52-K45"/>
