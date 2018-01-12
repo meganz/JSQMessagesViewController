@@ -344,12 +344,7 @@ const CGFloat kJSQMessagesCollectionViewAvatarSizeDefault = 30.0f;
         }];
     }
     
-    CGRect oldBounds = self.collectionView.bounds;
-    if (CGRectGetWidth(newBounds) != CGRectGetWidth(oldBounds)) {
-        return YES;
-    }
-    
-    return NO;
+    return YES;
 }
 
 - (void)prepareForCollectionViewUpdates:(NSArray *)updateItems
