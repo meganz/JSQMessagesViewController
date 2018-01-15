@@ -257,8 +257,8 @@ CGFloat kImagePickerViewHeight;
 }
 
 - (CGFloat)heightToFitInWidth:(CGFloat)width {
-    CGFloat originalTextViewHeight = 18.0f;
-    CGFloat maxTextViewHeight = 54.0f;
+    CGFloat originalTextViewHeight = 20.0f;
+    CGFloat maxTextViewHeight = 50.0f;
     CGSize sizeThatFits = [self.contentView.textView sizeThatFits:CGSizeMake(width, self.contentView.textView.frame.size.height)];
     CGFloat textViewHeightNeeded = sizeThatFits.height;
     textViewHeightNeeded = textViewHeightNeeded > maxTextViewHeight ? maxTextViewHeight : textViewHeightNeeded;

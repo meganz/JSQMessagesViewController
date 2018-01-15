@@ -79,9 +79,9 @@ CGFloat kCollectionViewHeight;
         // Videos:
         if (currentAsset.mediaType == PHAssetMediaTypeVideo) {
             UIImageView *playView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"video_list"]];
-            playView.frame = CGRectMake(8.0f, kCellSquareSize-24.0f, 12.0f, 12.0f);
+            playView.frame = CGRectMake(2.0f, kCellSquareSize-17.0f, 12.0f, 12.0f);
             [cell.backgroundView addSubview:playView];
-            UILabel *durationLabel = [[UILabel alloc] initWithFrame:CGRectMake(21.0f, kCellSquareSize-25.0f, 48.0f, 15.0f)];
+            UILabel *durationLabel = [[UILabel alloc] initWithFrame:CGRectMake(15.0f, kCellSquareSize-17.5f, 48.0f, 15.0f)];
             durationLabel.text = [NSString mnz_stringFromTimeInterval:currentAsset.duration];
             durationLabel.font = [UIFont mnz_SFUIRegularWithSize:12.0f];
             durationLabel.textColor = [UIColor whiteColor];
@@ -96,7 +96,9 @@ CGFloat kCollectionViewHeight;
         cell.backgroundView.layer.opacity = 1.0;
         // Remove checkmark if needed:
         if (cell.contentView.subviews.count > 0) {
-            [cell.contentView.subviews[0] removeFromSuperview];
+            for (UIView *checkView in cell.contentView.subviews) {
+                [checkView removeFromSuperview];
+            }
         }
     } else {
         cell.backgroundView.layer.borderColor = [[UIColor mnz_redFF333A] CGColor];
@@ -104,7 +106,7 @@ CGFloat kCollectionViewHeight;
         cell.backgroundView.layer.opacity = 0.48;
         // Add checkmark:
         UIImageView *checkView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"white_checkmark"]];
-        checkView.frame = CGRectMake(kCellSquareSize-24.0f, 7.0f, 12.0f, 12.0f);
+        checkView.frame = CGRectMake(kCellSquareSize-18.0f, 7.0f, 12.0f, 12.0f);
         [cell.contentView addSubview:checkView];
     }
     cell.backgroundColor = [UIColor mnz_redFF333A];
