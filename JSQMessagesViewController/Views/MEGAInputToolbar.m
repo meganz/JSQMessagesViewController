@@ -171,32 +171,84 @@ CGFloat kImagePickerViewHeight;
         [self.delegate messagesInputToolbar:self didPressSendButton:sender toAttachAssets:self.selectedAssetsArray];
         self.selectedAssetsArray = [NSMutableArray new];
         [self assetPicker:nil didChangeSelectionTo:self.selectedAssetsArray];
-        [self mnz_accesoryButtonPressed:self.imagePickerView.accessoryTextButton];
+        [self.imagePickerView removeFromSuperview];
+        _contentView = [self loadToolbarTextContentView];
     }
 }
 
 - (void)mnz_accesoryButtonPressed:(UIButton *)sender {
     switch (sender.tag) {
-        case MEGAChatAccessoryButtonImage:
-            if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusNotDetermined) {
-                [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusAuthorized) {
-                            if (!self.imagePickerView) {
-                                [self.contentView.textView removeObserver:self forKeyPath:@"text"];
-                                [self.contentView removeFromSuperview];
-                                _imagePickerView = [self loadToolbarImagePickerView];
-                            }
-                        } else {
-                            self.contentView.accessoryImageButton.enabled = NO;
-                        }
-                    });
-                }];
+        case MEGAChatAccessoryButtonText:
+            if (self.imagePickerView) {
+                [self.imagePickerView removeFromSuperview];
+                _contentView = [self loadToolbarTextContentView];
+                // Become first responder unanimated:
+                [UIView animateWithDuration:0.0f
+                                 animations:^{
+                                     [self.contentView.textView becomeFirstResponder];
+                                 }
+                                 completion:nil];
             } else {
-                if (!self.imagePickerView) {
-                    [self.contentView.textView removeObserver:self forKeyPath:@"text"];
-                    [self.contentView removeFromSuperview];
-                    _imagePickerView = [self loadToolbarImagePickerView];
+                if ([self.contentView.textView isFirstResponder]) {
+                    [self.contentView.textView resignFirstResponder];
+                } else {
+                    [self.contentView.textView becomeFirstResponder];
+                }
+            }
+            break;
+            
+        case MEGAChatAccessoryButtonImage:
+            if (self.imagePickerView) {
+                [UIView animateWithDuration:0.2f
+                                 animations:^{
+                                     self.imagePickerView.frame = CGRectMake(
+                                                                             self.imagePickerView.frame.origin.x,
+                                                                             self.imagePickerView.frame.origin.y + (kImagePickerViewHeight - kButtonBarHeight),
+                                                                             self.imagePickerView.frame.size.width,
+                                                                             self.imagePickerView.frame.size.height);
+                                 }
+                                 completion:^(BOOL finished){
+                                     [self.imagePickerView removeFromSuperview];
+                                     _contentView = [self loadToolbarTextContentView];
+                                 }];
+            } else {
+                if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusNotDetermined) {
+                    [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusAuthorized) {
+                                if (!self.imagePickerView) {
+                                    [self.contentView.textView removeObserver:self forKeyPath:@"text"];
+                                    [self.contentView removeFromSuperview];
+                                    _imagePickerView = [self loadToolbarImagePickerView];
+                                }
+                            } else {
+                                self.contentView.accessoryImageButton.enabled = NO;
+                            }
+                        });
+                    }];
+                } else {
+                    if (!self.imagePickerView) {
+                        BOOL keyboardWasPresent = [self.contentView.textView isFirstResponder];
+                        [self.contentView.textView removeObserver:self forKeyPath:@"text"];
+                        [self.contentView removeFromSuperview];
+                        _imagePickerView = [self loadToolbarImagePickerView];
+                        if (!keyboardWasPresent) {
+                            self.imagePickerView.frame = CGRectMake(
+                                                                    self.imagePickerView.frame.origin.x,
+                                                                    self.imagePickerView.frame.origin.y + (kImagePickerViewHeight - kButtonBarHeight),
+                                                                    self.imagePickerView.frame.size.width,
+                                                                    self.imagePickerView.frame.size.height);
+                            [UIView animateWithDuration:0.2f
+                                             animations:^{
+                                                 self.imagePickerView.frame = CGRectMake(
+                                                                                         self.imagePickerView.frame.origin.x,
+                                                                                         self.imagePickerView.frame.origin.y - (kImagePickerViewHeight - kButtonBarHeight),
+                                                                                         self.imagePickerView.frame.size.width,
+                                                                                         self.imagePickerView.frame.size.height);
+                                             }
+                                             completion:nil];
+                        }
+                    }
                 }
             }
             break;
@@ -205,6 +257,8 @@ CGFloat kImagePickerViewHeight;
             if (self.imagePickerView) {
                 [self.imagePickerView removeFromSuperview];
                 _contentView = [self loadToolbarTextContentView];
+            } else if ([self.contentView.textView isFirstResponder]) {
+                [self.contentView.textView resignFirstResponder];
             }
             [self.delegate messagesInputToolbar:self didPressAccessoryButton:sender];
             break;
