@@ -39,13 +39,13 @@
                         <nil key="highlightedColor"/>
                     </label>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="btS-p8-B7Z" userLabel="Bubble container">
-                        <rect key="frame" x="36" y="66" width="244" height="94"/>
+                        <rect key="frame" x="38" y="66" width="242" height="94"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="OCS-Fu-acq" userLabel="Bubble Image View">
-                                <rect key="frame" x="0.0" y="0.0" width="244" height="94"/>
+                                <rect key="frame" x="0.0" y="0.0" width="242" height="94"/>
                             </imageView>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="KYU-B8-cUW" customClass="JSQMessagesCellTextView">
-                                <rect key="frame" x="0.0" y="0.0" width="244" height="94"/>
+                                <rect key="frame" x="0.0" y="0.0" width="242" height="94"/>
                                 <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
@@ -60,7 +60,7 @@
                             <constraint firstItem="KYU-B8-cUW" firstAttribute="top" secondItem="btS-p8-B7Z" secondAttribute="top" id="aEL-yH-N1p"/>
                             <constraint firstAttribute="bottom" secondItem="OCS-Fu-acq" secondAttribute="bottom" id="aJ4-ZD-tk9"/>
                             <constraint firstItem="OCS-Fu-acq" firstAttribute="leading" secondItem="btS-p8-B7Z" secondAttribute="leading" id="qpQ-dc-2V5"/>
-                            <constraint firstAttribute="width" constant="244" id="stE-iz-VHo"/>
+                            <constraint firstAttribute="width" constant="242" id="stE-iz-VHo"/>
                             <constraint firstItem="OCS-Fu-acq" firstAttribute="top" secondItem="btS-p8-B7Z" secondAttribute="top" id="zTa-8g-VY4"/>
                         </constraints>
                     </view>
@@ -115,7 +115,7 @@
                 <constraint firstAttribute="trailing" secondItem="Ufa-bF-l1Y" secondAttribute="trailing" id="cWQ-1Q-xOA"/>
                 <constraint firstItem="UPz-5x-c1T" firstAttribute="top" secondItem="Da1-09-wR4" secondAttribute="bottom" id="dDB-B0-c6J"/>
                 <constraint firstItem="Ufa-bF-l1Y" firstAttribute="top" secondItem="afj-rd-iNv" secondAttribute="bottom" id="i9Y-sV-v6b"/>
-                <constraint firstItem="btS-p8-B7Z" firstAttribute="leading" secondItem="Da1-09-wR4" secondAttribute="trailing" constant="2" id="j0I-pm-eex"/>
+                <constraint firstItem="btS-p8-B7Z" firstAttribute="leading" secondItem="Da1-09-wR4" secondAttribute="trailing" constant="4" id="j0I-pm-eex"/>
                 <constraint firstItem="btS-p8-B7Z" firstAttribute="top" secondItem="Ufa-bF-l1Y" secondAttribute="bottom" id="jAu-Dn-7rN"/>
                 <constraint firstItem="Da1-09-wR4" firstAttribute="leading" secondItem="4lh-CK-yVn" secondAttribute="leading" id="jiu-B4-TSD"/>
                 <constraint firstAttribute="bottom" secondItem="UPz-5x-c1T" secondAttribute="bottom" id="nsK-Gh-M3Z"/>
