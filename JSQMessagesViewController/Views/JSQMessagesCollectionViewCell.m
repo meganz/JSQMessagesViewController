@@ -148,7 +148,10 @@ static NSMutableSet *jsqMessagesCollectionViewCellActions = nil;
     CALayer *bottomBorder = [CALayer layer];
     bottomBorder.borderColor = [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.1].CGColor;
     bottomBorder.borderWidth = 1;
-    bottomBorder.frame = CGRectMake(0.0f, layer.frame.size.height-1.0f, layer.frame.size.width*2, 1.0f);
+    CGFloat screenWidth = [[UIScreen mainScreen] bounds].size.width;
+    CGFloat screenHeight = [[UIScreen mainScreen] bounds].size.height;
+    CGFloat frameWidth = screenWidth > screenHeight ? screenWidth : screenHeight;
+    bottomBorder.frame = CGRectMake(0.0f, layer.frame.size.height-1.0f, frameWidth, 1.0f);
     [layer addSublayer:bottomBorder];
 }
 
