@@ -560,13 +560,11 @@ extern const CGFloat kTextContentViewHeight;
 
     cell.cellTopLabel.textInsets = UIEdgeInsetsMake(13.0f, 0.0f, 0.0f, 0.0f);
     
-    CGFloat bubbleTopLabelInset = 30.0f;
-
     if (isOutgoingMessage) {
-        cell.messageBubbleTopLabel.textInsets = UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, bubbleTopLabelInset);
+        cell.messageBubbleTopLabel.textInsets = UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f);
     }
     else {
-        cell.messageBubbleTopLabel.textInsets = UIEdgeInsetsMake(0.0f, bubbleTopLabelInset, 0.0f, 0.0f);
+        cell.messageBubbleTopLabel.textInsets = UIEdgeInsetsMake(0.0f, 30.0f, 0.0f, 0.0f);
     }
 
     cell.textView.dataDetectorTypes = UIDataDetectorTypeAll;
