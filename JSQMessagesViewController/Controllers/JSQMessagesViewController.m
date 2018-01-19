@@ -344,9 +344,6 @@ extern const CGFloat kTextContentViewHeight;
 
     [[NSNotificationCenter defaultCenter] postNotificationName:UITextViewTextDidChangeNotification object:textView];
 
-    [self.collectionView.collectionViewLayout invalidateLayoutWithContext:[JSQMessagesCollectionViewFlowLayoutInvalidationContext context]];
-    [self.collectionView reloadData];
-
     if (self.automaticallyScrollsToMostRecentMessage) {
         [self scrollToBottomAnimated:animated];
     }
