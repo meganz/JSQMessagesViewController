@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13770" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13770"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
@@ -33,11 +33,14 @@
                     <fontDescription key="fontDescription" name="SFUIText-Regular" family="SF UI Text" pointSize="15"/>
                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                 </textView>
-                <button contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yqt-18-HR0">
-                    <rect key="frame" x="303" y="40" width="55" height="30"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                <button contentMode="scaleToFill" misplaced="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yqt-18-HR0">
+                    <rect key="frame" x="308" y="40" width="50" height="30"/>
                     <color key="backgroundColor" red="0.8862745098" green="0.91764705879999997" blue="0.91764705879999997" alpha="1" colorSpace="calibratedRGB"/>
-                    <fontDescription key="fontDescription" name="SFUIText-Regular" family="SF UI Text" pointSize="15"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="30" id="hj9-jN-QeX"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" name="SFUIText-Regular" family="SF UI Text" pointSize="12"/>
+                    <inset key="contentEdgeInsets" minX="10" minY="0.0" maxX="10" maxY="0.0"/>
                     <state key="normal" title="Send">
                         <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </state>
@@ -54,25 +57,29 @@
                     <state key="normal" title="Button" image="button_text_active"/>
                 </button>
                 <button opaque="NO" tag="12" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fDU-tM-mKk" userLabel="Media">
-                    <rect key="frame" x="117" y="40" width="30" height="30"/>
+                    <rect key="frame" x="111" y="40" width="30" height="30"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <color key="tintColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <state key="normal" title="Button" image="button_media_default"/>
                 </button>
                 <button opaque="NO" tag="13" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mas-Ji-t8P" userLabel="Upload">
-                    <rect key="frame" x="167" y="40" width="30" height="30"/>
+                    <rect key="frame" x="158" y="40" width="30" height="30"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <color key="tintColor" red="0.59215686274509804" green="0.59215686274509804" blue="0.59215686274509804" alpha="1" colorSpace="calibratedRGB"/>
                     <state key="normal" title="Button" image="button_upload_default"/>
                 </button>
                 <button opaque="NO" tag="11" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Q9K-U3-wwY" userLabel="Camera">
-                    <rect key="frame" x="67" y="40" width="30" height="30"/>
+                    <rect key="frame" x="64" y="40" width="30" height="30"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <color key="tintColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <state key="normal" title="Button" image="button_camera_default"/>
                 </button>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="yqt-18-HR0" secondAttribute="trailing" constant="17" id="RAx-ut-da3"/>
+                <constraint firstAttribute="bottom" secondItem="yqt-18-HR0" secondAttribute="bottom" constant="10" id="apA-29-EcK"/>
+            </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
                 <outlet property="accessoryCameraButton" destination="Q9K-U3-wwY" id="LGT-Ok-R6V"/>
