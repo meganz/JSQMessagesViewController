@@ -154,6 +154,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (assign, nonatomic) UIEdgeInsets additionalContentInset;
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *toolbarHeightConstraint;
+@property (weak, nonatomic) IBOutlet UIView *jumpToBottomView;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *jumpToBottomConstraint;
 
 #pragma mark - Class methods
 
