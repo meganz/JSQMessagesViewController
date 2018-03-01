@@ -43,7 +43,7 @@
                     <items/>
                 </toolbar>
                 <view opaque="NO" alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Vhb-c9-1gI">
-                    <rect key="frame" x="113" y="526" width="148" height="34"/>
+                    <rect key="frame" x="155" y="526" width="64" height="34"/>
                     <subviews>
                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="jumpBottom" translatesAutoresizingMaskIntoConstraints="NO" id="tfc-sC-lwN">
                             <rect key="frame" x="20" y="9" width="16" height="16"/>
@@ -54,7 +54,7 @@
                             </constraints>
                         </imageView>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Dy3-ml-lsd">
-                            <rect key="frame" x="44" y="10" width="84" height="14"/>
+                            <rect key="frame" x="44" y="10" width="0.0" height="14"/>
                             <fontDescription key="fontDescription" name="SFUIText-Regular" family="SF UI Text" pointSize="12"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
@@ -64,7 +64,6 @@
                     <constraints>
                         <constraint firstItem="Dy3-ml-lsd" firstAttribute="leading" secondItem="tfc-sC-lwN" secondAttribute="trailing" constant="8" id="1BU-FP-e9B"/>
                         <constraint firstAttribute="trailing" secondItem="Dy3-ml-lsd" secondAttribute="trailing" constant="20" id="6up-OB-g7j"/>
-                        <constraint firstAttribute="width" constant="148" id="72T-uv-20V"/>
                         <constraint firstItem="Dy3-ml-lsd" firstAttribute="top" secondItem="Vhb-c9-1gI" secondAttribute="top" constant="10" id="HU9-Xi-gG0"/>
                         <constraint firstItem="tfc-sC-lwN" firstAttribute="centerY" secondItem="Vhb-c9-1gI" secondAttribute="centerY" id="M9k-E5-D4n"/>
                         <constraint firstAttribute="height" constant="34" id="iES-6g-ihZ"/>
