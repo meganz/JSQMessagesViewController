@@ -1,7 +1,10 @@
 
 #import "MEGAToolbarAssetPicker.h"
 
+#import "ChatVideoUploadQuality.h"
+
 #import "NSString+MNZCategory.h"
+#import "UIApplication+MNZCategory.h"
 #import "UIColor+MNZCategory.h"
 
 const CGFloat kCellSquareSize = 93.0f;
@@ -16,6 +19,8 @@ CGFloat kCollectionViewHeight;
 
 @property (nonatomic) PHFetchResult *fetchResult;
 @property (nonatomic) NSMutableArray<PHAsset *> *selectedAssetsArray;
+
+@property (nonatomic) ChatVideoUploadQuality videoQuality;
 
 @end
 
@@ -44,6 +49,17 @@ CGFloat kCollectionViewHeight;
         CGFloat newY = _collectionView.frame.origin.y - kCollectionViewHeight + _collectionView.frame.size.height;
         _collectionView.frame = CGRectMake(_collectionView.frame.origin.x, newY, _collectionView.frame.size.width, kCollectionViewHeight);
     }
+    
+    //TODO: Remove this code and the property when not limiting the amount of videos:
+    NSNumber *videoQualityNumber = [[NSUserDefaults standardUserDefaults] objectForKey:@"ChatVideoQuality"];
+    if (videoQualityNumber) {
+        self.videoQuality = videoQualityNumber.unsignedIntegerValue;
+    } else {
+        [[NSUserDefaults standardUserDefaults] setObject:@(ChatVideoUploadQualityMedium) forKey:@"ChatVideoQuality"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        self.videoQuality = ChatVideoUploadQualityMedium;
+    }
+    
     return self;
 }
 
@@ -122,6 +138,17 @@ CGFloat kCollectionViewHeight;
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     if ([self.selectedAssetsArray indexOfObject:[self.fetchResult objectAtIndex:indexPath.row]] == NSNotFound) {
+        //TODO: Remove this temporal limitation
+        if (self.videoQuality < ChatVideoUploadQualityOriginal) {
+            for (PHAsset *asset in self.selectedAssetsArray) {
+                if (asset.mediaType == PHAssetMediaTypeVideo) {
+                    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Please, send videos one by one" message:nil preferredStyle:UIAlertControllerStyleAlert];
+                    [alertController addAction:[UIAlertAction actionWithTitle:AMLocalizedString(@"cancel", nil) style:UIAlertActionStyleCancel handler:nil]];
+                    [[UIApplication mnz_visibleViewController] presentViewController:alertController animated:YES completion:nil];
+                    return;
+                }
+            }
+        }
         [self.selectedAssetsArray addObject:[self.fetchResult objectAtIndex:indexPath.row]];
     } else {
         [self.selectedAssetsArray removeObject:[self.fetchResult objectAtIndex:indexPath.row]];
