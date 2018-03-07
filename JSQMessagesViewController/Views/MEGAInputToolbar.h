@@ -71,4 +71,6 @@
  */
 @property (weak, nonatomic, readonly, nullable) MEGAToolbarContentView *imagePickerView;
 
+- (void)mnz_accesoryButtonPressed:(UIButton *)sender;
+
 @end
