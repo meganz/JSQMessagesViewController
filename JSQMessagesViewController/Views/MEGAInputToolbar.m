@@ -203,6 +203,7 @@ CGFloat kImagePickerViewHeight;
                     [self.contentView.textView becomeFirstResponder];
                 }
             }
+            [self.delegate messagesInputToolbar:self didPressAccessoryButton:sender];
             break;
             
         case MEGAChatAccessoryButtonImage:
@@ -259,6 +260,7 @@ CGFloat kImagePickerViewHeight;
                     }
                 }
             }
+            [self.delegate messagesInputToolbar:self didPressAccessoryButton:sender];
             break;
             
         default:
