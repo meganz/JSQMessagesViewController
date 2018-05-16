@@ -100,7 +100,6 @@ CGFloat kImagePickerViewHeight;
     [self.delegate messagesInputToolbar:self needsResizeToHeight:kTextContentViewHeight];
     
     textContentView.textView.placeHolderTextColor = [UIColor mnz_grayCCCCCC];
-    textContentView.textView.placeHolder = AMLocalizedString(@"writeAMessage", @"Message box label which shows that user can type message text in this textview");
     textContentView.textView.font = [UIFont mnz_SFUIRegularWithSize:15.0f];
     textContentView.textView.textColor = [UIColor mnz_black333333];
     textContentView.textView.tintColor = [UIColor mnz_green00BFA5];
