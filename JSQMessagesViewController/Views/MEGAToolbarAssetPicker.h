@@ -9,6 +9,7 @@
 @required
 
 - (void)assetPicker:(MEGAToolbarAssetPicker *)assetPicker didChangeSelectionTo:(NSArray<PHAsset *> *)assetsArray;
+- (void)requestAssetFailedWithError:(NSError *)error;
 
 @end
 

@@ -301,6 +301,10 @@ CGFloat kImagePickerViewHeight;
     [self.delegate messagesInputToolbar:self needsResizeToHeight:kImagePickerViewHeight];
 }
 
+- (void)requestAssetFailedWithError:(NSError *)error {
+    [self.delegate messagesInputToolbar:self assetLoadFailed:error];
+}
+
 #pragma mark - Notifications
 
 - (void)textViewTextDidChangeNotification:(NSNotification *)notification {

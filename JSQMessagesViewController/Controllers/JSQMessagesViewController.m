@@ -741,6 +741,13 @@ extern const CGFloat kTextContentViewHeight;
     NSAssert(NO, @"Error! required method not implemented in subclass. Need to implement %s", __PRETTY_FUNCTION__);
 }
 
+- (void)messagesInputToolbar:(MEGAInputToolbar *)toolbar assetLoadFailed:(NSError *)error {    
+    NSString *message = [[[[[error.userInfo objectForKey:@"NSUnderlyingError"] userInfo] objectForKey:@"NSUnderlyingError"] userInfo] objectForKey:@"NSLocalizedDescription"];
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:AMLocalizedString(@"error", nil) message:message preferredStyle:UIAlertControllerStyleAlert];
+    [alertController addAction:[UIAlertAction actionWithTitle:AMLocalizedString(@"ok", nil) style:UIAlertActionStyleCancel handler:nil]];
+    [self presentViewController:alertController animated:YES completion:nil];
+}
+
 - (void)messagesInputToolbar:(MEGAInputToolbar *)toolbar didPressAccessoryButton:(UIButton *)sender {
     [self didPressAccessoryButton:sender];
 }
