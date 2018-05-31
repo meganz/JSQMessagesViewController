@@ -40,7 +40,7 @@ CGFloat kImagePickerViewHeight;
     kImagePickerViewHeight = kButtonBarHeight + (kCellRows+1)*kCellInset + kCellRows*kCellSquareSize;
     _selectedAssetsArray = [NSMutableArray new];
     
-    _contentView = [self loadToolbarTextContentView];
+    [self loadToolbarTextContentView];
 }
 
 - (void)layoutSubviews {
@@ -74,22 +74,23 @@ CGFloat kImagePickerViewHeight;
     }
 }
 
-- (MEGAToolbarContentView *)loadToolbarTextContentView {
+- (void)loadToolbarTextContentView {
     NSArray *nibViews = [[NSBundle bundleForClass:[MEGAToolbarContentView class]] loadNibNamed:@"MEGAToolbarTextContentView"
                                                                                          owner:nil
                                                                                        options:nil];
     MEGAToolbarContentView *textContentView = nibViews.firstObject;
     [self setupTextContentView:textContentView];
-    return textContentView;
+    _contentView = textContentView;
+    [self.delegate messagesInputToolbar:self didLoadContentView:self.contentView];
 }
 
-- (MEGAToolbarContentView *)loadToolbarImagePickerView {
+- (void)loadToolbarImagePickerView {
     NSArray *nibViews = [[NSBundle bundleForClass:[MEGAToolbarContentView class]] loadNibNamed:@"MEGAToolbarImagePickerView"
                                                                                          owner:nil
                                                                                        options:nil];
     MEGAToolbarContentView *imagePickerView = nibViews.firstObject;
     [self setupImagePickerView:imagePickerView];
-    return imagePickerView;
+    _imagePickerView = imagePickerView;
 }
 
 - (void)setupTextContentView:(MEGAToolbarContentView *)textContentView {
@@ -99,13 +100,6 @@ CGFloat kImagePickerViewHeight;
     [self addTargetsToView:textContentView];
     [self.delegate messagesInputToolbar:self needsResizeToHeight:kTextContentViewHeight];
     
-    textContentView.textView.placeHolderTextColor = [UIColor mnz_grayCCCCCC];
-    textContentView.textView.font = [UIFont mnz_SFUIRegularWithSize:15.0f];
-    textContentView.textView.textColor = [UIColor mnz_black333333];
-    textContentView.textView.tintColor = [UIColor mnz_green00BFA5];
-    
-    textContentView.textView.placeHolder = AMLocalizedString(@"writeAMessage", @"Message box label which shows that user can type message text in this textview");
-
     [self updateSendButtonEnabledState];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -180,7 +174,7 @@ CGFloat kImagePickerViewHeight;
         self.selectedAssetsArray = [NSMutableArray new];
         [self assetPicker:nil didChangeSelectionTo:self.selectedAssetsArray];
         [self.imagePickerView removeFromSuperview];
-        _contentView = [self loadToolbarTextContentView];
+        [self loadToolbarTextContentView];
     }
 }
 
@@ -189,7 +183,7 @@ CGFloat kImagePickerViewHeight;
         case MEGAChatAccessoryButtonText:
             if (self.imagePickerView) {
                 [self.imagePickerView removeFromSuperview];
-                _contentView = [self loadToolbarTextContentView];
+                [self loadToolbarTextContentView];
                 // Become first responder unanimated:
                 [UIView animateWithDuration:0.0f
                                  animations:^{
@@ -218,7 +212,7 @@ CGFloat kImagePickerViewHeight;
                                  }
                                  completion:^(BOOL finished){
                                      [self.imagePickerView removeFromSuperview];
-                                     _contentView = [self loadToolbarTextContentView];
+                                     [self loadToolbarTextContentView];
                                  }];
             } else {
                 if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusNotDetermined) {
@@ -228,7 +222,7 @@ CGFloat kImagePickerViewHeight;
                                 if (!self.imagePickerView) {
                                     [self.contentView.textView removeObserver:self forKeyPath:@"text"];
                                     [self.contentView removeFromSuperview];
-                                    _imagePickerView = [self loadToolbarImagePickerView];
+                                    [self loadToolbarImagePickerView];
                                 }
                             } else {
                                 self.contentView.accessoryImageButton.enabled = NO;
@@ -240,7 +234,7 @@ CGFloat kImagePickerViewHeight;
                         BOOL keyboardWasPresent = [self.contentView.textView isFirstResponder];
                         [self.contentView.textView removeObserver:self forKeyPath:@"text"];
                         [self.contentView removeFromSuperview];
-                        _imagePickerView = [self loadToolbarImagePickerView];
+                        [self loadToolbarImagePickerView];
                         if (!keyboardWasPresent) {
                             self.imagePickerView.frame = CGRectMake(
                                                                     self.imagePickerView.frame.origin.x,
@@ -266,7 +260,7 @@ CGFloat kImagePickerViewHeight;
         default:
             if (self.imagePickerView) {
                 [self.imagePickerView removeFromSuperview];
-                _contentView = [self loadToolbarTextContentView];
+                [self loadToolbarTextContentView];
             } else if ([self.contentView.textView isFirstResponder]) {
                 [self.contentView.textView resignFirstResponder];
             }

@@ -749,6 +749,10 @@ extern const CGFloat kTextContentViewHeight;
     self.toolbarHeightConstraint.constant = newToolbarHeight;
 }
 
+- (void)messagesInputToolbar:(MEGAInputToolbar *)toolbar didLoadContentView:(MEGAToolbarContentView *)toolbarContentView {
+    [self customToolbarContentView];
+}
+
 - (NSString *)jsq_currentlyComposedMessageText
 {
     //  auto-accept any auto-correct suggestions
@@ -756,6 +760,10 @@ extern const CGFloat kTextContentViewHeight;
     [self.inputToolbar.contentView.textView.inputDelegate selectionDidChange:self.inputToolbar.contentView.textView];
 
     return [self.inputToolbar.contentView.textView.text jsq_stringByTrimingWhitespace];
+}
+
+- (void)customToolbarContentView {
+    NSAssert(NO, @"Error! required method not implemented in subclass. Need to implement %s", __PRETTY_FUNCTION__);
 }
 
 #pragma mark - Input

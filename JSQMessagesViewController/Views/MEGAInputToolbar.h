@@ -48,6 +48,9 @@
 - (void)messagesInputToolbar:(MEGAInputToolbar *_Nonnull)toolbar
          needsResizeToHeight:(CGFloat)newToolbarHeight;
 
+- (void)messagesInputToolbar:(MEGAInputToolbar *_Nonnull)toolbar
+          didLoadContentView:(MEGAToolbarContentView *_Nonnull)toolbarContentView;
+
 @end
 
 /**
