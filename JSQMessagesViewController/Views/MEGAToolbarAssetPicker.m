@@ -74,11 +74,6 @@ CGFloat kCollectionViewHeight;
     PHImageRequestID requestId = (PHImageRequestID) [self.requestIdIndexPathDictionary objectForKey:indexPath].intValue;
     [self.requestIdIndexPathDictionary removeObjectForKey:indexPath];
     [self.progressIndexPathDictionary removeObjectForKey:indexPath];
-    dispatch_async(dispatch_get_main_queue(), ^{
-        if ([[self.collectionView indexPathsForVisibleItems] containsObject:indexPath]) {
-            [self.collectionView reloadItemsAtIndexPaths:@[indexPath]];
-        }
-    });
     if (data) {
         if ([self.selectedAssetsArray indexOfObject:[self.fetchResult objectAtIndex:indexPath.row]] == NSNotFound) {
             MEGALogInfo(@"[AP] Add asset %@ to selected array", asset.localIdentifier);
@@ -86,7 +81,6 @@ CGFloat kCollectionViewHeight;
         }
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.collectionView reloadItemsAtIndexPaths:@[indexPath]];
             [self.delegate assetPicker:self didChangeSelectionTo:self.selectedAssetsArray];
         });
     } else {
@@ -100,6 +94,12 @@ CGFloat kCollectionViewHeight;
             });
         }
     }
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if ([[self.collectionView indexPathsForVisibleItems] containsObject:indexPath]) {
+            [self.collectionView reloadItemsAtIndexPaths:@[indexPath]];
+        }
+    });
 }
 
 - (void)progressHandlerWithProgress:(double)progress indexPath:(NSIndexPath *)indexPath error:(NSError *)error {
@@ -112,10 +112,29 @@ CGFloat kCollectionViewHeight;
         [self.progressIndexPathDictionary setObject:@(progress) forKey:indexPath];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            if ([[self.collectionView indexPathsForVisibleItems] containsObject:indexPath]) {
-                [self.collectionView reloadItemsAtIndexPaths:@[indexPath]];
+            UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:indexPath];
+            if (cell) {
+                [self drawAssetProgressInCell:cell indexPath:indexPath];
             }
         });
+    }
+}
+
+- (void)drawAssetProgressInCell:(UICollectionViewCell *)cell indexPath:(NSIndexPath *)indexPath {
+    NSNumber *progress = [self.progressIndexPathDictionary objectForKey:indexPath];
+    if (progress) {
+        PWProgressView *progressView;
+        if ([[cell.backgroundView.subviews lastObject] isKindOfClass:[PWProgressView class]]) {
+            progressView = [cell.backgroundView.subviews lastObject];
+        } else {
+            progressView = [[PWProgressView alloc] initWithFrame:cell.backgroundView.frame];
+            [cell.backgroundView addSubview:progressView];
+        }
+        progressView.progress = progress.doubleValue;
+    } else {
+        if ([[cell.backgroundView.subviews lastObject] isKindOfClass:[PWProgressView class]]) {
+            [[cell.backgroundView.subviews lastObject] removeFromSuperview];
+        }
     }
 }
 
@@ -166,23 +185,11 @@ CGFloat kCollectionViewHeight;
         [cell.contentView addSubview:checkView];
     }
     
-    NSNumber *progress = [self.progressIndexPathDictionary objectForKey:indexPath];
-    if (progress && [self.requestIdIndexPathDictionary objectForKey:indexPath]) {
-        PWProgressView *progressView;
-        if ([[cell.backgroundView.subviews lastObject] isKindOfClass:[PWProgressView class]]) {
-            progressView = [cell.backgroundView.subviews lastObject];
-        } else {
-            progressView = [[PWProgressView alloc] initWithFrame:cell.backgroundView.frame];
-            [cell.backgroundView addSubview:progressView];
-        }
-        progressView.progress = progress.doubleValue;
-    } else {
-        if ([[cell.backgroundView.subviews lastObject] isKindOfClass:[PWProgressView class]]) {
-            [[cell.backgroundView.subviews lastObject] removeFromSuperview];
-        }
-    }
-    
     cell.backgroundColor = [UIColor mnz_redFF333A];
+    
+    if ([self.requestIdIndexPathDictionary objectForKey:indexPath]) {
+        [self drawAssetProgressInCell:cell indexPath:indexPath];
+    }
     
     return cell;
 }
@@ -200,7 +207,6 @@ CGFloat kCollectionViewHeight;
         MEGALogInfo(@"[AP] Cancel image/video request id %d", requestId);
         [self.requestIdIndexPathDictionary removeObjectForKey:indexPath];
         [self.progressIndexPathDictionary removeObjectForKey:indexPath];
-        [collectionView reloadItemsAtIndexPaths:@[indexPath]];
         return;
     }
     PHAsset *asset = [self.fetchResult objectAtIndex:indexPath.row];
@@ -208,7 +214,6 @@ CGFloat kCollectionViewHeight;
     if ([self.selectedAssetsArray indexOfObject:asset] != NSNotFound) {
         MEGALogInfo(@"[AP] Remove asset %@ from selected array", asset.localIdentifier);
         [self.selectedAssetsArray removeObject:[self.fetchResult objectAtIndex:indexPath.row]];
-        [collectionView reloadItemsAtIndexPaths:@[indexPath]];
         [self.delegate assetPicker:self didChangeSelectionTo:self.selectedAssetsArray];
         return;
     }
