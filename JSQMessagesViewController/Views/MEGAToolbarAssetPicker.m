@@ -70,7 +70,7 @@ CGFloat kCollectionViewHeight;
     [self.collectionView reloadData];
 }
 
-- (void)requestedAsset:(id)asset indexPath:(NSIndexPath *)indexPath info:(NSDictionary *)info {
+- (void)requestedAsset:(PHAsset *)asset data:(id)data indexPath:(NSIndexPath *)indexPath info:(NSDictionary *)info {
     PHImageRequestID requestId = (PHImageRequestID) [self.requestIdIndexPathDictionary objectForKey:indexPath].intValue;
     [self.requestIdIndexPathDictionary removeObjectForKey:indexPath];
     [self.progressIndexPathDictionary removeObjectForKey:indexPath];
@@ -79,22 +79,22 @@ CGFloat kCollectionViewHeight;
             [self.collectionView reloadItemsAtIndexPaths:@[indexPath]];
         }
     });
-    if (asset) {
+    if (data) {
         if ([self.selectedAssetsArray indexOfObject:[self.fetchResult objectAtIndex:indexPath.row]] == NSNotFound) {
+            MEGALogInfo(@"[AP] Add asset %@ to selected array", asset.localIdentifier);
             [self.selectedAssetsArray addObject:[self.fetchResult objectAtIndex:indexPath.row]];
-        } else {
-            [self.selectedAssetsArray removeObject:[self.fetchResult objectAtIndex:indexPath.row]];
         }
+        
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.collectionView reloadItemsAtIndexPaths:@[indexPath]];
             [self.delegate assetPicker:self didChangeSelectionTo:self.selectedAssetsArray];
         });
     } else {
         if ([info objectForKey:@"PHImageCancelledKey"]) {
-            MEGALogInfo(@"[AP] Request asset cancelled by the user, request id: %d", requestId);
+            MEGALogInfo(@"[AP] Request asset %@ cancelled by the user, request id %d", asset.localIdentifier, requestId);
         } else {
             NSError *error = [info objectForKey:@"PHImageErrorKey"];
-            MEGALogError(@"[AP] Request asset: %@ failed with error: %@", asset, error);
+            MEGALogError(@"[AP] Request asset %@ failed with error %@", asset.localIdentifier, error);
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.delegate requestAssetFailedWithError:error];
             });
@@ -197,13 +197,22 @@ CGFloat kCollectionViewHeight;
     __block PHImageRequestID requestId = (PHImageRequestID) [self.requestIdIndexPathDictionary objectForKey:indexPath].intValue;
     if (requestId) {
         [[PHImageManager defaultManager] cancelImageRequest:requestId];
+        MEGALogInfo(@"[AP] Cancel image/video request id %d", requestId);
         [self.requestIdIndexPathDictionary removeObjectForKey:indexPath];
         [self.progressIndexPathDictionary removeObjectForKey:indexPath];
         [collectionView reloadItemsAtIndexPaths:@[indexPath]];
-        MEGALogInfo(@"[AP] Cancel image/video request id %d", requestId);
         return;
     }
     PHAsset *asset = [self.fetchResult objectAtIndex:indexPath.row];
+    
+    if ([self.selectedAssetsArray indexOfObject:asset] != NSNotFound) {
+        MEGALogInfo(@"[AP] Remove asset %@ from selected array", asset.localIdentifier);
+        [self.selectedAssetsArray removeObject:[self.fetchResult objectAtIndex:indexPath.row]];
+        [collectionView reloadItemsAtIndexPaths:@[indexPath]];
+        [self.delegate assetPicker:self didChangeSelectionTo:self.selectedAssetsArray];
+        return;
+    }
+    
     switch (asset.mediaType) {
         case PHAssetMediaTypeImage: {
             PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
@@ -217,10 +226,10 @@ CGFloat kCollectionViewHeight;
                          requestImageDataForAsset:asset
                          options:options
                          resultHandler:^(NSData *imageData, NSString *dataUTI, UIImageOrientation orientation, NSDictionary *info) {
-                             [self requestedAsset:imageData indexPath:indexPath info:info];
+                             [self requestedAsset:asset data:imageData indexPath:indexPath info:info];
                          }];
             
-            MEGALogInfo(@"[AP] Request image data id %d", requestId);
+            MEGALogInfo(@"[AP] Request image data id %d, asset %@", requestId, asset.localIdentifier);
             
             break;
         }
@@ -234,11 +243,11 @@ CGFloat kCollectionViewHeight;
             };
             requestId = [[PHImageManager defaultManager]
                          requestAVAssetForVideo:asset
-                         options:options resultHandler:^(AVAsset *asset, AVAudioMix *audioMix, NSDictionary *info) {
-                             [self requestedAsset:asset indexPath:indexPath info:info];
+                         options:options resultHandler:^(AVAsset *data, AVAudioMix *audioMix, NSDictionary *info) {
+                             [self requestedAsset:asset data:data indexPath:indexPath info:info];
                          }];
             
-            MEGALogInfo(@"[AP] Request video id %d", requestId);
+            MEGALogInfo(@"[AP] Request video id %d, asset %@", requestId, asset.localIdentifier);
             
             break;
         }
