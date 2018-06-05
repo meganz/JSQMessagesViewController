@@ -48,6 +48,9 @@
 - (void)messagesInputToolbar:(MEGAInputToolbar *_Nonnull)toolbar
          needsResizeToHeight:(CGFloat)newToolbarHeight;
 
+- (void)messagesInputToolbar:(MEGAInputToolbar *_Nonnull)toolbar
+          didLoadContentView:(MEGAToolbarContentView *_Nonnull)toolbarContentView;
+
 @end
 
 /**
@@ -70,5 +73,7 @@
  *  Returns the image picker view of the toolbar. This view contains all subviews of the toolbar.
  */
 @property (weak, nonatomic, readonly, nullable) MEGAToolbarContentView *imagePickerView;
+
+- (void)mnz_accesoryButtonPressed:(UIButton *)sender;
 
 @end

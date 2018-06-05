@@ -31,6 +31,7 @@ static NSMutableSet *jsqMessagesCollectionViewCellActions = nil;
 
 @interface JSQMessagesCollectionViewCell ()
 
+@property (weak, nonatomic) IBOutlet JSQMessagesLabel *unreadMessagesLabel;
 @property (weak, nonatomic) IBOutlet JSQMessagesLabel *cellTopLabel;
 @property (weak, nonatomic) IBOutlet JSQMessagesLabel *messageBubbleTopLabel;
 @property (weak, nonatomic) IBOutlet JSQMessagesLabel *cellBottomLabel;
@@ -51,6 +52,7 @@ static NSMutableSet *jsqMessagesCollectionViewCellActions = nil;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *textViewAvatarHorizontalSpaceConstraint;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *textViewMarginHorizontalSpaceConstraint;
 
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *unreadMessagesViewHeightConstraint;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *cellTopLabelHeightConstraint;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *messageBubbleTopLabelHeightConstraint;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *cellBottomLabelHeightConstraint;
@@ -117,6 +119,12 @@ static NSMutableSet *jsqMessagesCollectionViewCellActions = nil;
     self.backgroundColor = [UIColor whiteColor];
     self.avatarViewSize = CGSizeZero;
     
+    UIFont *unreadLabelFont = [UIFont preferredFontForTextStyle:UIFontTextStyleCaption1];
+    self.cellTopLabel.textAlignment = NSTextAlignmentCenter;
+    self.cellTopLabel.font = unreadLabelFont;
+    self.cellTopLabel.textColor = [UIColor lightGrayColor];
+    self.cellTopLabel.numberOfLines = 0;
+    
     UIFont *topLabelFont = [UIFont preferredFontForTextStyle:UIFontTextStyleCaption1];
     self.cellTopLabel.textAlignment = NSTextAlignmentLeft;
     self.cellTopLabel.font = topLabelFont;
@@ -135,6 +143,7 @@ static NSMutableSet *jsqMessagesCollectionViewCellActions = nil;
 
     [self configureAccessoryButton];
 
+    self.unreadMessagesViewHeightConstraint.constant = unreadLabelFont.pointSize;
     self.cellTopLabelHeightConstraint.constant = topLabelFont.pointSize;
     self.messageBubbleTopLabelHeightConstraint.constant = messageBubbleTopLabelFont.pointSize;
     self.cellBottomLabelHeightConstraint.constant = bottomLabelFont.pointSize;
@@ -142,17 +151,6 @@ static NSMutableSet *jsqMessagesCollectionViewCellActions = nil;
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(jsq_handleTapGesture:)];
     [self addGestureRecognizer:tap];
     self.tapGestureRecognizer = tap;
-    
-    // Bottom border for top label (hidden if its height is 0)
-    CALayer* layer = self.cellTopLabel.layer;
-    CALayer *bottomBorder = [CALayer layer];
-    bottomBorder.borderColor = [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.1].CGColor;
-    bottomBorder.borderWidth = 1;
-    CGFloat screenWidth = [[UIScreen mainScreen] bounds].size.width;
-    CGFloat screenHeight = [[UIScreen mainScreen] bounds].size.height;
-    CGFloat frameWidth = screenWidth > screenHeight ? screenWidth : screenHeight;
-    bottomBorder.frame = CGRectMake(0.0f, layer.frame.size.height-1.0f, frameWidth, 1.0f);
-    [layer addSublayer:bottomBorder];
 }
 
 - (void)configureAccessoryButton
@@ -220,6 +218,9 @@ static NSMutableSet *jsqMessagesCollectionViewCellActions = nil;
     [self jsq_updateConstraint:self.messageBubbleContainerWidthConstraint
                   withConstant:customAttributes.messageBubbleContainerViewWidth];
 
+    [self jsq_updateConstraint:self.unreadMessagesViewHeightConstraint
+                  withConstant:customAttributes.unreadMessagesLabelHeight];
+    
     [self jsq_updateConstraint:self.cellTopLabelHeightConstraint
                   withConstant:customAttributes.cellTopLabelHeight];
 
@@ -234,6 +235,21 @@ static NSMutableSet *jsqMessagesCollectionViewCellActions = nil;
     }
     else if ([self isKindOfClass:[JSQMessagesCollectionViewCellOutgoing class]]) {
         self.avatarViewSize = customAttributes.outgoingAvatarViewSize;
+    }
+    
+    CGFloat screenWidth = [[UIScreen mainScreen] bounds].size.width;
+    CGFloat screenHeight = [[UIScreen mainScreen] bounds].size.height;
+    CGFloat frameWidth = screenWidth > screenHeight ? screenWidth : screenHeight;
+    if (self.cellTopLabelHeightConstraint.constant > 0.0f) {
+        // Bottom border for top label
+        CALayer* layer = self.cellTopLabel.layer;
+        CALayer *border = [CALayer layer];
+        border.borderColor = [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.1].CGColor;
+        border.borderWidth = 1.0f;
+        border.frame = CGRectMake(0.0f, self.cellTopLabelHeightConstraint.constant - 1.0f, frameWidth, 1.0f);
+        [layer addSublayer:border];
+    } else {
+        self.cellTopLabel.layer.sublayers = nil;
     }
 }
 

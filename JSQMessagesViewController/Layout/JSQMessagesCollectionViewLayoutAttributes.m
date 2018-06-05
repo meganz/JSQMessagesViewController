@@ -57,6 +57,12 @@
     _outgoingAvatarViewSize = [self jsq_correctedAvatarSizeFromSize:outgoingAvatarViewSize];
 }
 
+- (void)setUnreadMessagesLabelHeight:(CGFloat)unreadMessagesLabelHeight
+{
+    NSParameterAssert(unreadMessagesLabelHeight >= 0.0f);
+    _unreadMessagesLabelHeight = [self jsq_correctedLabelHeightForHeight:unreadMessagesLabelHeight];
+}
+
 - (void)setCellTopLabelHeight:(CGFloat)cellTopLabelHeight
 {
     NSParameterAssert(cellTopLabelHeight >= 0.0f);
@@ -108,6 +114,7 @@
             || !CGSizeEqualToSize(layoutAttributes.incomingAvatarViewSize, self.incomingAvatarViewSize)
             || !CGSizeEqualToSize(layoutAttributes.outgoingAvatarViewSize, self.outgoingAvatarViewSize)
             || (int)layoutAttributes.messageBubbleContainerViewWidth != (int)self.messageBubbleContainerViewWidth
+            || (int)layoutAttributes.unreadMessagesLabelHeight != (int)self.unreadMessagesLabelHeight
             || (int)layoutAttributes.cellTopLabelHeight != (int)self.cellTopLabelHeight
             || (int)layoutAttributes.messageBubbleTopLabelHeight != (int)self.messageBubbleTopLabelHeight
             || (int)layoutAttributes.cellBottomLabelHeight != (int)self.cellBottomLabelHeight) {
@@ -139,6 +146,7 @@
     copy.textViewTextContainerInsets = self.textViewTextContainerInsets;
     copy.incomingAvatarViewSize = self.incomingAvatarViewSize;
     copy.outgoingAvatarViewSize = self.outgoingAvatarViewSize;
+    copy.unreadMessagesLabelHeight = self.unreadMessagesLabelHeight;
     copy.cellTopLabelHeight = self.cellTopLabelHeight;
     copy.messageBubbleTopLabelHeight = self.messageBubbleTopLabelHeight;
     copy.cellBottomLabelHeight = self.cellBottomLabelHeight;
