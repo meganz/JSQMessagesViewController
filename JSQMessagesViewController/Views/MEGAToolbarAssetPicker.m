@@ -137,9 +137,10 @@ CGFloat kCollectionViewHeight;
 #pragma mark - UICollectionViewDelegate
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    if ([self.selectedAssetsArray indexOfObject:[self.fetchResult objectAtIndex:indexPath.row]] == NSNotFound) {
+    PHAsset *selectedAsset = [self.fetchResult objectAtIndex:indexPath.row];
+    if ([self.selectedAssetsArray indexOfObject:selectedAsset] == NSNotFound) {
         //TODO: Remove this temporal limitation
-        if (self.videoQuality < ChatVideoUploadQualityOriginal) {
+        if (self.videoQuality < ChatVideoUploadQualityOriginal && selectedAsset.mediaType == PHAssetMediaTypeVideo) {
             for (PHAsset *asset in self.selectedAssetsArray) {
                 if (asset.mediaType == PHAssetMediaTypeVideo) {
                     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Please, send videos one by one" message:nil preferredStyle:UIAlertControllerStyleAlert];
