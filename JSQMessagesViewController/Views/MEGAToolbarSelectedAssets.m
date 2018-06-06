@@ -90,6 +90,7 @@ CGFloat kSelectedAssetCellSquareSize = 134.0f;
 #pragma mark - UICollectionViewDelegateFlowLayout
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+    MEGALogInfo(@"[AP] Remove asset %@ from selected array", [self.selectedAssetsArray objectAtIndex:indexPath.row].localIdentifier);
     [self.selectedAssetsArray removeObjectAtIndex:indexPath.row];
     [self.delegate assetPicker:nil didChangeSelectionTo:self.selectedAssetsArray];
     [collectionView reloadData];

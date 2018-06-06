@@ -291,8 +291,15 @@ CGFloat kImagePickerViewHeight;
         kImagePickerViewHeight = kSelectedAssetsViewHeight + (kCellRows+1)*kCellInset + kCellRows*kCellSquareSize;
         self.imagePickerView.selectedAssetsCollectionView.frame = CGRectMake(0.0f, 1.0f, self.frame.size.width, kSelectedAssetsViewHeight - kButtonBarHeight);
     }
-    self.imagePickerView.frame = self.frame = CGRectMake(0.0f, 0.0f, self.frame.size.width, kImagePickerViewHeight);
-    [self.delegate messagesInputToolbar:self needsResizeToHeight:kImagePickerViewHeight];
+    
+    if (self.imagePickerView) {
+        self.imagePickerView.frame = self.frame = CGRectMake(0.0f, 0.0f, self.frame.size.width, kImagePickerViewHeight);
+        [self.delegate messagesInputToolbar:self needsResizeToHeight:kImagePickerViewHeight];
+    }
+}
+
+- (void)requestAssetFailedWithError:(NSError *)error {
+    [self.delegate messagesInputToolbar:self assetLoadFailed:error];
 }
 
 #pragma mark - Notifications
