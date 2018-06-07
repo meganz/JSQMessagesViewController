@@ -143,8 +143,8 @@ CGFloat kCollectionViewHeight;
         if (self.videoQuality < ChatVideoUploadQualityOriginal && selectedAsset.mediaType == PHAssetMediaTypeVideo) {
             for (PHAsset *asset in self.selectedAssetsArray) {
                 if (asset.mediaType == PHAssetMediaTypeVideo) {
-                    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Please, send videos one by one" message:nil preferredStyle:UIAlertControllerStyleAlert];
-                    [alertController addAction:[UIAlertAction actionWithTitle:AMLocalizedString(@"cancel", nil) style:UIAlertActionStyleCancel handler:nil]];
+                    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:AMLocalizedString(@"sendVideosOneByOne", @"Alert title shown when you try to select more than one video to send them through the chat") message:nil preferredStyle:UIAlertControllerStyleAlert];
+                    [alertController addAction:[UIAlertAction actionWithTitle:AMLocalizedString(@"ok", nil) style:UIAlertActionStyleCancel handler:nil]];
                     [[UIApplication mnz_visibleViewController] presentViewController:alertController animated:YES completion:nil];
                     return;
                 }
