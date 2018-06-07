@@ -6,6 +6,7 @@
 #import "NSString+MNZCategory.h"
 #import "UIApplication+MNZCategory.h"
 #import "UIColor+MNZCategory.h"
+#import "PWProgressView.h"
 
 const CGFloat kCellSquareSize = 93.0f;
 const CGFloat kCellInset = 1.0f;
@@ -19,6 +20,8 @@ CGFloat kCollectionViewHeight;
 
 @property (nonatomic) PHFetchResult *fetchResult;
 @property (nonatomic) NSMutableArray<PHAsset *> *selectedAssetsArray;
+@property (nonatomic) NSMutableDictionary <NSIndexPath *, NSNumber *> *requestIdIndexPathDictionary;
+@property (nonatomic) NSMutableDictionary <NSIndexPath *, NSNumber *> *progressIndexPathDictionary;
 
 @property (nonatomic) ChatVideoUploadQuality videoQuality;
 
@@ -36,6 +39,8 @@ CGFloat kCollectionViewHeight;
         _delegate = delegate;
         [self fetchAssets];
         _selectedAssetsArray = selectedAssetsArray;
+        _requestIdIndexPathDictionary = [[NSMutableDictionary alloc] init];
+        _progressIndexPathDictionary = [[NSMutableDictionary alloc] init];
 
         [collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"assetCellId"];
         
@@ -63,6 +68,8 @@ CGFloat kCollectionViewHeight;
     return self;
 }
 
+#pragma mark - Private
+
 - (void)setSelectionTo:(NSMutableArray<PHAsset *> *)selectedAssetsArray {
     self.selectedAssetsArray = selectedAssetsArray;
     [self.collectionView reloadData];
@@ -77,6 +84,74 @@ CGFloat kCollectionViewHeight;
 - (void)reloadUI {
     [self fetchAssets];
     [self.collectionView reloadData];
+}
+
+- (void)requestedAsset:(PHAsset *)asset data:(id)data indexPath:(NSIndexPath *)indexPath info:(NSDictionary *)info {
+    PHImageRequestID requestId = (PHImageRequestID) [self.requestIdIndexPathDictionary objectForKey:indexPath].intValue;
+    [self.requestIdIndexPathDictionary removeObjectForKey:indexPath];
+    [self.progressIndexPathDictionary removeObjectForKey:indexPath];
+    if (data) {
+        if ([self.selectedAssetsArray indexOfObject:[self.fetchResult objectAtIndex:indexPath.row]] == NSNotFound) {
+            MEGALogInfo(@"[AP] Add asset %@ to selected array", asset.localIdentifier);
+            [self.selectedAssetsArray addObject:[self.fetchResult objectAtIndex:indexPath.row]];
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.delegate assetPicker:self didChangeSelectionTo:self.selectedAssetsArray];
+        });
+    } else {
+        if ([info objectForKey:@"PHImageCancelledKey"]) {
+            MEGALogInfo(@"[AP] Request asset %@ cancelled by the user, request id %d", asset.localIdentifier, requestId);
+        } else {
+            NSError *error = [info objectForKey:@"PHImageErrorKey"];
+            MEGALogError(@"[AP] Request asset %@ failed with error %@", asset.localIdentifier, error);
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.delegate requestAssetFailedWithError:error];
+            });
+        }
+    }
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if ([[self.collectionView indexPathsForVisibleItems] containsObject:indexPath]) {
+            [self.collectionView reloadItemsAtIndexPaths:@[indexPath]];
+        }
+    });
+}
+
+- (void)progressHandlerWithProgress:(double)progress indexPath:(NSIndexPath *)indexPath error:(NSError *)error {
+    PHImageRequestID requestId = (PHImageRequestID) [self.requestIdIndexPathDictionary objectForKey:indexPath].intValue;
+    if (error) {
+        MEGALogError(@"[AP] Progress handler for id %d failed with error %@", requestId, error);
+    } else {
+        MEGALogInfo(@"[AP] Progress %f for id %d", progress, requestId);
+        
+        [self.progressIndexPathDictionary setObject:@(progress) forKey:indexPath];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:indexPath];
+            if (cell) {
+                [self drawAssetProgressInCell:cell indexPath:indexPath];
+            }
+        });
+    }
+}
+
+- (void)drawAssetProgressInCell:(UICollectionViewCell *)cell indexPath:(NSIndexPath *)indexPath {
+    NSNumber *progress = [self.progressIndexPathDictionary objectForKey:indexPath];
+    if (progress) {
+        PWProgressView *progressView;
+        if ([[cell.backgroundView.subviews lastObject] isKindOfClass:[PWProgressView class]]) {
+            progressView = [cell.backgroundView.subviews lastObject];
+        } else {
+            progressView = [[PWProgressView alloc] initWithFrame:cell.backgroundView.frame];
+            [cell.backgroundView addSubview:progressView];
+        }
+        progressView.progress = progress.doubleValue;
+    } else {
+        if ([[cell.backgroundView.subviews lastObject] isKindOfClass:[PWProgressView class]]) {
+            [[cell.backgroundView.subviews lastObject] removeFromSuperview];
+        }
+    }
 }
 
 #pragma mark - UICollectionViewDataSource
@@ -125,7 +200,12 @@ CGFloat kCollectionViewHeight;
         checkView.frame = CGRectMake(kCellSquareSize-18.0f, 7.0f, 12.0f, 12.0f);
         [cell.contentView addSubview:checkView];
     }
+    
     cell.backgroundColor = [UIColor mnz_redFF333A];
+    
+    if ([self.requestIdIndexPathDictionary objectForKey:indexPath]) {
+        [self drawAssetProgressInCell:cell indexPath:indexPath];
+    }
     
     return cell;
 }
@@ -137,7 +217,17 @@ CGFloat kCollectionViewHeight;
 #pragma mark - UICollectionViewDelegate
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+    __block PHImageRequestID requestId = (PHImageRequestID) [self.requestIdIndexPathDictionary objectForKey:indexPath].intValue;
+    if (requestId) {
+        [[PHImageManager defaultManager] cancelImageRequest:requestId];
+        MEGALogInfo(@"[AP] Cancel image/video request id %d", requestId);
+        [self.requestIdIndexPathDictionary removeObjectForKey:indexPath];
+        [self.progressIndexPathDictionary removeObjectForKey:indexPath];
+        return;
+    }
+    
     PHAsset *selectedAsset = [self.fetchResult objectAtIndex:indexPath.row];
+    
     if ([self.selectedAssetsArray indexOfObject:selectedAsset] == NSNotFound) {
         //TODO: Remove this temporal limitation
         if (self.videoQuality < ChatVideoUploadQualityOriginal && selectedAsset.mediaType == PHAssetMediaTypeVideo) {
@@ -150,12 +240,56 @@ CGFloat kCollectionViewHeight;
                 }
             }
         }
-        [self.selectedAssetsArray addObject:[self.fetchResult objectAtIndex:indexPath.row]];
+        
+        switch (selectedAsset.mediaType) {
+            case PHAssetMediaTypeImage: {
+                PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
+                options.version = PHImageRequestOptionsVersionCurrent;
+                options.networkAccessAllowed = YES;
+                options.progressHandler = ^(double progress, NSError *error, BOOL *stop, NSDictionary *info) {
+                    [self progressHandlerWithProgress:progress indexPath:indexPath error:error];
+                };
+                
+                requestId = [[PHImageManager defaultManager]
+                             requestImageDataForAsset:selectedAsset
+                             options:options
+                             resultHandler:^(NSData *imageData, NSString *dataUTI, UIImageOrientation orientation, NSDictionary *info) {
+                                 [self requestedAsset:selectedAsset data:imageData indexPath:indexPath info:info];
+                             }];
+                
+                MEGALogInfo(@"[AP] Request image data id %d, asset %@", requestId, selectedAsset.localIdentifier);
+                
+                break;
+            }
+                
+            case PHAssetMediaTypeVideo: {
+                PHVideoRequestOptions *options = [[PHVideoRequestOptions alloc] init];
+                options.version = PHImageRequestOptionsVersionOriginal;
+                options.networkAccessAllowed = YES;
+                options.progressHandler = ^(double progress, NSError *error, BOOL *stop, NSDictionary *info) {
+                    [self progressHandlerWithProgress:progress indexPath:indexPath error:error];
+                };
+                requestId = [[PHImageManager defaultManager]
+                             requestAVAssetForVideo:selectedAsset
+                             options:options resultHandler:^(AVAsset *data, AVAudioMix *audioMix, NSDictionary *info) {
+                                 [self requestedAsset:selectedAsset data:data indexPath:indexPath info:info];
+                             }];
+                
+                MEGALogInfo(@"[AP] Request video id %d, asset %@", requestId, selectedAsset.localIdentifier);
+                
+                break;
+            }
+                
+            default:
+                break;
+        }
+        
+        [self.requestIdIndexPathDictionary setObject:@(requestId) forKey:indexPath];
     } else {
+        MEGALogInfo(@"[AP] Remove asset %@ from selected array", selectedAsset.localIdentifier);
         [self.selectedAssetsArray removeObject:[self.fetchResult objectAtIndex:indexPath.row]];
+        [self.delegate assetPicker:self didChangeSelectionTo:self.selectedAssetsArray];
     }
-    [collectionView reloadItemsAtIndexPaths:@[indexPath]];
-    [self.delegate assetPicker:self didChangeSelectionTo:self.selectedAssetsArray];
 }
 
 #pragma mark - UICollectionViewDelegateFlowLayout

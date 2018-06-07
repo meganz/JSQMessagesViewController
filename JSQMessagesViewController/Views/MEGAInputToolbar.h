@@ -43,6 +43,15 @@
 - (void)messagesInputToolbar:(MEGAInputToolbar *_Nonnull)toolbar
      didPressAccessoryButton:(UIButton *_Nonnull)sender;
 
+/**
+ *  Tells the delegate that Photos framework failed fetching asset.
+ *
+ *  @param toolbar The object representing the toolbar sending this information.
+ *  @param error The error that received from Photos framework.
+ */
+- (void)messagesInputToolbar:(MEGAInputToolbar *_Nonnull)toolbar
+     assetLoadFailed:(NSError *_Nonnull)error;
+
 @optional
 
 - (void)messagesInputToolbar:(MEGAInputToolbar *_Nonnull)toolbar
@@ -74,6 +83,6 @@
  */
 @property (weak, nonatomic, readonly, nullable) MEGAToolbarContentView *imagePickerView;
 
-- (void)mnz_accesoryButtonPressed:(UIButton *)sender;
+- (void)mnz_accesoryButtonPressed:(UIButton *_Nonnull)sender;
 
 @end
