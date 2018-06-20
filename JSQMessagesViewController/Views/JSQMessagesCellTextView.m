@@ -18,6 +18,7 @@
 
 #import "JSQMessagesCellTextView.h"
 
+#import "Helper.h"
 #import "NSURL+MNZCategory.h"
 
 @interface JSQMessagesCellTextView () <UITextViewDelegate>
@@ -108,19 +109,22 @@
 #pragma mark - UITextViewDelegate
 
 - (BOOL)textView:(UITextView *)textView shouldInteractWithURL:(NSURL *)URL inRange:(NSRange)characterRange interaction:(UITextItemInteraction)interaction {
+    BOOL shouldInteract = YES;
     switch (interaction) {
         case UITextItemInteractionInvokeDefaultAction:
             if ([URL mnz_type] != URLTypeDefault) {
                 [URL mnz_showLinkView];
-                return NO;
+            } else {
+                [Helper presentSafariViewControllerWithURL:URL];
             }
-            
+            shouldInteract = NO;
             break;
             
         default:
             break;
     }
-    return YES;
+    
+    return shouldInteract;
 }
 
 @end
