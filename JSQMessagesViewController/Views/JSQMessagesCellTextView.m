@@ -18,6 +18,13 @@
 
 #import "JSQMessagesCellTextView.h"
 
+#import "Helper.h"
+#import "NSURL+MNZCategory.h"
+
+@interface JSQMessagesCellTextView () <UITextViewDelegate>
+
+@end
+
 @implementation JSQMessagesCellTextView
 
 - (void)awakeFromNib
@@ -40,6 +47,8 @@
     self.textContainer.lineFragmentPadding = 0;
     self.linkTextAttributes = @{ NSForegroundColorAttributeName : [UIColor whiteColor],
                                  NSUnderlineStyleAttributeName : @(NSUnderlineStyleSingle | NSUnderlinePatternSolid) };
+    
+    self.delegate = self;
 }
 
 - (void)setSelectedRange:(NSRange)selectedRange
@@ -95,6 +104,27 @@
         }
     }
     return nil;
+}
+
+#pragma mark - UITextViewDelegate
+
+- (BOOL)textView:(UITextView *)textView shouldInteractWithURL:(NSURL *)URL inRange:(NSRange)characterRange interaction:(UITextItemInteraction)interaction {
+    BOOL shouldInteract = YES;
+    switch (interaction) {
+        case UITextItemInteractionInvokeDefaultAction:
+            if ([URL mnz_type] != URLTypeDefault) {
+                [URL mnz_showLinkView];
+            } else {
+                [Helper presentSafariViewControllerWithURL:URL];
+            }
+            shouldInteract = NO;
+            break;
+            
+        default:
+            break;
+    }
+    
+    return shouldInteract;
 }
 
 @end
