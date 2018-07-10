@@ -19,6 +19,7 @@
 #import "JSQMessagesCellTextView.h"
 
 #import "Helper.h"
+#import "MEGALinkManager.h"
 #import "NSURL+MNZCategory.h"
 
 @interface JSQMessagesCellTextView () <UITextViewDelegate>
@@ -113,7 +114,7 @@
     switch (interaction) {
         case UITextItemInteractionInvokeDefaultAction:
             if ([URL mnz_type] != URLTypeDefault) {
-                [URL mnz_showLinkView];
+                [MEGALinkManager showFileLinkView];
             } else {
                 [Helper presentSafariViewControllerWithURL:URL];
             }
