@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14295.6" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14270.1"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
@@ -130,6 +130,19 @@
                             <action selector="didTapAccessoryButton:" destination="4lh-CK-yVn" eventType="touchUpInside" id="28N-SY-ngB"/>
                         </connections>
                     </button>
+                    <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="checkBoxSelected" translatesAutoresizingMaskIntoConstraints="NO" id="ufQ-U2-eJW">
+                        <rect key="frame" x="0.0" y="145" width="24" height="24"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="24" id="6nW-cP-aqy"/>
+                            <constraint firstAttribute="width" constant="24" id="CQ1-uL-pGd"/>
+                        </constraints>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                <integer key="value" value="12"/>
+                            </userDefinedRuntimeAttribute>
+                            <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                        </userDefinedRuntimeAttributes>
+                    </imageView>
                 </subviews>
             </view>
             <constraints>
@@ -138,6 +151,7 @@
                 <constraint firstAttribute="trailing" secondItem="UPz-5x-c1T" secondAttribute="trailing" id="G3U-h0-DWS"/>
                 <constraint firstAttribute="trailing" secondItem="afj-rd-iNv" secondAttribute="trailing" id="Ka4-Dy-jCS"/>
                 <constraint firstItem="Md1-I7-2AZ" firstAttribute="centerY" secondItem="btS-p8-B7Z" secondAttribute="centerY" id="LQ0-vF-qkk"/>
+                <constraint firstItem="ufQ-U2-eJW" firstAttribute="centerY" secondItem="btS-p8-B7Z" secondAttribute="centerY" id="LWK-eb-Xpa"/>
                 <constraint firstItem="Md1-I7-2AZ" firstAttribute="leading" secondItem="btS-p8-B7Z" secondAttribute="trailing" constant="10" id="MYP-wd-RXn"/>
                 <constraint firstItem="afj-rd-iNv" firstAttribute="leading" secondItem="4lh-CK-yVn" secondAttribute="leading" id="OnD-mZ-QtR"/>
                 <constraint firstItem="3Uf-lF-8hR" firstAttribute="top" secondItem="4lh-CK-yVn" secondAttribute="top" id="W9c-tq-TsN"/>
@@ -149,6 +163,7 @@
                 <constraint firstItem="btS-p8-B7Z" firstAttribute="top" secondItem="Ufa-bF-l1Y" secondAttribute="bottom" id="jAu-Dn-7rN"/>
                 <constraint firstItem="Da1-09-wR4" firstAttribute="leading" secondItem="4lh-CK-yVn" secondAttribute="leading" id="jiu-B4-TSD"/>
                 <constraint firstAttribute="bottom" secondItem="UPz-5x-c1T" secondAttribute="bottom" id="nsK-Gh-M3Z"/>
+                <constraint firstItem="ufQ-U2-eJW" firstAttribute="leading" secondItem="4lh-CK-yVn" secondAttribute="leading" id="pg1-91-bhE"/>
                 <constraint firstItem="3Uf-lF-8hR" firstAttribute="centerX" secondItem="4lh-CK-yVn" secondAttribute="centerX" id="s4g-Bk-bEP"/>
                 <constraint firstItem="UPz-5x-c1T" firstAttribute="top" secondItem="btS-p8-B7Z" secondAttribute="bottom" id="s8G-Je-7GA"/>
             </constraints>
@@ -168,6 +183,7 @@
                 <outlet property="messageBubbleImageView" destination="OCS-Fu-acq" id="OuN-5t-30g"/>
                 <outlet property="messageBubbleTopLabel" destination="Ufa-bF-l1Y" id="VtH-te-blR"/>
                 <outlet property="messageBubbleTopLabelHeightConstraint" destination="fal-sy-hrK" id="kgv-NO-Gud"/>
+                <outlet property="selectionImageView" destination="ufQ-U2-eJW" id="US7-2g-MkN"/>
                 <outlet property="textView" destination="KYU-B8-cUW" id="1Yv-ln-EUZ"/>
                 <outlet property="textViewAvatarHorizontalSpaceConstraint" destination="Tg9-9l-vr8" id="HWn-aO-NbR"/>
                 <outlet property="textViewBottomVerticalSpaceConstraint" destination="B2v-Gq-Y1L" id="oKV-Ti-Oci"/>
@@ -179,4 +195,7 @@
             <point key="canvasLocation" x="255" y="202"/>
         </collectionViewCell>
     </objects>
+    <resources>
+        <image name="checkBoxSelected" width="20" height="20"/>
+    </resources>
 </document>
