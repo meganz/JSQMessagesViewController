@@ -114,10 +114,12 @@
         case UITextItemInteractionInvokeDefaultAction:
             if ([URL mnz_type] != URLTypeDefault) {
                 [URL mnz_showLinkView];
-            } else {
+                shouldInteract = NO;
+            } else if ([URL.scheme.lowercaseString isEqualToString:@"https"] || [URL.scheme.lowercaseString isEqualToString:@"http"]) {
                 [Helper presentSafariViewControllerWithURL:URL];
+                shouldInteract = NO;
             }
-            shouldInteract = NO;
+            
             break;
             
         default:
