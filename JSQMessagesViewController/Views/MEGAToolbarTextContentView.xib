@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
@@ -54,41 +54,61 @@
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
                 </button>
-                <button opaque="NO" tag="10" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="S8o-QO-z7n" userLabel="Text">
+                <button opaque="NO" tag="10" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="S8o-QO-z7n" userLabel="Text">
                     <rect key="frame" x="17" y="40" width="30" height="30"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="30" id="s4J-J9-VIc"/>
+                        <constraint firstAttribute="height" constant="30" id="zLS-QC-Eke"/>
+                    </constraints>
                     <color key="tintColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                    <state key="normal" title="Button" image="button_text_active"/>
+                    <state key="normal" image="button_text_active"/>
                 </button>
-                <button opaque="NO" tag="12" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fDU-tM-mKk" userLabel="Media">
-                    <rect key="frame" x="111" y="40" width="30" height="30"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <color key="tintColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                    <state key="normal" title="Button" image="button_media_default"/>
-                </button>
-                <button opaque="NO" tag="13" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mas-Ji-t8P" userLabel="Upload">
-                    <rect key="frame" x="158" y="40" width="30" height="30"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <color key="tintColor" red="0.59215686274509804" green="0.59215686274509804" blue="0.59215686274509804" alpha="1" colorSpace="calibratedRGB"/>
-                    <state key="normal" title="Button" image="button_upload_default"/>
-                </button>
-                <button opaque="NO" tag="11" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Q9K-U3-wwY" userLabel="Camera">
+                <button opaque="NO" tag="11" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Q9K-U3-wwY" userLabel="Camera">
                     <rect key="frame" x="64" y="40" width="30" height="30"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="30" id="E46-Rn-YDH"/>
+                        <constraint firstAttribute="width" constant="30" id="eGl-6V-ejE"/>
+                    </constraints>
                     <color key="tintColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                    <state key="normal" title="Button" image="button_camera_default"/>
+                    <state key="normal" image="button_camera_default"/>
+                </button>
+                <button opaque="NO" tag="12" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fDU-tM-mKk" userLabel="Media">
+                    <rect key="frame" x="111" y="40" width="30" height="30"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="30" id="4dn-fn-3dx"/>
+                        <constraint firstAttribute="height" constant="30" id="ybN-mj-8mI"/>
+                    </constraints>
+                    <color key="tintColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <state key="normal" image="button_media_default"/>
+                </button>
+                <button opaque="NO" tag="13" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mas-Ji-t8P" userLabel="Upload">
+                    <rect key="frame" x="158" y="40" width="30" height="30"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="30" id="Nr6-n4-ZZw"/>
+                        <constraint firstAttribute="height" constant="30" id="gn0-BV-v1h"/>
+                    </constraints>
+                    <color key="tintColor" red="0.59215686274509804" green="0.59215686274509804" blue="0.59215686274509804" alpha="1" colorSpace="calibratedRGB"/>
+                    <state key="normal" image="button_upload_default"/>
                 </button>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
+                <constraint firstAttribute="bottom" secondItem="Q9K-U3-wwY" secondAttribute="bottom" constant="10" id="1Pj-6j-T3A"/>
+                <constraint firstItem="fDU-tM-mKk" firstAttribute="leading" secondItem="Q9K-U3-wwY" secondAttribute="trailing" constant="17" id="3Ww-K1-t4g"/>
                 <constraint firstItem="FzB-DF-mS3" firstAttribute="top" secondItem="BfD-Cm-wk4" secondAttribute="bottom" constant="9" id="4wT-qD-B1O"/>
                 <constraint firstItem="yqt-18-HR0" firstAttribute="top" secondItem="FzB-DF-mS3" secondAttribute="bottom" constant="10" id="AfT-bh-FRK"/>
+                <constraint firstAttribute="bottom" secondItem="fDU-tM-mKk" secondAttribute="bottom" constant="10" id="FWT-iN-za4"/>
+                <constraint firstAttribute="bottom" secondItem="Mas-Ji-t8P" secondAttribute="bottom" constant="10" id="HUw-U4-fZN"/>
+                <constraint firstItem="S8o-QO-z7n" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="17" id="Nfm-RF-bpR"/>
+                <constraint firstItem="Mas-Ji-t8P" firstAttribute="leading" secondItem="fDU-tM-mKk" secondAttribute="trailing" constant="17" id="PFv-NL-X6q"/>
                 <constraint firstAttribute="trailing" secondItem="yqt-18-HR0" secondAttribute="trailing" constant="17" id="RAx-ut-da3"/>
                 <constraint firstAttribute="trailing" secondItem="BfD-Cm-wk4" secondAttribute="trailing" id="Yqq-h8-9Pq"/>
                 <constraint firstAttribute="trailing" secondItem="FzB-DF-mS3" secondAttribute="trailing" constant="17" id="aKu-sw-8Ot"/>
                 <constraint firstAttribute="bottom" secondItem="yqt-18-HR0" secondAttribute="bottom" constant="10" id="apA-29-EcK"/>
                 <constraint firstItem="BfD-Cm-wk4" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="f9M-wh-UbW"/>
                 <constraint firstItem="BfD-Cm-wk4" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="jhE-vk-bZb"/>
+                <constraint firstItem="Q9K-U3-wwY" firstAttribute="leading" secondItem="S8o-QO-z7n" secondAttribute="trailing" constant="17" id="pw6-ZW-ttM"/>
+                <constraint firstAttribute="bottom" secondItem="S8o-QO-z7n" secondAttribute="bottom" constant="10" id="rDK-ad-o6k"/>
                 <constraint firstItem="FzB-DF-mS3" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="17" id="ymV-Yr-eLS"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
