@@ -127,7 +127,7 @@ static NSMutableSet *jsqMessagesCollectionViewCellActions = nil;
     self.cellTopLabel.numberOfLines = 0;
     
     UIFont *topLabelFont = [UIFont preferredFontForTextStyle:UIFontTextStyleCaption1];
-    self.cellTopLabel.textAlignment = NSTextAlignmentLeft;
+    self.cellTopLabel.textAlignment = NSTextAlignmentNatural;
     self.cellTopLabel.font = topLabelFont;
     self.cellTopLabel.textColor = [UIColor lightGrayColor];
     self.cellTopLabel.numberOfLines = 0;
