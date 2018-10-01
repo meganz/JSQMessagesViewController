@@ -549,11 +549,12 @@ extern const CGFloat kTextContentViewHeight;
 
     cell.cellTopLabel.textInsets = UIEdgeInsetsMake(13.0f, 0.0f, 0.0f, 0.0f);
     
+    BOOL isRTLLanguage = ([UIApplication sharedApplication].userInterfaceLayoutDirection == UIUserInterfaceLayoutDirectionRightToLeft);
     if (isOutgoingMessage) {
-        cell.messageBubbleTopLabel.textInsets = UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f);
+        cell.messageBubbleTopLabel.textInsets = isRTLLanguage ? UIEdgeInsetsMake(0.0f, 4.0f, 0.0f, 0.0f) : UIEdgeInsetsMake(0.0f, -4.0f, 0.0f, 0.0f);
     }
     else {
-        cell.messageBubbleTopLabel.textInsets = UIEdgeInsetsMake(0.0f, 30.0f, 0.0f, 0.0f);
+        cell.messageBubbleTopLabel.textInsets = isRTLLanguage ? UIEdgeInsetsMake(0.0f, -28.0f, 0.0f, 0.0f) : UIEdgeInsetsMake(0.0f, 28.0f, 0.0f, 0.0f);
     }
 
     cell.textView.dataDetectorTypes = UIDataDetectorTypeAll;
@@ -641,13 +642,6 @@ extern const CGFloat kTextContentViewHeight;
     JSQMessagesCollectionViewCell *selectedCell = (JSQMessagesCollectionViewCell *)[collectionView cellForItemAtIndexPath:indexPath];
     selectedCell.textView.selectable = NO;
     
-    //  it will reset the font and fontcolor when selectable is NO
-    //  however, the actual font and fontcolor in textView do not get changed
-    //  in order to preserve link colors, we need to re-assign the font and fontcolor when selectable is NO
-    //  see GitHub issues #1675 and #1759
-    selectedCell.textView.textColor = selectedCell.textView.textColor;
-    selectedCell.textView.font = selectedCell.textView.font;
-
     return YES;
 }
 

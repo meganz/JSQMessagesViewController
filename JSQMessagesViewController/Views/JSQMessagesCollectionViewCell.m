@@ -44,6 +44,7 @@ static NSMutableSet *jsqMessagesCollectionViewCellActions = nil;
 @property (weak, nonatomic) IBOutlet UIView *avatarContainerView;
 
 @property (weak, nonatomic) IBOutlet UIButton *accessoryButton;
+@property (weak, nonatomic) IBOutlet UIImageView *selectionImageView;
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *messageBubbleContainerWidthConstraint;
 
@@ -126,7 +127,7 @@ static NSMutableSet *jsqMessagesCollectionViewCellActions = nil;
     self.cellTopLabel.numberOfLines = 0;
     
     UIFont *topLabelFont = [UIFont preferredFontForTextStyle:UIFontTextStyleCaption1];
-    self.cellTopLabel.textAlignment = NSTextAlignmentLeft;
+    self.cellTopLabel.textAlignment = NSTextAlignmentNatural;
     self.cellTopLabel.font = topLabelFont;
     self.cellTopLabel.textColor = [UIColor lightGrayColor];
     self.cellTopLabel.numberOfLines = 0;

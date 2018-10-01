@@ -175,6 +175,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (weak, nonatomic, readonly, nullable) UIButton *accessoryButton;
 
 /**
+ *  Returns the accessory button of the cell.
+ */
+@property (weak, nonatomic, readonly, nullable) UIImageView *selectionImageView;
+
+/**
  *  The media view of the cell. This view displays the contents of a media message.
  *
  *  @warning If this value is non-nil, then textView and messageBubbleImageView will both be `nil`.
