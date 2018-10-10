@@ -1,16 +1,20 @@
 
 #import "MEGAToolbarAssetPicker.h"
 
+#import "PWProgressView.h"
+#import "UIScrollView+EmptyDataSet.h"
+
+#import "DevicePermissionsHelper.h"
 #import "NSString+MNZCategory.h"
 #import "UIColor+MNZCategory.h"
-#import "PWProgressView.h"
+#import "UIImage+MNZCategory.h"
 
 const CGFloat kCellSquareSize = 93.0f;
 const CGFloat kCellInset = 1.0f;
 const NSUInteger kCellRows = 3;
 CGFloat kCollectionViewHeight;
 
-@interface MEGAToolbarAssetPicker ()
+@interface MEGAToolbarAssetPicker () <DZNEmptyDataSetSource, DZNEmptyDataSetDelegate>
 
 @property (nonatomic) UICollectionView *collectionView;
 @property (nonatomic, weak) id<MEGAToolbarAssetPickerDelegate> delegate;
@@ -37,7 +41,9 @@ CGFloat kCollectionViewHeight;
         _requestIdIndexPathDictionary = [[NSMutableDictionary alloc] init];
         _progressIndexPathDictionary = [[NSMutableDictionary alloc] init];
 
-        [collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"assetCellId"];
+        [_collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"assetCellId"];
+        _collectionView.emptyDataSetSource = self;
+        _collectionView.emptyDataSetDelegate = self;
         
         // Reload when returning to foreground:
         [[NSNotificationCenter defaultCenter]addObserver:self
@@ -280,6 +286,50 @@ CGFloat kCollectionViewHeight;
 
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
     return kCellInset/2;
+}
+
+#pragma mark - DZNEmptyDataSetSource
+
+- (NSAttributedString *)titleForEmptyDataSet:(UIScrollView *)scrollView {
+    NSAttributedString *attributedString = nil;
+    
+    if ([PHPhotoLibrary authorizationStatus] != PHAuthorizationStatusAuthorized) {
+        NSString *text = AMLocalizedString(@"To share photos and videos, allow MEGA to access your photos", @"Detailed explanation of why the user should give permission to access to the photos");
+        attributedString = [[NSAttributedString alloc] initWithString:text attributes:@{NSFontAttributeName:[UIFont mnz_SFUIRegularWithSize:14.0f], NSForegroundColorAttributeName:UIColor.mnz_black333333}];
+    }
+    
+    return attributedString;
+}
+
+- (UIImage *)imageForEmptyDataSet:(UIScrollView *)scrollView {
+    UIImage *image = nil;
+    
+    if ([PHPhotoLibrary authorizationStatus] != PHAuthorizationStatusAuthorized) {
+        image = [UIImage mnz_imageNamed:@"photosPermission" scaledToSize:CGSizeMake(120.0f, 120.0f)];
+    }
+    
+    return image;
+}
+
+- (NSAttributedString *)buttonTitleForEmptyDataSet:(UIScrollView *)scrollView forState:(UIControlState)state {
+    NSAttributedString *attributedString = nil;
+    
+    if ([PHPhotoLibrary authorizationStatus] != PHAuthorizationStatusAuthorized) {
+        NSString *text = AMLocalizedString(@"Enable Access", @"Button which triggers a request for a specific permission, that have been explained to the user beforehand");
+        attributedString = [[NSAttributedString alloc] initWithString:text attributes:@{NSFontAttributeName:[UIFont mnz_SFUISemiBoldWithSize:17.0f], NSForegroundColorAttributeName:UIColor.mnz_green899B9C}];
+    }
+    
+    return attributedString;
+}
+
+- (UIColor *)backgroundColorForEmptyDataSet:(UIScrollView *)scrollView {
+    return UIColor.whiteColor;
+}
+
+#pragma mark - DZNEmptyDataSetDelegate
+
+- (void)emptyDataSet:(UIScrollView *)scrollView didTapButton:(UIButton *)button {
+    [DevicePermissionsHelper alertPhotosPermission];
 }
 
 @end

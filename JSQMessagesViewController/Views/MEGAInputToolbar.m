@@ -117,11 +117,6 @@ CGFloat kImagePickerViewHeight;
     
     // Observe remote changes of the text within the textView, useful when the user edits the content of a message:
     [textContentView.textView addObserver:self forKeyPath:@"text" options:NSKeyValueObservingOptionNew context:nil];
-    
-    // Disable the image accessory button if the app does not have permission to access the multimedia files:
-    if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusDenied || [PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusRestricted) {
-        textContentView.accessoryImageButton.enabled = NO;
-    }
 }
 
 - (void)setupImagePickerView:(MEGAToolbarContentView *)imagePickerView {
@@ -218,14 +213,10 @@ CGFloat kImagePickerViewHeight;
                 if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusNotDetermined) {
                     [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
                         dispatch_async(dispatch_get_main_queue(), ^{
-                            if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusAuthorized) {
-                                if (!self.imagePickerView) {
-                                    [self.contentView.textView removeObserver:self forKeyPath:@"text"];
-                                    [self.contentView removeFromSuperview];
-                                    [self loadToolbarImagePickerView];
-                                }
-                            } else {
-                                self.contentView.accessoryImageButton.enabled = NO;
+                            if (!self.imagePickerView) {
+                                [self.contentView.textView removeObserver:self forKeyPath:@"text"];
+                                [self.contentView removeFromSuperview];
+                                [self loadToolbarImagePickerView];
                             }
                         });
                     }];
