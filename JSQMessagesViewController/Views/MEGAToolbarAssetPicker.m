@@ -322,6 +322,16 @@ CGFloat kCollectionViewHeight;
     return attributedString;
 }
 
+- (UIImage *)buttonBackgroundImageForEmptyDataSet:(UIScrollView *)scrollView forState:(UIControlState)state {
+    UIImage *image = nil;
+    
+    if ([PHPhotoLibrary authorizationStatus] != PHAuthorizationStatusAuthorized) {
+        image = [UIImage imageNamed:@"emptyStateButtonGrey"];
+    }
+    
+    return image;
+}
+
 - (UIColor *)backgroundColorForEmptyDataSet:(UIScrollView *)scrollView {
     return UIColor.whiteColor;
 }
