@@ -176,7 +176,7 @@ CGFloat kCollectionViewHeight;
             }
         }
     } else {
-        cell.backgroundView.layer.borderColor = [UIColor.mnz_redMain CGColor];
+        cell.backgroundView.layer.borderColor = [UIColor.mnz_green00BFA5 CGColor];
         cell.backgroundView.layer.borderWidth = 2.0;
         cell.backgroundView.layer.opacity = 0.48;
         // Add checkmark:
@@ -185,7 +185,7 @@ CGFloat kCollectionViewHeight;
         [cell.contentView addSubview:checkView];
     }
     
-    cell.backgroundColor = UIColor.mnz_redMain;
+    cell.backgroundColor = [UIColor.mnz_green00BFA5 colorWithAlphaComponent:0.48];
     
     if ([self.requestIdIndexPathDictionary objectForKey:indexPath]) {
         [self drawAssetProgressInCell:cell indexPath:indexPath];
