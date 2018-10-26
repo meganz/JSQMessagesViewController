@@ -156,6 +156,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *toolbarHeightConstraint;
 @property (weak, nonatomic) IBOutlet UIView *jumpToBottomView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *jumpToBottomConstraint;
+@property (weak, nonatomic) IBOutlet UIView *observersView;
+@property (weak, nonatomic) IBOutlet UILabel *observersLabel;
 
 #pragma mark - Class methods
 

@@ -44,6 +44,15 @@
      didPressAccessoryButton:(UIButton *_Nonnull)sender;
 
 /**
+ *  Tells the delegate that the toolbar's `joinButton` has been pressed.
+ *
+ *  @param toolbar The object representing the toolbar sending this information.
+ *  @param sender  The button that received the touch event.
+ */
+- (void)messagesInputToolbar:(MEGAInputToolbar *_Nonnull)toolbar
+     didPressJoinButton:(UIButton *_Nonnull)sender;
+
+/**
  *  Tells the delegate that Photos framework failed fetching asset.
  *
  *  @param toolbar The object representing the toolbar sending this information.
@@ -84,5 +93,6 @@
 @property (weak, nonatomic, readonly, nullable) MEGAToolbarContentView *imagePickerView;
 
 - (void)mnz_accesoryButtonPressed:(UIButton *_Nonnull)sender;
+- (void)mnz_setJoinViewHidden:(BOOL)hidden;
 
 @end
