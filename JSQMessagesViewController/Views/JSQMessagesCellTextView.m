@@ -46,7 +46,10 @@
     self.textContainer.lineFragmentPadding = 0;
     self.linkTextAttributes = @{ NSForegroundColorAttributeName : [UIColor whiteColor],
                                  NSUnderlineStyleAttributeName : @(NSUnderlineStyleSingle | NSUnderlinePatternSolid) };
-    
+    if (@available(iOS 10.0, *)) {
+        self.adjustsFontForContentSizeCategory = YES;
+    }
+
     self.delegate = self;
 }
 
