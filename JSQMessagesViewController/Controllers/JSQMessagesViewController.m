@@ -735,6 +735,10 @@ extern const CGFloat kTextContentViewHeight;
     NSAssert(NO, @"Error! required method not implemented in subclass. Need to implement %s", __PRETTY_FUNCTION__);
 }
 
+- (void)messagesInputToolbar:(MEGAInputToolbar *)toolbar didRecordVoiceClipAtPath:(NSString *)voiceClipPath {
+    NSAssert(NO, @"Error! required method not implemented in subclass. Need to implement %s", __PRETTY_FUNCTION__);
+}
+
 - (void)messagesInputToolbar:(MEGAInputToolbar *)toolbar assetLoadFailed:(NSError *)error {    
     NSString *message = [[[[[error.userInfo objectForKey:@"NSUnderlyingError"] userInfo] objectForKey:@"NSUnderlyingError"] userInfo] objectForKey:@"NSLocalizedDescription"];
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:AMLocalizedString(@"error", nil) message:message preferredStyle:UIAlertControllerStyleAlert];

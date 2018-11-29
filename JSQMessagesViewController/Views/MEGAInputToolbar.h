@@ -35,6 +35,15 @@
               toAttachAssets:(NSArray<PHAsset *>*_Nullable)assets;
 
 /**
+ *  Tells the delegate that there is a voice clip ready to be sent.
+ *
+ *  @param toolbar The object representing the toolbar sending this information.
+ *  @param path    The path of the voice clip.
+ */
+- (void)messagesInputToolbar:(MEGAInputToolbar *_Nonnull)toolbar
+    didRecordVoiceClipAtPath:(NSString *_Nonnull)voiceClipPath;
+
+/**
  *  Tells the delegate that one toolbar's `accessoryButton` has been pressed.
  *
  *  @param toolbar The object representing the toolbar sending this information.

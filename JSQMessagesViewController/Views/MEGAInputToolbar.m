@@ -1,6 +1,7 @@
 
 #import "MEGAInputToolbar.h"
 
+#import "NSString+MNZCategory.h"
 #import "UIColor+MNZCategory.h"
 
 static void * kMEGAInputToolbarKeyValueObservingContext = &kMEGAInputToolbarKeyValueObservingContext;
@@ -18,14 +19,26 @@ CGFloat kImagePickerViewHeight;
 
 @interface MEGAInputToolbar ()
 
+typedef NS_ENUM(NSUInteger, InputToolbarState) {
+    InputToolbarStateInitial,
+    InputToolbarStateWriting,
+    InputToolbarStateRecordingUnlocked,
+    InputToolbarStateRecordingLocked
+};
+
 @property (assign, nonatomic) BOOL jsq_isObserving;
 @property (nonatomic) MEGAToolbarAssetPicker *assetPicker;
 @property (nonatomic) MEGAToolbarSelectedAssets *selectedAssets;
 @property (nonatomic) NSMutableArray<PHAsset *> *selectedAssetsArray;
 
+@property (nonatomic) InputToolbarState currentState;
+@property (nonatomic) CGPoint longPressInitialPoint;
+@property (nonatomic) CGRect slideToCancelOriginalFrame;
+@property (nonatomic) AVAudioRecorder *audioRecorder;
+@property (nonatomic) NSTimer *timer;
+@property (nonatomic) NSDate *baseDate;
+
 @end
-
-
 
 @implementation MEGAInputToolbar
 
@@ -100,19 +113,11 @@ CGFloat kImagePickerViewHeight;
     [self addTargetsToView:textContentView];
     [self.delegate messagesInputToolbar:self needsResizeToHeight:kTextContentViewHeight];
     
-    [self updateSendButtonEnabledState];
+    [self updateToolbar];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(textViewTextDidChangeNotification:)
                                                  name:UITextViewTextDidChangeNotification
-                                               object:textContentView.textView];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(textViewTextDidBeginEditingNotification:)
-                                                 name:UITextViewTextDidBeginEditingNotification
-                                               object:textContentView.textView];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(textViewTextDidEndEditingNotification:)
-                                                 name:UITextViewTextDidEndEditingNotification
                                                object:textContentView.textView];
     
     // Observe remote changes of the text within the textView, useful when the user edits the content of a message:
@@ -168,7 +173,20 @@ CGFloat kImagePickerViewHeight;
 
 - (void)jsq_sendButtonPressed:(UIButton *)sender {
     if (self.contentView) {
-        [self.delegate messagesInputToolbar:self didPressSendButton:sender];
+        switch (self.currentState) {
+            case InputToolbarStateInitial:
+                break;
+            case InputToolbarStateWriting:
+                [self.delegate messagesInputToolbar:self didPressSendButton:sender];
+                break;
+            case InputToolbarStateRecordingUnlocked:
+                break;
+            case InputToolbarStateRecordingLocked:
+                [self stopRecordingAudioToSend:YES];
+                self.currentState = InputToolbarStateInitial;
+                [self updateToolbar];
+                break;
+        }
     } else {
         [self.delegate messagesInputToolbar:self didPressSendButton:sender toAttachAssets:self.selectedAssetsArray];
         self.selectedAssetsArray = [NSMutableArray new];
@@ -190,14 +208,8 @@ CGFloat kImagePickerViewHeight;
                                      [self.contentView.textView becomeFirstResponder];
                                  }
                                  completion:nil];
-            } else {
-                if ([self.contentView.textView isFirstResponder]) {
-                    [self.contentView.textView resignFirstResponder];
-                } else {
-                    [self.contentView.textView becomeFirstResponder];
-                }
+                [self.delegate messagesInputToolbar:self didPressAccessoryButton:sender];
             }
-            [self.delegate messagesInputToolbar:self didPressAccessoryButton:sender];
             break;
             
         case MEGAChatAccessoryButtonImage:
@@ -269,11 +281,131 @@ CGFloat kImagePickerViewHeight;
     }
 }
 
-#pragma mark - Input toolbar
+- (void)mnz_cancelRecording:(UIButton *)sender {
+    [self stopRecordingAudioToSend:NO];
+    self.currentState = InputToolbarStateInitial;
+    [self updateToolbar];
+}
 
-- (void)updateSendButtonEnabledState {
-    self.contentView.sendButton.enabled = [self.contentView.textView hasText];
-    self.contentView.sendButton.backgroundColor = [self.contentView.textView hasText] ? [UIColor mnz_green00BFA5] : [UIColor mnz_grayE2EAEA];
+#pragma mark - Voice clips
+
+- (BOOL)startRecordingAudio {
+    NSError *error;
+    if (![[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryRecord error:&error]) {
+        MEGALogError(@"[Voice clips] Error setting the audio category: %@", error);
+        return NO;
+    }
+    if (![[AVAudioSession sharedInstance] setActive:YES error:&error]) {
+        MEGALogError(@"[Voice clips] Error activating audio session: %@", error);
+        return NO;
+    }
+    
+    AudioFormatID audioFormat;
+    NSString *extension;
+    if (@available(iOS 11.0, *)) {
+        audioFormat = kAudioFormatOpus;
+        extension = @"opus";
+    } else {
+        audioFormat = kAudioFormatMPEG4AAC;
+        extension = @"m4a";
+    }
+    
+    if (![NSFileManager.defaultManager fileExistsAtPath:NSTemporaryDirectory()]) {
+        if (![NSFileManager.defaultManager createDirectoryAtPath:NSTemporaryDirectory() withIntermediateDirectories:YES attributes:nil error:&error]) {
+            MEGALogError(@"[Voice clips] Error creating temporary directory: %@", error);
+            return NO;
+        }
+    }
+    
+    NSURL *destinationURL = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", [NSString mnz_fileNameWithDate:[NSDate date]], extension]]];
+    NSDictionary *recordSettings = @{ AVNumberOfChannelsKey: @(1),
+                                      AVFormatIDKey: @(audioFormat),
+                                      AVSampleRateKey: @(16000),
+                                      AVLinearPCMBitDepthKey: @(8),
+                                      AVEncoderAudioQualityKey: @(AVAudioQualityMin),
+                                      AVEncoderBitRateKey: @(8000),
+                                      AVEncoderBitRateStrategyKey: AVAudioBitRateStrategy_Variable,
+                                      AVEncoderBitDepthHintKey: @(8),
+                                      AVSampleRateConverterAudioQualityKey: @(AVAudioQualityMin),
+                                      AVEncoderAudioQualityForVBRKey: @(AVAudioQualityMin)
+                                      };
+    
+    self.audioRecorder = [[AVAudioRecorder alloc] initWithURL:destinationURL settings:recordSettings error:&error];
+    if (!self.audioRecorder) {
+        MEGALogError(@"[Voice clips] Error instantiating audio recorder: %@", error);
+        return NO;
+    }
+    
+    self.timer = [NSTimer timerWithTimeInterval:1.0f target:self selector:@selector(updateRecordingTimeLabel) userInfo:nil repeats:YES];
+    [NSRunLoop.mainRunLoop addTimer:self.timer forMode:NSRunLoopCommonModes];
+    self.baseDate = [NSDate date];
+    
+    return [self.audioRecorder record];
+}
+
+- (BOOL)stopRecordingAudioToSend:(BOOL)send {
+    [self.audioRecorder stop];
+    [self.timer invalidate];
+    NSURL *clipURL = self.audioRecorder.url;
+    self.audioRecorder = nil;
+    
+    NSError *error;
+    if (![[AVAudioSession sharedInstance] setActive:NO withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation error:&error]) {
+        MEGALogError(@"[Voice clips] Error deactivating audio session: %@", error);
+        return NO;
+    }
+    
+    if (send) {
+        [self.delegate messagesInputToolbar:self didRecordVoiceClipAtPath:clipURL.path];
+    } else {
+        if (![NSFileManager.defaultManager removeItemAtURL:clipURL error:&error]) {
+            MEGALogError(@"[Voice clips] Error removing recorded clip: %@", error);
+            return NO;
+        }
+    }
+    
+    return YES;
+}
+
+- (void)updateRecordingTimeLabel {
+    NSTimeInterval interval = ([NSDate date].timeIntervalSince1970 - self.baseDate.timeIntervalSince1970);
+    self.contentView.recordingTimeLabel.text = [NSString mnz_stringFromTimeInterval:interval];
+}
+
+#pragma mark - Toolbar state
+
+- (void)updateToolbar {
+    switch (self.currentState) {
+        case InputToolbarStateInitial:
+            [self.contentView.sendButton setImage:[UIImage imageNamed:@"sendVoiceClipInactive"] forState:UIControlStateNormal];
+            [self.contentView.slideToCancelButton setTitle:@"< Slide to cancel" forState:UIControlStateNormal];
+            [self.contentView.slideToCancelButton setTitleColor:UIColor.mnz_gray666666 forState:UIControlStateNormal];
+            self.contentView.recordingTimeLabel.text = @"00:00";
+            self.contentView.accessoryCameraButton.hidden = self.contentView.accessoryImageButton.hidden = self.contentView.accessoryUploadButton.hidden = self.contentView.textView.hidden = NO;
+            self.contentView.recordingView.hidden = self.contentView.recordingTimeLabel.hidden = self.contentView.slideToCancelButton.hidden = self.contentView.lockView.hidden = YES;
+            
+            break;
+            
+        case InputToolbarStateWriting:
+            [self.contentView.sendButton setImage:[UIImage imageNamed:@"sendButton"] forState:UIControlStateNormal];
+            
+            break;
+            
+        case InputToolbarStateRecordingUnlocked:
+            [self.contentView.sendButton setImage:[UIImage imageNamed:@"sendVoiceClipActive"] forState:UIControlStateNormal];
+            self.contentView.accessoryCameraButton.hidden = self.contentView.accessoryImageButton.hidden = self.contentView.accessoryUploadButton.hidden = self.contentView.textView.hidden = YES;
+            self.contentView.recordingView.hidden = self.contentView.recordingTimeLabel.hidden = self.contentView.slideToCancelButton.hidden = self.contentView.lockView.hidden = NO;
+            
+            break;
+            
+        case InputToolbarStateRecordingLocked:
+            [self.contentView.sendButton setImage:[UIImage imageNamed:@"sendButton"] forState:UIControlStateNormal];
+            [self.contentView.slideToCancelButton setTitle:@"Cancel" forState:UIControlStateNormal];
+            [self.contentView.slideToCancelButton setTitleColor:UIColor.mnz_redMain forState:UIControlStateNormal];
+            self.contentView.lockView.hidden = YES;
+            
+            break;
+    }
 }
 
 #pragma mark - MEGAToolbarAssetPickerDelegate
@@ -305,16 +437,9 @@ CGFloat kImagePickerViewHeight;
 #pragma mark - Notifications
 
 - (void)textViewTextDidChangeNotification:(NSNotification *)notification {
-    [self updateSendButtonEnabledState];
+    self.currentState = [self.contentView.textView hasText] ? InputToolbarStateWriting : InputToolbarStateInitial;
+    [self updateToolbar];
     [self resizeToolbarIfNeeded];
-}
-
-- (void)textViewTextDidBeginEditingNotification:(NSNotification *)notification {
-    self.contentView.accessoryTextButton.tintColor = [UIColor mnz_green00BFA5];
-}
-
-- (void)textViewTextDidEndEditingNotification:(NSNotification *)notification {
-    self.contentView.accessoryTextButton.tintColor = [UIColor mnz_gray999999];
 }
 
 - (void)resizeToolbarIfNeeded {
@@ -337,10 +462,6 @@ CGFloat kImagePickerViewHeight;
     [view.sendButton addTarget:self
                         action:@selector(jsq_sendButtonPressed:)
               forControlEvents:UIControlEventTouchUpInside];
-
-    [view.accessoryTextButton addTarget:self
-                                 action:@selector(mnz_accesoryButtonPressed:)
-                       forControlEvents:UIControlEventTouchUpInside];
     
     [view.accessoryCameraButton addTarget:self
                                    action:@selector(mnz_accesoryButtonPressed:)
@@ -353,16 +474,18 @@ CGFloat kImagePickerViewHeight;
     [view.accessoryUploadButton addTarget:self
                                    action:@selector(mnz_accesoryButtonPressed:)
                          forControlEvents:UIControlEventTouchUpInside];
+    
+    [view.slideToCancelButton addTarget:self
+                                 action:@selector(mnz_cancelRecording:)
+                       forControlEvents:UIControlEventTouchUpInside];
+    
+    [view.sendButton addGestureRecognizer:[[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)]];
 }
 
 - (void)removeTargetsFromView:(MEGAToolbarContentView *)view {
     [view.sendButton removeTarget:self
                            action:NULL
                  forControlEvents:UIControlEventTouchUpInside];
-    
-    [view.accessoryTextButton removeTarget:self
-                                    action:NULL
-                          forControlEvents:UIControlEventTouchUpInside];
     
     [view.accessoryCameraButton removeTarget:self
                                       action:NULL
@@ -375,12 +498,88 @@ CGFloat kImagePickerViewHeight;
     [view.accessoryUploadButton removeTarget:self
                                       action:NULL
                             forControlEvents:UIControlEventTouchUpInside];
+    
+    [view.slideToCancelButton removeTarget:self
+                                    action:NULL
+                          forControlEvents:UIControlEventTouchUpInside];
+    
+    for (UIGestureRecognizer *gestureRecognizer in view.sendButton.gestureRecognizers) {
+        [view.sendButton removeGestureRecognizer:gestureRecognizer];
+    }
 }
 
 # pragma mark - KVO
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     [self textViewTextDidChangeNotification:nil];
+}
+
+#pragma mark - UILongPressGestureRecognizer
+
+- (void)longPress:(UILongPressGestureRecognizer *)longPressGestureRecognizer {
+    switch (longPressGestureRecognizer.state) {
+        case UIGestureRecognizerStateBegan:
+            if (self.currentState != InputToolbarStateInitial) {
+                return;
+            }
+            
+            self.longPressInitialPoint = [longPressGestureRecognizer locationInView:self];
+            self.slideToCancelOriginalFrame = self.contentView.slideToCancelButton.frame;
+            self.contentView.slideToCancelButton.translatesAutoresizingMaskIntoConstraints = YES;
+            [self startRecordingAudio];
+            
+            self.currentState = InputToolbarStateRecordingUnlocked;
+            [self updateToolbar];
+            
+            break;
+            
+        case UIGestureRecognizerStateChanged: {
+            if (self.currentState != InputToolbarStateRecordingUnlocked) {
+                return;
+            }
+            
+            CGFloat xIncrement = [longPressGestureRecognizer locationInView:self].x - self.longPressInitialPoint.x;
+            CGFloat yIncrement = [longPressGestureRecognizer locationInView:self].y - self.longPressInitialPoint.y;
+            if (yIncrement < -70.0f) {
+                self.contentView.slideToCancelButton.frame = self.slideToCancelOriginalFrame;
+                self.contentView.slideToCancelButton.translatesAutoresizingMaskIntoConstraints = NO;
+                self.currentState = InputToolbarStateRecordingLocked;
+                [self updateToolbar];
+            } else if (xIncrement < -100.0f) {
+                self.contentView.slideToCancelButton.frame = self.slideToCancelOriginalFrame;
+                self.contentView.slideToCancelButton.translatesAutoresizingMaskIntoConstraints = NO;
+                [self mnz_cancelRecording:self.contentView.slideToCancelButton];
+            } else if (xIncrement > -100.0f && xIncrement < 0.0f) {
+                CGRect frame = self.slideToCancelOriginalFrame;
+                frame.origin.x = frame.origin.x + xIncrement;
+                self.contentView.slideToCancelButton.frame = frame;
+                if (xIncrement < -50.0f) {
+                    [self.contentView.slideToCancelButton setTitleColor:UIColor.mnz_redMain forState:UIControlStateNormal];
+                } else {
+                    [self.contentView.slideToCancelButton setTitleColor:UIColor.mnz_gray666666 forState:UIControlStateNormal];
+                }
+            }
+            
+            break;
+        }
+            
+        case UIGestureRecognizerStateEnded: {
+            if (self.currentState != InputToolbarStateRecordingUnlocked) {
+                return;
+            }
+            
+            [self stopRecordingAudioToSend:YES];
+            self.contentView.slideToCancelButton.frame = self.slideToCancelOriginalFrame;
+            self.contentView.slideToCancelButton.translatesAutoresizingMaskIntoConstraints = NO;
+            self.currentState = InputToolbarStateInitial;
+            [self updateToolbar];
+            
+            break;
+        }
+            
+        default:
+            break;
+    }
 }
 
 @end

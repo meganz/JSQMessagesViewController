@@ -6,7 +6,8 @@
 - (void)awakeFromNib {
     [super awakeFromNib];
     
-    [_sendButton setTitle:AMLocalizedString(@"send", @"Label for any 'Send' button, link, text, title, etc. - (String as short as possible).") forState:UIControlStateNormal];
+    self.lockView.layer.borderColor = UIColor.mnz_black000000_01.CGColor;
+    self.lockView.layer.borderWidth = 1.0f;
 }
 
 @end
