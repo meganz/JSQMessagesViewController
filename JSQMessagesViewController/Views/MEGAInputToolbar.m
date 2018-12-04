@@ -412,7 +412,6 @@ typedef NS_ENUM(NSUInteger, InputToolbarState) {
 
 - (void)assetPicker:(MEGAToolbarAssetPicker *)assetPicker didChangeSelectionTo:(NSMutableArray<PHAsset *> *)selectedAssetsArray {
     self.imagePickerView.sendButton.enabled = selectedAssetsArray.count > 0;
-    self.imagePickerView.sendButton.backgroundColor = selectedAssetsArray.count > 0 ? [UIColor mnz_green00BFA5] : [UIColor mnz_grayE2EAEA];
     self.selectedAssetsArray = selectedAssetsArray;
     [self.assetPicker setSelectionTo:self.selectedAssetsArray];
     [self.selectedAssets setSelectionTo:self.selectedAssetsArray];
