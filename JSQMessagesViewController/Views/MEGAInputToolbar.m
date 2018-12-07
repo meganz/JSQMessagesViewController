@@ -10,7 +10,7 @@ extern const CGFloat kCellSquareSize;
 extern const CGFloat kCellInset;
 extern const NSUInteger kCellRows;
 const CGFloat kButtonBarHeight = 50.0f;
-const CGFloat kTextContentViewHeight = 80.0f;
+const CGFloat kTextContentViewHeight = 154.0f;
 const CGFloat kSelectedAssetsViewHeight = 200.0f;
 const CGFloat kTextViewHorizontalMargins = 34.0f;
 CGFloat kImagePickerViewHeight;
