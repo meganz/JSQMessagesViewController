@@ -174,13 +174,21 @@ typedef NS_ENUM(NSUInteger, InputToolbarState) {
 - (void)jsq_sendButtonPressed:(UIButton *)sender {
     if (self.contentView) {
         switch (self.currentState) {
-            case InputToolbarStateInitial:
+            case InputToolbarStateInitial: {
+                self.contentView.tooltipView.alpha = 1.0f;
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [self mnz_tooltipClose:nil];
+                });
                 break;
+            }
+                
             case InputToolbarStateWriting:
                 [self.delegate messagesInputToolbar:self didPressSendButton:sender];
                 break;
+                
             case InputToolbarStateRecordingUnlocked:
                 break;
+                
             case InputToolbarStateRecordingLocked:
                 [self stopRecordingAudioToSend:YES];
                 self.currentState = InputToolbarStateInitial;
@@ -285,6 +293,12 @@ typedef NS_ENUM(NSUInteger, InputToolbarState) {
     [self stopRecordingAudioToSend:NO];
     self.currentState = InputToolbarStateInitial;
     [self updateToolbar];
+}
+
+- (void)mnz_tooltipClose:(UIButton *)sender {
+    [UIView animateWithDuration:0.2f animations:^{
+        self.contentView.tooltipView.alpha = 0.0f;
+    } completion:nil];
 }
 
 #pragma mark - Voice clips
@@ -478,6 +492,10 @@ typedef NS_ENUM(NSUInteger, InputToolbarState) {
                                  action:@selector(mnz_cancelRecording:)
                        forControlEvents:UIControlEventTouchUpInside];
     
+    [view.tooltipButton addTarget:self
+                           action:@selector(mnz_tooltipClose:)
+                 forControlEvents:UIControlEventTouchUpInside];
+    
     [view.sendButton addGestureRecognizer:[[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)]];
 }
 
@@ -501,6 +519,10 @@ typedef NS_ENUM(NSUInteger, InputToolbarState) {
     [view.slideToCancelButton removeTarget:self
                                     action:NULL
                           forControlEvents:UIControlEventTouchUpInside];
+    
+    [view.tooltipButton removeTarget:self
+                              action:NULL
+                    forControlEvents:UIControlEventTouchUpInside];
     
     for (UIGestureRecognizer *gestureRecognizer in view.sendButton.gestureRecognizers) {
         [view.sendButton removeGestureRecognizer:gestureRecognizer];
