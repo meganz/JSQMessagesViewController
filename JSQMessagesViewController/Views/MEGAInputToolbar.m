@@ -359,7 +359,7 @@ typedef NS_ENUM(NSUInteger, InputToolbarState) {
     return [self.audioRecorder record];
 }
 
-- (BOOL)stopRecordingAudioToSend:(BOOL)send {
+- (void)stopRecordingAudioToSend:(BOOL)send {
     [self.audioRecorder stop];
     [self.timer invalidate];
     NSURL *clipURL = self.audioRecorder.url;
@@ -368,7 +368,6 @@ typedef NS_ENUM(NSUInteger, InputToolbarState) {
     NSError *error;
     if (![[AVAudioSession sharedInstance] setActive:NO withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation error:&error]) {
         MEGALogError(@"[Voice clips] Error deactivating audio session: %@", error);
-        return NO;
     }
     
     if (send) {
@@ -376,11 +375,8 @@ typedef NS_ENUM(NSUInteger, InputToolbarState) {
     } else {
         if (![NSFileManager.defaultManager removeItemAtURL:clipURL error:&error]) {
             MEGALogError(@"[Voice clips] Error removing recorded clip: %@", error);
-            return NO;
         }
     }
-    
-    return YES;
 }
 
 - (void)updateRecordingTimeLabel {
@@ -553,10 +549,11 @@ typedef NS_ENUM(NSUInteger, InputToolbarState) {
             self.longPressInitialPoint = [longPressGestureRecognizer locationInView:self];
             self.slideToCancelOriginalFrame = self.contentView.slideToCancelButton.frame;
             self.contentView.slideToCancelButton.translatesAutoresizingMaskIntoConstraints = YES;
-            [self startRecordingAudio];
             
-            self.currentState = InputToolbarStateRecordingUnlocked;
-            [self updateToolbar];
+            if ([self startRecordingAudio]) {
+                self.currentState = InputToolbarStateRecordingUnlocked;
+                [self updateToolbar];
+            }
             
             break;
             
@@ -578,7 +575,8 @@ typedef NS_ENUM(NSUInteger, InputToolbarState) {
                 [self mnz_cancelRecording:self.contentView.slideToCancelButton];
             } else if (xIncrement < 100.0f && xIncrement > 0.0f) {
                 CGRect frame = self.slideToCancelOriginalFrame;
-                frame.origin.x = frame.origin.x + xIncrement;
+                BOOL isRTLLanguage = UIApplication.sharedApplication.userInterfaceLayoutDirection == UIUserInterfaceLayoutDirectionRightToLeft;
+                frame.origin.x = isRTLLanguage ? frame.origin.x + xIncrement : frame.origin.x - xIncrement;
                 self.contentView.slideToCancelButton.frame = frame;
                 if (xIncrement > 50.0f) {
                     [self.contentView.slideToCancelButton setTitleColor:UIColor.mnz_redMain forState:UIControlStateNormal];
