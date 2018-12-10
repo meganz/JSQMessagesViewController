@@ -235,8 +235,10 @@
                 <outlet property="lockView" destination="BWP-qA-B0h" id="U9p-mD-bcc"/>
                 <outlet property="recordingTimeLabel" destination="uJd-TE-hLU" id="T0n-H0-ist"/>
                 <outlet property="recordingView" destination="l5c-RX-VTV" id="7Xl-S9-JzI"/>
+                <outlet property="releaseToSendLabel" destination="4BF-8K-b6X" id="U8I-MF-5ny"/>
                 <outlet property="sendButton" destination="yqt-18-HR0" id="5gS-04-8WK"/>
                 <outlet property="slideToCancelButton" destination="vfR-cz-NSL" id="Khj-Ka-VPj"/>
+                <outlet property="tapAndHoldLabel" destination="pO5-Xz-t92" id="Dip-N5-nuJ"/>
                 <outlet property="textView" destination="FzB-DF-mS3" id="4Lm-7E-qbM"/>
                 <outlet property="tooltipButton" destination="JsO-LB-ZlF" id="MSr-tF-B5a"/>
                 <outlet property="tooltipView" destination="81b-te-QCr" id="rzh-yr-cYr"/>

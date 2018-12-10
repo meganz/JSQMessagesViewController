@@ -138,6 +138,8 @@ typedef NS_ENUM(NSUInteger, InputToolbarState) {
         imagePickerView.sendButton.enabled = YES;
         imagePickerView.sendButton.backgroundColor = [UIColor mnz_green00BFA5];
     }
+    UIImage *sendButton = [UIImage imageNamed:@"sendButton"];
+    [imagePickerView.sendButton setImage:sendButton.imageFlippedForRightToLeftLayoutDirection forState:UIControlStateNormal];
     [self addSubview:imagePickerView];
     [self removeTargetsFromView:imagePickerView];
     [self addTargetsToView:imagePickerView];
@@ -392,7 +394,7 @@ typedef NS_ENUM(NSUInteger, InputToolbarState) {
     switch (self.currentState) {
         case InputToolbarStateInitial:
             [self.contentView.sendButton setImage:[UIImage imageNamed:@"sendVoiceClipInactive"] forState:UIControlStateNormal];
-            [self.contentView.slideToCancelButton setTitle:@"< Slide to cancel" forState:UIControlStateNormal];
+            [self.contentView.slideToCancelButton setTitle:AMLocalizedString(@"< Slide to cancel", @"Text shown in the chat toolbar while the user is recording a voice clip. The < character should be > in RTL languages.") forState:UIControlStateNormal];
             [self.contentView.slideToCancelButton setTitleColor:UIColor.mnz_gray666666 forState:UIControlStateNormal];
             self.contentView.recordingTimeLabel.text = @"00:00";
             self.contentView.accessoryCameraButton.hidden = self.contentView.accessoryImageButton.hidden = self.contentView.accessoryUploadButton.hidden = self.contentView.textView.hidden = NO;
@@ -400,10 +402,12 @@ typedef NS_ENUM(NSUInteger, InputToolbarState) {
             
             break;
             
-        case InputToolbarStateWriting:
-            [self.contentView.sendButton setImage:[UIImage imageNamed:@"sendButton"] forState:UIControlStateNormal];
+        case InputToolbarStateWriting: {
+            UIImage *sendButton = [UIImage imageNamed:@"sendButton"];
+            [self.contentView.sendButton setImage:sendButton.imageFlippedForRightToLeftLayoutDirection forState:UIControlStateNormal];
             
             break;
+        }
             
         case InputToolbarStateRecordingUnlocked:
             [self.contentView.sendButton setImage:[UIImage imageNamed:@"sendVoiceClipActive"] forState:UIControlStateNormal];
@@ -412,13 +416,15 @@ typedef NS_ENUM(NSUInteger, InputToolbarState) {
             
             break;
             
-        case InputToolbarStateRecordingLocked:
-            [self.contentView.sendButton setImage:[UIImage imageNamed:@"sendButton"] forState:UIControlStateNormal];
-            [self.contentView.slideToCancelButton setTitle:@"Cancel" forState:UIControlStateNormal];
+        case InputToolbarStateRecordingLocked: {
+            UIImage *sendButton = [UIImage imageNamed:@"sendButton"];
+            [self.contentView.sendButton setImage:sendButton.imageFlippedForRightToLeftLayoutDirection forState:UIControlStateNormal];
+            [self.contentView.slideToCancelButton setTitle:AMLocalizedString(@"cancel", @"Button title to cancel something") forState:UIControlStateNormal];
             [self.contentView.slideToCancelButton setTitleColor:UIColor.mnz_redMain forState:UIControlStateNormal];
             self.contentView.lockView.hidden = YES;
             
             break;
+        }
     }
 }
 
@@ -559,22 +565,22 @@ typedef NS_ENUM(NSUInteger, InputToolbarState) {
                 return;
             }
             
-            CGFloat xIncrement = [longPressGestureRecognizer locationInView:self].x - self.longPressInitialPoint.x;
+            CGFloat xIncrement = ABS([longPressGestureRecognizer locationInView:self].x - self.longPressInitialPoint.x);
             CGFloat yIncrement = [longPressGestureRecognizer locationInView:self].y - self.longPressInitialPoint.y;
             if (yIncrement < -70.0f) {
                 self.contentView.slideToCancelButton.frame = self.slideToCancelOriginalFrame;
                 self.contentView.slideToCancelButton.translatesAutoresizingMaskIntoConstraints = NO;
                 self.currentState = InputToolbarStateRecordingLocked;
                 [self updateToolbar];
-            } else if (xIncrement < -100.0f) {
+            } else if (xIncrement > 100.0f) {
                 self.contentView.slideToCancelButton.frame = self.slideToCancelOriginalFrame;
                 self.contentView.slideToCancelButton.translatesAutoresizingMaskIntoConstraints = NO;
                 [self mnz_cancelRecording:self.contentView.slideToCancelButton];
-            } else if (xIncrement > -100.0f && xIncrement < 0.0f) {
+            } else if (xIncrement < 100.0f && xIncrement > 0.0f) {
                 CGRect frame = self.slideToCancelOriginalFrame;
                 frame.origin.x = frame.origin.x + xIncrement;
                 self.contentView.slideToCancelButton.frame = frame;
-                if (xIncrement < -50.0f) {
+                if (xIncrement > 50.0f) {
                     [self.contentView.slideToCancelButton setTitleColor:UIColor.mnz_redMain forState:UIControlStateNormal];
                 } else {
                     [self.contentView.slideToCancelButton setTitleColor:UIColor.mnz_gray666666 forState:UIControlStateNormal];
