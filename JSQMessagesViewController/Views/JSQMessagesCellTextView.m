@@ -114,7 +114,7 @@
     BOOL shouldInteract = YES;
     switch (interaction) {
         case UITextItemInteractionInvokeDefaultAction:
-            [MEGALinkManager setLinkURL:URL];
+            MEGALinkManager.linkURL = URL;
             [MEGALinkManager processLinkURL:URL];
             shouldInteract = NO;
             break;
