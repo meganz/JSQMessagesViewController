@@ -18,8 +18,7 @@
 
 #import "JSQMessagesCellTextView.h"
 
-#import "Helper.h"
-#import "NSURL+MNZCategory.h"
+#import "MEGALinkManager.h"
 
 @interface JSQMessagesCellTextView () <UITextViewDelegate>
 
@@ -115,14 +114,9 @@
     BOOL shouldInteract = YES;
     switch (interaction) {
         case UITextItemInteractionInvokeDefaultAction:
-            if ([URL mnz_type] != URLTypeDefault) {
-                [URL mnz_showLinkView];
-                shouldInteract = NO;
-            } else if ([URL.scheme.lowercaseString isEqualToString:@"https"] || [URL.scheme.lowercaseString isEqualToString:@"http"]) {
-                [Helper presentSafariViewControllerWithURL:URL];
-                shouldInteract = NO;
-            }
-            
+            MEGALinkManager.linkURL = URL;
+            [MEGALinkManager processLinkURL:URL];
+            shouldInteract = NO;
             break;
             
         default:
