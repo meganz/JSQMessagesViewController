@@ -26,6 +26,10 @@
 {
     [self setTranslatesAutoresizingMaskIntoConstraints:NO];
     self.textInsets = UIEdgeInsetsZero;
+    
+    if (@available(iOS 10.0, *)) {
+        self.adjustsFontForContentSizeCategory = YES;
+    }
 }
 
 - (instancetype)initWithFrame:(CGRect)frame
