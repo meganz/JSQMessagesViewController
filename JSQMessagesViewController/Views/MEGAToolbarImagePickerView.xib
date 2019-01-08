@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
@@ -24,11 +25,13 @@
                     <rect key="frame" x="0.0" y="0.0" width="375" height="1"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                     <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.10000000000000001" colorSpace="custom" customColorSpace="sRGB"/>
+                    <viewLayoutGuide key="safeArea" id="Czi-3M-Cld"/>
                 </view>
                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="NQd-2K-E6E">
                     <rect key="frame" x="0.0" y="1" width="375" height="149"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <viewLayoutGuide key="safeArea" id="CqV-HW-hgr"/>
                     <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="lTs-lU-eos">
                         <size key="itemSize" width="50" height="50"/>
                         <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -95,6 +98,7 @@
                     <constraints>
                         <constraint firstAttribute="height" constant="283" id="vJe-6M-IFt"/>
                     </constraints>
+                    <viewLayoutGuide key="safeArea" id="Sa1-Np-qvM"/>
                     <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="An8-Jd-lUn">
                         <size key="itemSize" width="50" height="50"/>
                         <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -106,20 +110,21 @@
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstItem="z7w-59-SD1" firstAttribute="top" secondItem="BDr-gM-ZHD" secondAttribute="bottom" constant="10" id="25Q-WL-hIq"/>
-                <constraint firstItem="IWf-dn-Aam" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="17" id="3ep-GO-1f6"/>
+                <constraint firstItem="IWf-dn-Aam" firstAttribute="leading" secondItem="Ypi-dH-Guw" secondAttribute="leading" constant="17" id="3ep-GO-1f6"/>
                 <constraint firstItem="z7w-59-SD1" firstAttribute="top" secondItem="8Dn-9A-nU1" secondAttribute="bottom" constant="10" id="5W2-OY-gky"/>
                 <constraint firstItem="z7w-59-SD1" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="DT3-mA-eWi"/>
                 <constraint firstItem="z7w-59-SD1" firstAttribute="top" secondItem="vcN-Cp-Dka" secondAttribute="bottom" constant="10" id="Ggs-Bp-1Jh"/>
                 <constraint firstItem="BDr-gM-ZHD" firstAttribute="leading" secondItem="8Dn-9A-nU1" secondAttribute="trailing" constant="17" id="V8i-E8-8oH"/>
                 <constraint firstItem="bvV-Qr-VYz" firstAttribute="leading" secondItem="BDr-gM-ZHD" secondAttribute="trailing" constant="17" id="Z3P-3M-bzX"/>
                 <constraint firstAttribute="bottom" secondItem="z7w-59-SD1" secondAttribute="bottom" id="ffE-7c-2Rc"/>
-                <constraint firstAttribute="trailing" secondItem="vcN-Cp-Dka" secondAttribute="trailing" constant="17" id="hJ7-gf-6qQ"/>
+                <constraint firstItem="Ypi-dH-Guw" firstAttribute="trailing" secondItem="vcN-Cp-Dka" secondAttribute="trailing" constant="17" id="hJ7-gf-6qQ"/>
                 <constraint firstItem="z7w-59-SD1" firstAttribute="top" secondItem="IWf-dn-Aam" secondAttribute="bottom" constant="10" id="pal-7S-4Zd"/>
                 <constraint firstItem="8Dn-9A-nU1" firstAttribute="leading" secondItem="IWf-dn-Aam" secondAttribute="trailing" constant="17" id="qrx-3X-LZ3"/>
                 <constraint firstAttribute="trailing" secondItem="z7w-59-SD1" secondAttribute="trailing" id="rph-PY-yaf"/>
                 <constraint firstItem="z7w-59-SD1" firstAttribute="top" secondItem="bvV-Qr-VYz" secondAttribute="bottom" constant="10" id="whj-qH-gTP"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <viewLayoutGuide key="safeArea" id="Ypi-dH-Guw"/>
             <connections>
                 <outlet property="accessoryCameraButton" destination="8Dn-9A-nU1" id="oLa-tI-CZC"/>
                 <outlet property="accessoryImageButton" destination="BDr-gM-ZHD" id="YYk-uh-mZu"/>
