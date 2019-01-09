@@ -5,6 +5,7 @@
 #import "UIScrollView+EmptyDataSet.h"
 
 #import "DevicePermissionsHelper.h"
+#import "Helper.h"
 #import "NSString+MNZCategory.h"
 #import "UIColor+MNZCategory.h"
 #import "UIImage+MNZCategory.h"
@@ -326,7 +327,10 @@ CGFloat kCollectionViewHeight;
     UIImage *image = nil;
     
     if ([PHPhotoLibrary authorizationStatus] != PHAuthorizationStatusAuthorized) {
-        image = [UIImage imageNamed:@"emptyStateButtonGrey"];
+        UIEdgeInsets capInsets = [Helper capInsetsForEmptyStateButton];
+        UIEdgeInsets rectInsets = [Helper rectInsetsForEmptyStateButton];
+        
+        image = [[[UIImage imageNamed:@"emptyStateButtonGrey"] resizableImageWithCapInsets:capInsets resizingMode:UIImageResizingModeStretch] imageWithAlignmentRectInsets:rectInsets];
     }
     
     return image;
