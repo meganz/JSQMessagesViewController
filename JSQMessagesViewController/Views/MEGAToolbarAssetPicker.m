@@ -42,7 +42,7 @@ CGFloat kCollectionViewHeight;
         _requestIdIndexPathDictionary = [[NSMutableDictionary alloc] init];
         _progressIndexPathDictionary = [[NSMutableDictionary alloc] init];
 
-        [_collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"assetCellId"];
+        [_collectionView registerClass:UICollectionViewCell.class forCellWithReuseIdentifier:@"assetCellId"];
         _collectionView.emptyDataSetSource = self;
         _collectionView.emptyDataSetDelegate = self;
         
@@ -294,7 +294,7 @@ CGFloat kCollectionViewHeight;
 - (NSAttributedString *)titleForEmptyDataSet:(UIScrollView *)scrollView {
     NSAttributedString *attributedString = nil;
     
-    if ([PHPhotoLibrary authorizationStatus] != PHAuthorizationStatusAuthorized) {
+    if (PHPhotoLibrary.authorizationStatus != PHAuthorizationStatusAuthorized) {
         NSString *text = AMLocalizedString(@"Please give the MEGA App permission to access Photos to share photos and videos.", @"Detailed explanation of why the user should give permission to access to the photos");
         attributedString = [[NSAttributedString alloc] initWithString:text attributes:@{NSFontAttributeName:[UIFont mnz_SFUIRegularWithSize:14.0f], NSForegroundColorAttributeName:UIColor.mnz_black333333}];
     }
@@ -305,7 +305,7 @@ CGFloat kCollectionViewHeight;
 - (UIImage *)imageForEmptyDataSet:(UIScrollView *)scrollView {
     UIImage *image = nil;
     
-    if ([PHPhotoLibrary authorizationStatus] != PHAuthorizationStatusAuthorized) {
+    if (PHPhotoLibrary.authorizationStatus != PHAuthorizationStatusAuthorized) {
         image = [UIImage mnz_imageNamed:@"photosPermission" scaledToSize:CGSizeMake(120.0f, 120.0f)];
     }
     
@@ -315,7 +315,7 @@ CGFloat kCollectionViewHeight;
 - (NSAttributedString *)buttonTitleForEmptyDataSet:(UIScrollView *)scrollView forState:(UIControlState)state {
     NSAttributedString *attributedString = nil;
     
-    if ([PHPhotoLibrary authorizationStatus] != PHAuthorizationStatusAuthorized) {
+    if (PHPhotoLibrary.authorizationStatus != PHAuthorizationStatusAuthorized) {
         NSString *text = AMLocalizedString(@"Allow Access", @"Button which triggers a request for a specific permission, that have been explained to the user beforehand");
         attributedString = [[NSAttributedString alloc] initWithString:text attributes:@{NSFontAttributeName:[UIFont mnz_SFUISemiBoldWithSize:17.0f], NSForegroundColorAttributeName:UIColor.mnz_green899B9C}];
     }
@@ -326,7 +326,7 @@ CGFloat kCollectionViewHeight;
 - (UIImage *)buttonBackgroundImageForEmptyDataSet:(UIScrollView *)scrollView forState:(UIControlState)state {
     UIImage *image = nil;
     
-    if ([PHPhotoLibrary authorizationStatus] != PHAuthorizationStatusAuthorized) {
+    if (PHPhotoLibrary.authorizationStatus != PHAuthorizationStatusAuthorized) {
         UIEdgeInsets capInsets = [Helper capInsetsForEmptyStateButton];
         UIEdgeInsets rectInsets = [Helper rectInsetsForEmptyStateButton];
         
