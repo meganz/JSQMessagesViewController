@@ -6,6 +6,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
@@ -54,12 +55,12 @@
                             </userDefinedRuntimeAttributes>
                         </view>
                         <view clipsSubviews="YES" alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="81b-te-QCr">
-                            <rect key="frame" x="69" y="28" width="294" height="34"/>
+                            <rect key="frame" x="69.5" y="28" width="293.5" height="34"/>
                             <subviews>
                                 <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OHB-5e-VJG">
-                                    <rect key="frame" x="0.0" y="0.0" width="294" height="34"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="293.5" height="34"/>
                                     <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="C4k-nQ-h2r">
-                                        <rect key="frame" x="0.0" y="0.0" width="294" height="34"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="293" height="34"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tap and hold" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pO5-Xz-t92">
@@ -218,16 +219,18 @@
                         <constraint firstItem="BWP-qA-B0h" firstAttribute="top" secondItem="lzz-Kj-bhf" secondAttribute="top" id="vUx-sY-yBH"/>
                         <constraint firstItem="BfD-Cm-wk4" firstAttribute="leading" secondItem="lzz-Kj-bhf" secondAttribute="leading" id="z0V-eb-C8Z"/>
                     </constraints>
+                    <viewLayoutGuide key="safeArea" id="Ah5-Zw-hJJ"/>
                 </view>
             </subviews>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
-                <constraint firstAttribute="bottom" secondItem="lzz-Kj-bhf" secondAttribute="bottom" id="4n9-R8-ITr"/>
-                <constraint firstItem="lzz-Kj-bhf" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="F3G-zP-16Z"/>
-                <constraint firstAttribute="trailing" secondItem="lzz-Kj-bhf" secondAttribute="trailing" id="rQY-B0-zmo"/>
-                <constraint firstItem="lzz-Kj-bhf" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="yBx-Na-4yZ"/>
+                <constraint firstItem="woe-C0-kGZ" firstAttribute="bottom" secondItem="lzz-Kj-bhf" secondAttribute="bottom" id="4n9-R8-ITr"/>
+                <constraint firstItem="lzz-Kj-bhf" firstAttribute="leading" secondItem="woe-C0-kGZ" secondAttribute="leading" id="F3G-zP-16Z"/>
+                <constraint firstItem="woe-C0-kGZ" firstAttribute="trailing" secondItem="lzz-Kj-bhf" secondAttribute="trailing" id="rQY-B0-zmo"/>
+                <constraint firstItem="lzz-Kj-bhf" firstAttribute="top" secondItem="woe-C0-kGZ" secondAttribute="top" id="yBx-Na-4yZ"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <viewLayoutGuide key="safeArea" id="woe-C0-kGZ"/>
             <connections>
                 <outlet property="accessoryCameraButton" destination="Q9K-U3-wwY" id="LGT-Ok-R6V"/>
                 <outlet property="accessoryImageButton" destination="fDU-tM-mKk" id="MFW-FI-uWa"/>
