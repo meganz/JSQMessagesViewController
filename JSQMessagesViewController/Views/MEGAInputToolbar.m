@@ -14,7 +14,7 @@ const CGFloat kSelectedAssetsViewHeight = 200.0f;
 const CGFloat kTextViewHorizontalMargins = 34.0f;
 CGFloat kImagePickerViewHeight;
 
-static NSString * const kMEGAHardwareKeyboardCarriageReturnInput = @"\r";
+static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
 
 
 @interface MEGAInputToolbar ()
@@ -163,7 +163,7 @@ static NSString * const kMEGAHardwareKeyboardCarriageReturnInput = @"\r";
 #pragma mark - Actions
 
 - (NSArray<UIKeyCommand *> *)keyCommands {
-    return @[[UIKeyCommand keyCommandWithInput:kMEGAHardwareKeyboardCarriageReturnInput modifierFlags:0 action:@selector(jsq_sendButtonPressed:)]];
+    return @[[UIKeyCommand keyCommandWithInput:kMEGAUIKeyInputCarriageReturn modifierFlags:0 action:@selector(jsq_sendButtonPressed:)]];
 }
 
 - (void)jsq_sendButtonPressed:(UIButton *)sender {
