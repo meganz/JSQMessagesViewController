@@ -1,6 +1,7 @@
 
 #import "MEGAInputToolbar.h"
 
+#import "NSDate+MNZCategory.h"
 #import "NSString+MNZCategory.h"
 #import "UIColor+MNZCategory.h"
 
@@ -15,6 +16,7 @@ const CGFloat kSelectedAssetsViewHeight = 200.0f;
 const CGFloat kTextViewHorizontalMargins = 34.0f;
 CGFloat kImagePickerViewHeight;
 
+static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
 
 
 @interface MEGAInputToolbar ()
@@ -167,6 +169,10 @@ typedef NS_ENUM(NSUInteger, InputToolbarState) {
 }
 
 #pragma mark - Actions
+
+- (NSArray<UIKeyCommand *> *)keyCommands {
+    return @[[UIKeyCommand keyCommandWithInput:kMEGAUIKeyInputCarriageReturn modifierFlags:0 action:@selector(jsq_sendButtonPressed:)]];
+}
 
 - (void)jsq_sendButtonPressed:(UIButton *)sender {
     if (self.contentView) {
@@ -324,7 +330,7 @@ typedef NS_ENUM(NSUInteger, InputToolbarState) {
         }
     }
     
-    NSURL *destinationURL = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", [NSString mnz_fileNameWithDate:[NSDate date]], extension]]];
+    NSURL *destinationURL = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", [[NSDate date] mnz_formattedDefaultNameForMedia], extension]]];
     NSDictionary *recordSettings = @{ AVNumberOfChannelsKey: @(1),
                                       AVFormatIDKey: @(audioFormat),
                                       AVSampleRateKey: @(16000),
