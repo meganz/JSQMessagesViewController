@@ -23,6 +23,7 @@ typedef NS_ENUM(NSUInteger, MEGAChatAccessoryButton) {
 @property (weak, nonatomic) IBOutlet JSQMessagesComposerTextView *textView;
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
 @property (weak, nonatomic) IBOutlet UICollectionView *selectedAssetsCollectionView;
+@property (weak, nonatomic) IBOutlet UIView *opaqueContentView;
 
 /**
  *  The button to send messages, displayed on the right of the toolbar content view.

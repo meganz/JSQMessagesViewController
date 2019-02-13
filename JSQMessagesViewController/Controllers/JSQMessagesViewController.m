@@ -944,8 +944,10 @@ extern const CGFloat kTextContentViewHeight;
                         options:animationCurveOption
                      animations:^{
                          const UIEdgeInsets insets = self.additionalContentInset;
+                         CGFloat transparentHeight = self.inputToolbar.contentView.frame.size.height - self.inputToolbar.contentView.opaqueContentView.frame.size.height;
+                         CGFloat bottomValue = CGRectGetHeight(keyboardEndFrame) + insets.bottom - transparentHeight;
                          [self jsq_setCollectionViewInsetsTopValue:insets.top
-                                                       bottomValue:CGRectGetHeight(keyboardEndFrame) + insets.bottom];
+                                                       bottomValue:bottomValue];
                      }
                      completion:nil];
 }
