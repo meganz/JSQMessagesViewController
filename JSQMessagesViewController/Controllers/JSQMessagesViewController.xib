@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina5_9" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -27,20 +27,20 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <collectionView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="l9u-2b-4LK" customClass="JSQMessagesCollectionView">
-                    <rect key="frame" x="0.0" y="0.0" width="375" height="778"/>
+                    <rect key="frame" x="0.0" y="44" width="375" height="734"/>
                     <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <collectionViewLayout key="collectionViewLayout" id="dZl-7C-LHR" customClass="JSQMessagesCollectionViewFlowLayout"/>
                     <cells/>
                 </collectionView>
                 <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="250" placeholderIntrinsicWidth="320" placeholderIntrinsicHeight="44" translatesAutoresizingMaskIntoConstraints="NO" id="BoD-Az-3DM" customClass="MEGAInputToolbar">
-                    <rect key="frame" x="0.0" y="678" width="375" height="100"/>
+                    <rect key="frame" x="0.0" y="712" width="375" height="100"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="100" id="NvI-ha-YOZ"/>
                     </constraints>
                     <items/>
                 </toolbar>
                 <view opaque="NO" alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Vhb-c9-1gI">
-                    <rect key="frame" x="155" y="637" width="64" height="34"/>
+                    <rect key="frame" x="155.66666666666666" y="637" width="64" height="34"/>
                     <subviews>
                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="jumpBottom" translatesAutoresizingMaskIntoConstraints="NO" id="tfc-sC-lwN">
                             <rect key="frame" x="20" y="9" width="16" height="16"/>
@@ -76,19 +76,19 @@
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
-                <constraint firstItem="BoD-Az-3DM" firstAttribute="bottom" secondItem="JwB-cm-KbR" secondAttribute="bottom" id="3Pd-ng-j4Z"/>
-                <constraint firstItem="l9u-2b-4LK" firstAttribute="leading" secondItem="mUa-cS-ru4" secondAttribute="leading" id="MmF-oh-Y75"/>
+                <constraint firstItem="BoD-Az-3DM" firstAttribute="bottom" secondItem="mUa-cS-ru4" secondAttribute="bottom" id="3Pd-ng-j4Z"/>
+                <constraint firstItem="l9u-2b-4LK" firstAttribute="leading" secondItem="wKn-I2-Jq7" secondAttribute="leading" id="MmF-oh-Y75"/>
                 <constraint firstAttribute="trailing" secondItem="BoD-Az-3DM" secondAttribute="trailing" id="NYp-GV-CuO"/>
-                <constraint firstAttribute="trailing" secondItem="l9u-2b-4LK" secondAttribute="trailing" id="O9u-TA-A0e"/>
+                <constraint firstItem="wKn-I2-Jq7" firstAttribute="trailing" secondItem="l9u-2b-4LK" secondAttribute="trailing" id="O9u-TA-A0e"/>
                 <constraint firstItem="l9u-2b-4LK" firstAttribute="bottom" secondItem="Vhb-c9-1gI" secondAttribute="bottom" constant="107" id="XYY-oo-A3Q"/>
-                <constraint firstItem="JwB-cm-KbR" firstAttribute="bottom" secondItem="l9u-2b-4LK" secondAttribute="bottom" id="bdY-8K-8QO"/>
-                <constraint firstItem="l9u-2b-4LK" firstAttribute="top" secondItem="mUa-cS-ru4" secondAttribute="top" id="dCQ-DM-Wdj"/>
+                <constraint firstItem="wKn-I2-Jq7" firstAttribute="bottom" secondItem="l9u-2b-4LK" secondAttribute="bottom" id="bdY-8K-8QO"/>
+                <constraint firstItem="l9u-2b-4LK" firstAttribute="top" secondItem="wKn-I2-Jq7" secondAttribute="top" id="dCQ-DM-Wdj"/>
                 <constraint firstItem="BoD-Az-3DM" firstAttribute="leading" secondItem="mUa-cS-ru4" secondAttribute="leading" id="kcI-PG-nw7"/>
                 <constraint firstItem="Vhb-c9-1gI" firstAttribute="centerX" secondItem="mUa-cS-ru4" secondAttribute="centerX" id="lmu-27-aSo"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
-            <viewLayoutGuide key="safeArea" id="JwB-cm-KbR"/>
-            <point key="canvasLocation" x="24.5" y="51.5"/>
+            <viewLayoutGuide key="safeArea" id="wKn-I2-Jq7"/>
+            <point key="canvasLocation" x="39.200000000000003" y="46.326836581709152"/>
         </view>
     </objects>
     <resources>

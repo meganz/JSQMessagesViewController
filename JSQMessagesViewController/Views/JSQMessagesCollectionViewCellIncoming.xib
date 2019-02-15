@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -162,6 +163,7 @@
                 <constraint firstItem="3Uf-lF-8hR" firstAttribute="centerX" secondItem="4lh-CK-yVn" secondAttribute="centerX" id="s4g-Bk-bEP"/>
                 <constraint firstItem="UPz-5x-c1T" firstAttribute="top" secondItem="btS-p8-B7Z" secondAttribute="bottom" id="s8G-Je-7GA"/>
             </constraints>
+            <viewLayoutGuide key="safeArea" id="v0T-Wd-Oj5"/>
             <size key="customSize" width="317" height="245"/>
             <connections>
                 <outlet property="accessoryButton" destination="Md1-I7-2AZ" id="oP2-b9-yws"/>
@@ -187,7 +189,7 @@
                 <outlet property="unreadMessagesLabel" destination="29V-cv-OvV" id="usQ-aS-2yp"/>
                 <outlet property="unreadMessagesViewHeightConstraint" destination="eAf-7J-Ik2" id="WbW-sm-0Zt"/>
             </connections>
-            <point key="canvasLocation" x="255" y="202"/>
+            <point key="canvasLocation" x="408" y="181.70914542728636"/>
         </collectionViewCell>
     </objects>
     <resources>

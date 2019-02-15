@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -136,6 +137,7 @@
                 <constraint firstItem="X89-B1-aAd" firstAttribute="leading" secondItem="2zh-vR-QJW" secondAttribute="trailing" constant="4" id="vMz-Yi-B0w"/>
                 <constraint firstItem="2zh-vR-QJW" firstAttribute="leading" secondItem="BbA-sv-fxi" secondAttribute="trailing" constant="10" id="wHt-Ue-oPX"/>
             </constraints>
+            <viewLayoutGuide key="safeArea" id="QTu-yn-aro"/>
             <size key="customSize" width="317" height="245"/>
             <connections>
                 <outlet property="accessoryButton" destination="BbA-sv-fxi" id="e72-MA-jvZ"/>
@@ -159,7 +161,7 @@
                 <outlet property="textViewMarginHorizontalSpaceConstraint" destination="7rI-Nc-AK3" id="ciu-j6-IpH"/>
                 <outlet property="textViewTopVerticalSpaceConstraint" destination="RiG-21-Bqc" id="i3j-z0-feE"/>
             </connections>
-            <point key="canvasLocation" x="596" y="176"/>
+            <point key="canvasLocation" x="953.60000000000002" y="158.32083958020991"/>
         </collectionViewCell>
     </objects>
     <resources>
