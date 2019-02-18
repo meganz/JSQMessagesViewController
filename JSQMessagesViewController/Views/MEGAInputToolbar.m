@@ -277,7 +277,7 @@ static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
 }
 
 - (void)mnz_setJoinViewHidden:(BOOL)hidden {
-    if (!self.contentView) {
+    if (!hidden && !self.contentView) {
         self.selectedAssetsArray = [NSMutableArray new];
         [self assetPicker:nil didChangeSelectionTo:self.selectedAssetsArray];
         [self.imagePickerView removeFromSuperview];
