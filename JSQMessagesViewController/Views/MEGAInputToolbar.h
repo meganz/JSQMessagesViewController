@@ -35,6 +35,16 @@
               toAttachAssets:(NSArray<PHAsset *>*_Nullable)assets;
 
 /**
+ *  Tells the delegate that the toolbar's `sendButton` has been tapped (not held)
+ *  to record a voice clip. An informative tooltip should be shown.
+ *
+ *  @param toolbar The object representing the toolbar sending this information.
+ *  @param sender  The button that received the touch event.
+ */
+- (void)messagesInputToolbar:(MEGAInputToolbar *_Nonnull)toolbar
+ didPressNotHeldRecordButton:(UIButton *_Nullable)sender;
+
+/**
  *  Tells the delegate that there is a voice clip ready to be sent.
  *
  *  @param toolbar The object representing the toolbar sending this information.

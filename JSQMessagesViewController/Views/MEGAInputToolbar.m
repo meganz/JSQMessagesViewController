@@ -11,7 +11,7 @@ extern const CGFloat kCellSquareSize;
 extern const CGFloat kCellInset;
 extern const NSUInteger kCellRows;
 const CGFloat kButtonBarHeight = 50.0f;
-const CGFloat kTextContentViewHeight = 154.0f;
+const CGFloat kTextContentViewHeight = 80.0f;
 const CGFloat kSelectedAssetsViewHeight = 200.0f;
 const CGFloat kTextViewHorizontalMargins = 34.0f;
 CGFloat kImagePickerViewHeight;
@@ -177,13 +177,9 @@ typedef NS_ENUM(NSUInteger, InputToolbarState) {
 - (void)jsq_sendButtonPressed:(UIButton *)sender {
     if (self.contentView) {
         switch (self.currentState) {
-            case InputToolbarStateInitial: {
-                self.contentView.tooltipView.alpha = 1.0f;
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    [self mnz_tooltipClose:nil];
-                });
+            case InputToolbarStateInitial:
+                [self.delegate messagesInputToolbar:self didPressNotHeldRecordButton:sender];
                 break;
-            }
                 
             case InputToolbarStateWriting:
                 [self.delegate messagesInputToolbar:self didPressSendButton:sender];
@@ -292,12 +288,6 @@ typedef NS_ENUM(NSUInteger, InputToolbarState) {
     [self stopRecordingAudioToSend:NO];
     self.currentState = InputToolbarStateInitial;
     [self updateToolbar];
-}
-
-- (void)mnz_tooltipClose:(UIButton *)sender {
-    [UIView animateWithDuration:0.2f animations:^{
-        self.contentView.tooltipView.alpha = 0.0f;
-    } completion:nil];
 }
 
 #pragma mark - Voice clips
@@ -491,10 +481,6 @@ typedef NS_ENUM(NSUInteger, InputToolbarState) {
                                  action:@selector(mnz_cancelRecording:)
                        forControlEvents:UIControlEventTouchUpInside];
     
-    [view.tooltipButton addTarget:self
-                           action:@selector(mnz_tooltipClose:)
-                 forControlEvents:UIControlEventTouchUpInside];
-    
     [view.sendButton addGestureRecognizer:[[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)]];
 }
 
@@ -518,10 +504,6 @@ typedef NS_ENUM(NSUInteger, InputToolbarState) {
     [view.slideToCancelButton removeTarget:self
                                     action:NULL
                           forControlEvents:UIControlEventTouchUpInside];
-    
-    [view.tooltipButton removeTarget:self
-                              action:NULL
-                    forControlEvents:UIControlEventTouchUpInside];
     
     for (UIGestureRecognizer *gestureRecognizer in view.sendButton.gestureRecognizers) {
         [view.sendButton removeGestureRecognizer:gestureRecognizer];

@@ -735,6 +735,10 @@ extern const CGFloat kTextContentViewHeight;
     NSAssert(NO, @"Error! required method not implemented in subclass. Need to implement %s", __PRETTY_FUNCTION__);
 }
 
+- (void)messagesInputToolbar:(MEGAInputToolbar *)toolbar didPressNotHeldRecordButton:(UIButton *)sender {
+    NSAssert(NO, @"Error! required method not implemented in subclass. Need to implement %s", __PRETTY_FUNCTION__);
+}
+
 - (void)messagesInputToolbar:(MEGAInputToolbar *)toolbar didRecordVoiceClipAtPath:(NSString *)voiceClipPath {
     NSAssert(NO, @"Error! required method not implemented in subclass. Need to implement %s", __PRETTY_FUNCTION__);
 }
@@ -950,6 +954,12 @@ extern const CGFloat kTextContentViewHeight;
                                                        bottomValue:bottomValue];
                      }
                      completion:nil];
+}
+
+#pragma mark - IBActions
+
+- (IBAction)closeTooltipTapped:(UIButton *)sender {
+    NSAssert(NO, @"Error! required method not implemented in subclass. Need to implement %s", __PRETTY_FUNCTION__);
 }
 
 @end

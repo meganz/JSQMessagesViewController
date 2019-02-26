@@ -157,6 +157,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (weak, nonatomic) IBOutlet UIView *jumpToBottomView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *jumpToBottomConstraint;
 
+@property (weak, nonatomic) IBOutlet UIView *tooltipView;
+@property (weak, nonatomic) IBOutlet UILabel *tapAndHoldLabel;
+@property (weak, nonatomic) IBOutlet UILabel *releaseToSendLabel;
+
 #pragma mark - Class methods
 
 /**
