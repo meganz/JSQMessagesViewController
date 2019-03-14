@@ -9,7 +9,6 @@
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
-    
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="JSQMessagesViewController">
             <connections>
@@ -17,6 +16,8 @@
                 <outlet property="inputToolbar" destination="BoD-Az-3DM" id="w74-g9-1qA"/>
                 <outlet property="jumpToBottomConstraint" destination="XYY-oo-A3Q" id="7Oa-Gv-PdI"/>
                 <outlet property="jumpToBottomView" destination="Vhb-c9-1gI" id="rA8-B4-92p"/>
+                <outlet property="previewersLabel" destination="DhQ-Sq-qXp" id="ZVx-Et-waP"/>
+                <outlet property="previewersView" destination="fCi-YQ-caP" id="Zrf-Az-7wm"/>
                 <outlet property="toolbarHeightConstraint" destination="NvI-ha-YOZ" id="RQb-BT-tSl"/>
                 <outlet property="view" destination="mUa-cS-ru4" id="nki-T1-RTI"/>
             </connections>
@@ -73,6 +74,55 @@
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
                 </view>
+                <view hidden="YES" clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fCi-YQ-caP">
+                    <rect key="frame" x="151" y="56" width="73" height="34"/>
+                    <subviews>
+                        <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EBm-30-qeg">
+                            <rect key="frame" x="0.0" y="0.0" width="73" height="34"/>
+                            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="Fxu-yJ-BDf">
+                                <rect key="frame" x="0.0" y="0.0" width="73" height="34"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="showHidePassword_white" translatesAutoresizingMaskIntoConstraints="NO" id="gvw-eC-YBq">
+                                        <rect key="frame" x="16" y="5" width="24" height="24"/>
+                                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="24" id="0Q3-OE-Epq"/>
+                                            <constraint firstAttribute="width" constant="24" id="FE7-Dr-TCZ"/>
+                                        </constraints>
+                                    </imageView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DhQ-Sq-qXp">
+                                        <rect key="frame" x="48" y="8" width="9.6666666666666643" height="18"/>
+                                        <fontDescription key="fontDescription" name="SFUIText-Regular" family="SF UI Text" pointSize="15"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="DhQ-Sq-qXp" firstAttribute="leading" secondItem="gvw-eC-YBq" secondAttribute="trailing" constant="8" id="07v-xK-I7o"/>
+                                    <constraint firstAttribute="trailing" secondItem="DhQ-Sq-qXp" secondAttribute="trailing" constant="16" id="4nt-RM-jSh"/>
+                                    <constraint firstItem="gvw-eC-YBq" firstAttribute="leading" secondItem="Fxu-yJ-BDf" secondAttribute="leading" constant="16" id="HFR-Y3-AFU"/>
+                                    <constraint firstItem="gvw-eC-YBq" firstAttribute="centerY" secondItem="Fxu-yJ-BDf" secondAttribute="centerY" id="sR1-lE-yT1"/>
+                                    <constraint firstItem="DhQ-Sq-qXp" firstAttribute="centerY" secondItem="Fxu-yJ-BDf" secondAttribute="centerY" id="wMa-qm-ZcD"/>
+                                </constraints>
+                            </view>
+                            <blurEffect style="dark"/>
+                        </visualEffectView>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="bottom" secondItem="EBm-30-qeg" secondAttribute="bottom" id="Dgt-nW-sDL"/>
+                        <constraint firstItem="EBm-30-qeg" firstAttribute="top" secondItem="fCi-YQ-caP" secondAttribute="top" id="WI6-oV-ni8"/>
+                        <constraint firstItem="EBm-30-qeg" firstAttribute="leading" secondItem="fCi-YQ-caP" secondAttribute="leading" id="p8R-tg-qfU"/>
+                        <constraint firstAttribute="trailing" secondItem="EBm-30-qeg" secondAttribute="trailing" id="ukC-Yv-K2v"/>
+                        <constraint firstAttribute="height" constant="34" id="vEA-Zr-4IG"/>
+                    </constraints>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                            <integer key="value" value="17"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </view>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
@@ -80,11 +130,13 @@
                 <constraint firstItem="l9u-2b-4LK" firstAttribute="leading" secondItem="wKn-I2-Jq7" secondAttribute="leading" id="MmF-oh-Y75"/>
                 <constraint firstAttribute="trailing" secondItem="BoD-Az-3DM" secondAttribute="trailing" id="NYp-GV-CuO"/>
                 <constraint firstItem="wKn-I2-Jq7" firstAttribute="trailing" secondItem="l9u-2b-4LK" secondAttribute="trailing" id="O9u-TA-A0e"/>
+                <constraint firstItem="fCi-YQ-caP" firstAttribute="centerX" secondItem="mUa-cS-ru4" secondAttribute="centerX" id="TBi-RS-Glb"/>
                 <constraint firstItem="l9u-2b-4LK" firstAttribute="bottom" secondItem="Vhb-c9-1gI" secondAttribute="bottom" constant="107" id="XYY-oo-A3Q"/>
                 <constraint firstItem="wKn-I2-Jq7" firstAttribute="bottom" secondItem="l9u-2b-4LK" secondAttribute="bottom" id="bdY-8K-8QO"/>
                 <constraint firstItem="l9u-2b-4LK" firstAttribute="top" secondItem="wKn-I2-Jq7" secondAttribute="top" id="dCQ-DM-Wdj"/>
                 <constraint firstItem="BoD-Az-3DM" firstAttribute="leading" secondItem="mUa-cS-ru4" secondAttribute="leading" id="kcI-PG-nw7"/>
                 <constraint firstItem="Vhb-c9-1gI" firstAttribute="centerX" secondItem="mUa-cS-ru4" secondAttribute="centerX" id="lmu-27-aSo"/>
+                <constraint firstItem="fCi-YQ-caP" firstAttribute="top" secondItem="wKn-I2-Jq7" secondAttribute="top" constant="12" id="s6q-Za-nMd"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <viewLayoutGuide key="safeArea" id="wKn-I2-Jq7"/>
@@ -93,5 +145,6 @@
     </objects>
     <resources>
         <image name="jumpBottom" width="32" height="32"/>
+        <image name="showHidePassword_white" width="24" height="24"/>
     </resources>
 </document>

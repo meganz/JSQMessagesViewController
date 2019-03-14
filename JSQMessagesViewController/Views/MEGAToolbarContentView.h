@@ -17,6 +17,10 @@ typedef NS_ENUM(NSUInteger, MEGAChatAccessoryButton) {
  */
 @interface MEGAToolbarContentView : UIView
 
+@property (weak, nonatomic) IBOutlet UIView *containerView;
+@property (weak, nonatomic) IBOutlet UIView *joinView;
+@property (weak, nonatomic) IBOutlet UIButton *joinButton;
+
 /**
  *  The text view in which the user composes a message.
  */

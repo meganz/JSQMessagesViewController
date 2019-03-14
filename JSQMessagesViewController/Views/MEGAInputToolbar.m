@@ -265,11 +265,26 @@ static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
     }
 }
 
+- (void)mnz_joinButtonPressed:(UIButton *)sender {
+    [self.delegate messagesInputToolbar:self didPressJoinButton:sender];
+}
+
 #pragma mark - Input toolbar
 
 - (void)updateSendButtonEnabledState {
     self.contentView.sendButton.enabled = [self.contentView.textView hasText];
     self.contentView.sendButton.backgroundColor = [self.contentView.textView hasText] ? [UIColor mnz_green00BFA5] : [UIColor mnz_grayE2EAEA];
+}
+
+- (void)mnz_setJoinViewHidden:(BOOL)hidden {
+    if (!hidden && !self.contentView) {
+        self.selectedAssetsArray = [NSMutableArray new];
+        [self assetPicker:nil didChangeSelectionTo:self.selectedAssetsArray];
+        [self.imagePickerView removeFromSuperview];
+        [self loadToolbarTextContentView];
+    }
+    self.contentView.containerView.hidden = !hidden;
+    self.contentView.joinView.hidden = hidden;
 }
 
 #pragma mark - MEGAToolbarAssetPickerDelegate
@@ -349,6 +364,10 @@ static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
     [view.accessoryUploadButton addTarget:self
                                    action:@selector(mnz_accesoryButtonPressed:)
                          forControlEvents:UIControlEventTouchUpInside];
+    
+    [view.joinButton addTarget:self
+                        action:@selector(mnz_joinButtonPressed:)
+              forControlEvents:UIControlEventTouchUpInside];
 }
 
 - (void)removeTargetsFromView:(MEGAToolbarContentView *)view {
@@ -371,6 +390,10 @@ static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
     [view.accessoryUploadButton removeTarget:self
                                       action:NULL
                             forControlEvents:UIControlEventTouchUpInside];
+    
+    [view.joinButton removeTarget:self
+                           action:NULL
+                 forControlEvents:UIControlEventTouchUpInside];
 }
 
 # pragma mark - KVO

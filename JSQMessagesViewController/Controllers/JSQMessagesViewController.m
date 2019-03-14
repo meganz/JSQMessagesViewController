@@ -323,6 +323,11 @@ extern const CGFloat kTextContentViewHeight;
     NSAssert(NO, @"Error! required method not implemented in subclass. Need to implement %s", __PRETTY_FUNCTION__);
 }
 
+- (void)didPressJoinButton:(UIButton *)sender
+{
+    NSAssert(NO, @"Error! required method not implemented in subclass. Need to implement %s", __PRETTY_FUNCTION__);
+}
+
 - (void)finishSendingMessage
 {
     [self finishSendingMessageAnimated:YES];
@@ -744,6 +749,10 @@ extern const CGFloat kTextContentViewHeight;
 
 - (void)messagesInputToolbar:(MEGAInputToolbar *)toolbar didPressAccessoryButton:(UIButton *)sender {
     [self didPressAccessoryButton:sender];
+}
+
+- (void)messagesInputToolbar:(MEGAInputToolbar *)toolbar didPressJoinButton:(UIButton *)sender {
+    [self didPressJoinButton:sender];
 }
 
 - (void)messagesInputToolbar:(MEGAInputToolbar *)toolbar needsResizeToHeight:(CGFloat)newToolbarHeight {
