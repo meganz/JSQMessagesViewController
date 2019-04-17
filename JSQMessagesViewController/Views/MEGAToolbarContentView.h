@@ -17,6 +17,9 @@ typedef NS_ENUM(NSUInteger, MEGAChatAccessoryButton) {
  */
 @interface MEGAToolbarContentView : UIView
 
+@property (weak, nonatomic) IBOutlet UIVisualEffectView *typingIndicatorView;
+@property (weak, nonatomic) IBOutlet UILabel *typingIndicatorLabel;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *contentViewHeightConstraint;
 @property (weak, nonatomic) IBOutlet UIView *containerView;
 @property (weak, nonatomic) IBOutlet UIView *joinView;
 @property (weak, nonatomic) IBOutlet UIButton *joinButton;

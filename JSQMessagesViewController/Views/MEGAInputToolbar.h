@@ -94,5 +94,6 @@
 
 - (void)mnz_accesoryButtonPressed:(UIButton *_Nonnull)sender;
 - (void)mnz_setJoinViewHidden:(BOOL)hidden;
+- (void)mnz_setTypingIndicatorAttributedText:(NSAttributedString *)attributedText;
 
 @end
