@@ -289,6 +289,10 @@ static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
 }
 
 - (void)mnz_setTypingIndicatorAttributedText:(NSAttributedString *)attributedText {
+    if (!self.contentView) {
+        return;
+    }
+    
     if (attributedText) {
         self.contentView.typingIndicatorLabel.attributedText = attributedText;
         self.contentView.typingIndicatorView.hidden = NO;
