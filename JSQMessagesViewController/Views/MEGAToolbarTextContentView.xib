@@ -38,6 +38,7 @@
                     <constraints>
                         <constraint firstAttribute="height" constant="24" id="bTd-Kq-cxo"/>
                     </constraints>
+                    <viewLayoutGuide key="safeArea" id="7Fq-KY-4vN"/>
                     <blurEffect style="light"/>
                 </visualEffectView>
                 <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gYs-hW-CRP">
@@ -157,6 +158,7 @@
                         <constraint firstItem="S8o-QO-z7n" firstAttribute="leading" secondItem="xo0-If-lXN" secondAttribute="leading" constant="17" id="f4J-sd-efy"/>
                         <constraint firstAttribute="trailing" secondItem="FzB-DF-mS3" secondAttribute="trailing" constant="17" id="xcD-Fv-sgk"/>
                     </constraints>
+                    <viewLayoutGuide key="safeArea" id="uwm-CQ-V2d"/>
                 </view>
             </subviews>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
