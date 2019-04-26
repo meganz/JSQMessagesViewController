@@ -118,6 +118,7 @@ static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
     
     // Observe remote changes of the text within the textView, useful when the user edits the content of a message:
     [textContentView.textView addObserver:self forKeyPath:@"text" options:NSKeyValueObservingOptionNew context:nil];
+    [self resizeToolbarIfNeeded];
 }
 
 - (void)setupImagePickerView:(MEGAToolbarContentView *)imagePickerView {
@@ -287,6 +288,20 @@ static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
     self.contentView.joinView.hidden = hidden;
 }
 
+- (void)mnz_setTypingIndicatorAttributedText:(NSAttributedString *)attributedText {
+    if (!self.contentView) {
+        return;
+    }
+    
+    if (attributedText) {
+        self.contentView.typingIndicatorLabel.attributedText = attributedText;
+        self.contentView.typingIndicatorView.hidden = NO;
+    } else {
+        self.contentView.typingIndicatorView.hidden = YES;
+    }
+    [self resizeToolbarIfNeeded];
+}
+
 #pragma mark - MEGAToolbarAssetPickerDelegate
 
 - (void)assetPicker:(MEGAToolbarAssetPicker *)assetPicker didChangeSelectionTo:(NSMutableArray<PHAsset *> *)selectedAssetsArray {
@@ -329,7 +344,12 @@ static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
 }
 
 - (void)resizeToolbarIfNeeded {
-    [self.delegate messagesInputToolbar:self needsResizeToHeight:[self heightToFitInWidth:self.contentView.textView.frame.size.width]];
+    self.contentView.contentViewHeightConstraint.constant = [self heightToFitInWidth:self.contentView.textView.frame.size.width];
+    CGFloat newToolbarHeight = self.contentView.contentViewHeightConstraint.constant;
+    if (!self.contentView.typingIndicatorView.isHidden) {
+        newToolbarHeight += self.contentView.typingIndicatorView.frame.size.height;
+    }
+    [self.delegate messagesInputToolbar:self needsResizeToHeight:newToolbarHeight];
 }
 
 - (CGFloat)heightToFitInWidth:(CGFloat)width {
