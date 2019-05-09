@@ -124,6 +124,7 @@ typedef NS_ENUM(NSUInteger, InputToolbarState) {
     
     // Observe remote changes of the text within the textView, useful when the user edits the content of a message:
     [textContentView.textView addObserver:self forKeyPath:@"text" options:NSKeyValueObservingOptionNew context:nil];
+    [self resizeToolbarIfNeeded];
 }
 
 - (void)setupImagePickerView:(MEGAToolbarContentView *)imagePickerView {
@@ -284,6 +285,10 @@ typedef NS_ENUM(NSUInteger, InputToolbarState) {
     }
 }
 
+- (void)mnz_joinButtonPressed:(UIButton *)sender {
+    [self.delegate messagesInputToolbar:self didPressJoinButton:sender];
+}
+
 - (void)mnz_cancelRecording:(UIButton *)sender {
     [self stopRecordingAudioToSend:NO];
     self.currentState = InputToolbarStateInitial;
@@ -411,6 +416,31 @@ typedef NS_ENUM(NSUInteger, InputToolbarState) {
     }
 }
 
+- (void)mnz_setJoinViewHidden:(BOOL)hidden {
+    if (!hidden && !self.contentView) {
+        self.selectedAssetsArray = [NSMutableArray new];
+        [self assetPicker:nil didChangeSelectionTo:self.selectedAssetsArray];
+        [self.imagePickerView removeFromSuperview];
+        [self loadToolbarTextContentView];
+    }
+    self.contentView.opaqueContentView.hidden = !hidden;
+    self.contentView.joinView.hidden = hidden;
+}
+
+- (void)mnz_setTypingIndicatorAttributedText:(NSAttributedString *)attributedText {
+    if (!self.contentView) {
+        return;
+    }
+    
+    if (attributedText) {
+        self.contentView.typingIndicatorLabel.attributedText = attributedText;
+        self.contentView.typingIndicatorView.hidden = NO;
+    } else {
+        self.contentView.typingIndicatorView.hidden = YES;
+    }
+    [self resizeToolbarIfNeeded];
+}
+
 #pragma mark - MEGAToolbarAssetPickerDelegate
 
 - (void)assetPicker:(MEGAToolbarAssetPicker *)assetPicker didChangeSelectionTo:(NSMutableArray<PHAsset *> *)selectedAssetsArray {
@@ -445,7 +475,12 @@ typedef NS_ENUM(NSUInteger, InputToolbarState) {
 }
 
 - (void)resizeToolbarIfNeeded {
-    [self.delegate messagesInputToolbar:self needsResizeToHeight:[self heightToFitInWidth:self.contentView.textView.frame.size.width]];
+    self.contentView.contentViewHeightConstraint.constant = [self heightToFitInWidth:self.contentView.textView.frame.size.width];
+    CGFloat newToolbarHeight = self.contentView.contentViewHeightConstraint.constant;
+    if (!self.contentView.typingIndicatorView.isHidden) {
+        newToolbarHeight += self.contentView.typingIndicatorView.frame.size.height;
+    }
+    [self.delegate messagesInputToolbar:self needsResizeToHeight:newToolbarHeight];
 }
 
 - (CGFloat)heightToFitInWidth:(CGFloat)width {
@@ -477,6 +512,10 @@ typedef NS_ENUM(NSUInteger, InputToolbarState) {
                                    action:@selector(mnz_accesoryButtonPressed:)
                          forControlEvents:UIControlEventTouchUpInside];
     
+    [view.joinButton addTarget:self
+                        action:@selector(mnz_joinButtonPressed:)
+              forControlEvents:UIControlEventTouchUpInside];
+    
     [view.slideToCancelButton addTarget:self
                                  action:@selector(mnz_cancelRecording:)
                        forControlEvents:UIControlEventTouchUpInside];
@@ -501,6 +540,10 @@ typedef NS_ENUM(NSUInteger, InputToolbarState) {
                                       action:NULL
                             forControlEvents:UIControlEventTouchUpInside];
     
+    [view.joinButton removeTarget:self
+                           action:NULL
+                 forControlEvents:UIControlEventTouchUpInside];
+
     [view.slideToCancelButton removeTarget:self
                                     action:NULL
                           forControlEvents:UIControlEventTouchUpInside];

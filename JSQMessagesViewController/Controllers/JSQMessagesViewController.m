@@ -323,6 +323,11 @@ extern const CGFloat kTextContentViewHeight;
     NSAssert(NO, @"Error! required method not implemented in subclass. Need to implement %s", __PRETTY_FUNCTION__);
 }
 
+- (void)didPressJoinButton:(UIButton *)sender
+{
+    NSAssert(NO, @"Error! required method not implemented in subclass. Need to implement %s", __PRETTY_FUNCTION__);
+}
+
 - (void)finishSendingMessage
 {
     [self finishSendingMessageAnimated:YES];
@@ -754,6 +759,10 @@ extern const CGFloat kTextContentViewHeight;
     [self didPressAccessoryButton:sender];
 }
 
+- (void)messagesInputToolbar:(MEGAInputToolbar *)toolbar didPressJoinButton:(UIButton *)sender {
+    [self didPressJoinButton:sender];
+}
+
 - (void)messagesInputToolbar:(MEGAInputToolbar *)toolbar needsResizeToHeight:(CGFloat)newToolbarHeight {
     self.toolbarHeightConstraint.constant = newToolbarHeight;
 }
@@ -931,27 +940,25 @@ extern const CGFloat kTextContentViewHeight;
 - (void)jsq_didReceiveKeyboardWillChangeFrameNotification:(NSNotification *)notification
 {
     NSDictionary *userInfo = [notification userInfo];
-
+    
     CGRect keyboardEndFrame = [userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
-
+    
     if (CGRectIsNull(keyboardEndFrame)) {
         return;
     }
-
+    
     UIViewAnimationCurve animationCurve = [userInfo[UIKeyboardAnimationCurveUserInfoKey] integerValue];
     NSInteger animationCurveOption = (animationCurve << 16);
-
+    
     double animationDuration = [userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
-
+    
     [UIView animateWithDuration:animationDuration
                           delay:0.0
                         options:animationCurveOption
                      animations:^{
                          const UIEdgeInsets insets = self.additionalContentInset;
-                         CGFloat transparentHeight = self.inputToolbar.contentView.frame.size.height - self.inputToolbar.contentView.opaqueContentView.frame.size.height;
-                         CGFloat bottomValue = CGRectGetHeight(keyboardEndFrame) + insets.bottom - transparentHeight;
                          [self jsq_setCollectionViewInsetsTopValue:insets.top
-                                                       bottomValue:bottomValue];
+                                                       bottomValue:CGRectGetHeight(keyboardEndFrame) + insets.bottom];
                      }
                      completion:nil];
 }
