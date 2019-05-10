@@ -69,7 +69,7 @@
  *  @param sender  The button that received the touch event.
  */
 - (void)messagesInputToolbar:(MEGAInputToolbar *_Nonnull)toolbar
-     didPressJoinButton:(UIButton *_Nonnull)sender;
+          didPressJoinButton:(UIButton *_Nonnull)sender;
 
 /**
  *  Tells the delegate that Photos framework failed fetching asset.
@@ -78,7 +78,7 @@
  *  @param error The error that received from Photos framework.
  */
 - (void)messagesInputToolbar:(MEGAInputToolbar *_Nonnull)toolbar
-     assetLoadFailed:(NSError *_Nonnull)error;
+             assetLoadFailed:(NSError *_Nonnull)error;
 
 @optional
 
@@ -113,6 +113,6 @@
 
 - (void)mnz_accesoryButtonPressed:(UIButton *_Nonnull)sender;
 - (void)mnz_setJoinViewHidden:(BOOL)hidden;
-- (void)mnz_setTypingIndicatorAttributedText:(NSAttributedString *)attributedText;
+- (void)mnz_setTypingIndicatorAttributedText:(NSAttributedString *_Nullable)attributedText;
 
 @end

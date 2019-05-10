@@ -308,15 +308,8 @@ typedef NS_ENUM(NSUInteger, InputToolbarState) {
         return NO;
     }
     
-    AudioFormatID audioFormat;
-    NSString *extension;
-    if (@available(iOS 11.0, *)) {
-        audioFormat = kAudioFormatOpus;
-        extension = @"opus";
-    } else {
-        audioFormat = kAudioFormatMPEG4AAC;
-        extension = @"m4a";
-    }
+    AudioFormatID audioFormat = kAudioFormatMPEG4AAC;
+    NSString *extension = @"m4a";
     
     if (![NSFileManager.defaultManager fileExistsAtPath:NSTemporaryDirectory()]) {
         if (![NSFileManager.defaultManager createDirectoryAtPath:NSTemporaryDirectory() withIntermediateDirectories:YES attributes:nil error:&error]) {
