@@ -21,13 +21,6 @@ static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
 
 @interface MEGAInputToolbar ()
 
-typedef NS_ENUM(NSUInteger, InputToolbarState) {
-    InputToolbarStateInitial,
-    InputToolbarStateWriting,
-    InputToolbarStateRecordingUnlocked,
-    InputToolbarStateRecordingLocked
-};
-
 @property (assign, nonatomic) BOOL jsq_isObserving;
 @property (nonatomic) MEGAToolbarAssetPicker *assetPicker;
 @property (nonatomic) MEGAToolbarSelectedAssets *selectedAssets;
@@ -407,6 +400,8 @@ typedef NS_ENUM(NSUInteger, InputToolbarState) {
             break;
         }
     }
+    
+    [self.delegate messagesInputToolbar:self didChangeToState:self.currentState];
 }
 
 - (void)mnz_setJoinViewHidden:(BOOL)hidden {

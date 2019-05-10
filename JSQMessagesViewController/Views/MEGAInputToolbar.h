@@ -7,6 +7,13 @@
 
 @class MEGAInputToolbar;
 
+typedef NS_ENUM(NSUInteger, InputToolbarState) {
+    InputToolbarStateInitial,
+    InputToolbarStateWriting,
+    InputToolbarStateRecordingUnlocked,
+    InputToolbarStateRecordingLocked
+};
+
 /**
  *  The `MEGAInputToolbarDelegate` protocol defines methods for interacting with
  *  a `MEGAInputToolbar` object.
@@ -79,6 +86,15 @@
  */
 - (void)messagesInputToolbar:(MEGAInputToolbar *_Nonnull)toolbar
              assetLoadFailed:(NSError *_Nonnull)error;
+
+/**
+ *  Tells the delegate that the state of the toolbar has changed.
+ *
+ *  @param toolbar The object representing the toolbar sending this information.
+ *  @param state The new state.
+ */
+- (void)messagesInputToolbar:(MEGAInputToolbar *_Nonnull)toolbar
+            didChangeToState:(InputToolbarState)state;
 
 @optional
 
