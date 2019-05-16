@@ -1,6 +1,7 @@
 
 #import "MEGAInputToolbar.h"
 
+#import "DevicePermissionsHelper.h"
 #import "NSDate+MNZCategory.h"
 #import "NSString+MNZCategory.h"
 #import "UIColor+MNZCategory.h"
@@ -551,21 +552,33 @@ static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
 
 - (void)longPress:(UILongPressGestureRecognizer *)longPressGestureRecognizer {
     switch (longPressGestureRecognizer.state) {
-        case UIGestureRecognizerStateBegan:
+        case UIGestureRecognizerStateBegan: {
             if (self.currentState != InputToolbarStateInitial) {
                 return;
             }
             
-            self.longPressInitialPoint = [longPressGestureRecognizer locationInView:self];
-            self.slideToCancelOriginalFrame = self.contentView.slideToCancelButton.frame;
-            self.contentView.slideToCancelButton.translatesAutoresizingMaskIntoConstraints = YES;
-            
-            if ([self startRecordingAudio]) {
-                self.currentState = InputToolbarStateRecordingUnlocked;
-                [self updateToolbar];
+            if ([DevicePermissionsHelper shouldAskForAudioPermissions]) {
+                [DevicePermissionsHelper audioPermissionModal:YES forIncomingCall:NO withCompletionHandler:nil];
+            } else {
+                [DevicePermissionsHelper audioPermissionModal:YES forIncomingCall:NO withCompletionHandler:^(BOOL granted) {
+                    if (granted) {
+                        self.longPressInitialPoint = [longPressGestureRecognizer locationInView:self];
+                        self.slideToCancelOriginalFrame = self.contentView.slideToCancelButton.frame;
+                        self.contentView.slideToCancelButton.translatesAutoresizingMaskIntoConstraints = YES;
+                        
+                        if ([self startRecordingAudio]) {
+                            self.currentState = InputToolbarStateRecordingUnlocked;
+                            [self updateToolbar];
+                        }
+                    } else {
+                        [DevicePermissionsHelper alertAudioPermissionForIncomingCall:NO];
+                    }
+                }];
             }
             
             break;
+            
+        }
             
         case UIGestureRecognizerStateChanged: {
             if (self.currentState != InputToolbarStateRecordingUnlocked) {
