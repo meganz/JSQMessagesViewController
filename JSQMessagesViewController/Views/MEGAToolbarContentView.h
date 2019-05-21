@@ -44,5 +44,6 @@ typedef NS_ENUM(NSUInteger, MEGAChatAccessoryButton) {
 @property (weak, nonatomic) IBOutlet UILabel *recordingTimeLabel;
 @property (weak, nonatomic) IBOutlet UIButton *slideToCancelButton;
 @property (weak, nonatomic) IBOutlet UIView *lockView;
+@property (weak, nonatomic) IBOutlet UIView *recordingContainerView;
 
 @end

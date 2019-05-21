@@ -375,7 +375,7 @@ static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
             [self.contentView.slideToCancelButton setTitleColor:UIColor.mnz_gray666666 forState:UIControlStateNormal];
             self.contentView.recordingTimeLabel.text = @"00:00";
             self.contentView.accessoryCameraButton.hidden = self.contentView.accessoryImageButton.hidden = self.contentView.accessoryUploadButton.hidden = self.contentView.textView.hidden = NO;
-            self.contentView.recordingView.hidden = self.contentView.recordingTimeLabel.hidden = self.contentView.slideToCancelButton.hidden = self.contentView.lockView.hidden = YES;
+            self.contentView.recordingContainerView.hidden = self.contentView.slideToCancelButton.hidden = self.contentView.lockView.hidden = YES;
             
             break;
             
@@ -389,7 +389,7 @@ static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
         case InputToolbarStateRecordingUnlocked:
             [self.contentView.sendButton setImage:[UIImage imageNamed:@"sendVoiceClipActive"] forState:UIControlStateNormal];
             self.contentView.accessoryCameraButton.hidden = self.contentView.accessoryImageButton.hidden = self.contentView.accessoryUploadButton.hidden = self.contentView.textView.hidden = YES;
-            self.contentView.recordingView.hidden = self.contentView.recordingTimeLabel.hidden = self.contentView.slideToCancelButton.hidden = self.contentView.lockView.hidden = NO;
+            self.contentView.recordingContainerView.hidden = self.contentView.slideToCancelButton.hidden = self.contentView.lockView.hidden = NO;
             
             break;
             
