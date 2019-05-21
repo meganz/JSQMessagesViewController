@@ -339,8 +339,6 @@ extern const CGFloat kTextContentViewHeight;
     textView.text = nil;
     [textView.undoManager removeAllActions];
 
-    [[NSNotificationCenter defaultCenter] postNotificationName:UITextViewTextDidChangeNotification object:textView];
-
     [self scrollToBottomAnimated:animated];
 }
 
