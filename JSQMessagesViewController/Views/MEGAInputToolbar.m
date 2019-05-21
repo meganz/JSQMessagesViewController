@@ -3,6 +3,7 @@
 
 #import "DevicePermissionsHelper.h"
 #import "NSDate+MNZCategory.h"
+#import "NSFileManager+MNZCategory.h"
 #import "NSString+MNZCategory.h"
 #import "UIColor+MNZCategory.h"
 
@@ -15,6 +16,7 @@ const CGFloat kButtonBarHeight = 50.0f;
 const CGFloat kTextContentViewHeight = 80.0f;
 const CGFloat kSelectedAssetsViewHeight = 200.0f;
 const CGFloat kTextViewHorizontalMargins = 34.0f;
+const CGFloat kMinimunRecordDuration = 1.0f;
 CGFloat kImagePickerViewHeight;
 
 static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
@@ -349,12 +351,12 @@ static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
         MEGALogError(@"[Voice clips] Error deactivating audio session: %@", error);
     }
     
-    if (send) {
+    AVAudioPlayer *audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:clipURL error:nil];
+    MEGALogDebug(@"[Voice clips] Stop recording: send %d, duration - %f", send, audioPlayer.duration);
+    if (send && audioPlayer.duration >= kMinimunRecordDuration) {
         [self.delegate messagesInputToolbar:self didRecordVoiceClipAtPath:clipURL.path];
     } else {
-        if (![NSFileManager.defaultManager removeItemAtURL:clipURL error:&error]) {
-            MEGALogError(@"[Voice clips] Error removing recorded clip: %@", error);
-        }
+        [NSFileManager.defaultManager mnz_removeItemAtPath:clipURL.path];
     }
 }
 
