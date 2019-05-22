@@ -24,6 +24,8 @@ static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
 @property (nonatomic) MEGAToolbarSelectedAssets *selectedAssets;
 @property (nonatomic) NSMutableArray<PHAsset *> *selectedAssetsArray;
 
+@property (nonatomic) CGFloat currentToolbarHeight;
+
 @end
 
 
@@ -344,12 +346,13 @@ static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
 }
 
 - (void)resizeToolbarIfNeeded {
-    self.contentView.contentViewHeightConstraint.constant = [self heightToFitInWidth:self.contentView.textView.frame.size.width];
-    CGFloat newToolbarHeight = self.contentView.contentViewHeightConstraint.constant;
-    if (!self.contentView.typingIndicatorView.isHidden) {
-        newToolbarHeight += self.contentView.typingIndicatorView.frame.size.height;
+    CGFloat newToolbarHeight = [self heightToFitInWidth:self.contentView.textView.frame.size.width];
+    if (self.currentToolbarHeight != newToolbarHeight) {
+        self.contentView.contentViewHeightConstraint.constant = newToolbarHeight;
+        [self.delegate messagesInputToolbar:self needsResizeToHeight:newToolbarHeight];
+        
+        self.currentToolbarHeight = newToolbarHeight;
     }
-    [self.delegate messagesInputToolbar:self needsResizeToHeight:newToolbarHeight];
 }
 
 - (CGFloat)heightToFitInWidth:(CGFloat)width {
