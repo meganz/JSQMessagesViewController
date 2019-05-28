@@ -36,6 +36,7 @@ static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
 @property (nonatomic) NSTimer *timer;
 @property (nonatomic) NSDate *baseDate;
 @property (nonatomic) CGFloat currentToolbarHeight;
+@property (nonatomic) UINotificationFeedbackGenerator *hapticGenerator;
 
 @end
 
@@ -51,6 +52,9 @@ static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
     
     kImagePickerViewHeight = kButtonBarHeight + (kCellRows+1)*kCellInset + kCellRows*kCellSquareSize;
     _selectedAssetsArray = [NSMutableArray new];
+    if (@available(iOS 10.0, *)) {
+        _hapticGenerator = [[UINotificationFeedbackGenerator alloc] init];
+    }
     
     [self loadToolbarTextContentView];
 }
@@ -177,6 +181,9 @@ static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
         switch (self.currentState) {
             case InputToolbarStateInitial:
                 [self.delegate messagesInputToolbar:self didPressNotHeldRecordButton:sender];
+                if (@available(iOS 10.0, *)) {
+                    [self.hapticGenerator notificationOccurred:UINotificationFeedbackTypeError];
+                }
                 break;
                 
             case InputToolbarStateWriting:
@@ -358,8 +365,14 @@ static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
     MEGALogDebug(@"[Voice clips] Stop recording: send %d, duration - %f", send, audioPlayer.duration);
     if (send && audioPlayer.duration >= kMinimunRecordDuration) {
         [self.delegate messagesInputToolbar:self didRecordVoiceClipAtPath:clipURL.path];
+        if (@available(iOS 10.0, *)) {
+            [self.hapticGenerator notificationOccurred:UINotificationFeedbackTypeSuccess];
+        }
     } else {
         [NSFileManager.defaultManager mnz_removeItemAtPath:clipURL.path];
+        if (@available(iOS 10.0, *)) {
+            [self.hapticGenerator notificationOccurred:UINotificationFeedbackTypeError];
+        }
     }
 }
 
