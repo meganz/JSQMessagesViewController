@@ -188,6 +188,7 @@ static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
                 
             case InputToolbarStateRecordingLocked:
                 [self stopRecordingAudioToSend:YES];
+                self.contentView.textView.text = @"";
                 self.currentState = InputToolbarStateInitial;
                 [self updateToolbar];
                 break;
@@ -288,6 +289,7 @@ static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
 
 - (void)mnz_cancelRecording:(UIButton *)sender {
     [self stopRecordingAudioToSend:NO];
+    self.contentView.textView.text = @"";
     self.currentState = InputToolbarStateInitial;
     [self updateToolbar];
 }
@@ -461,6 +463,10 @@ static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
 #pragma mark - Notifications
 
 - (void)textViewTextDidChangeNotification:(NSNotification *)notification {
+    if (self.currentState == InputToolbarStateRecordingUnlocked || self.currentState == InputToolbarStateRecordingLocked) {
+        return;
+    }
+    
     self.currentState = [self.contentView.textView hasText] ? InputToolbarStateWriting : InputToolbarStateInitial;
     [self updateToolbar];
     [self resizeToolbarIfNeeded];
@@ -623,6 +629,7 @@ static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
             [self stopRecordingAudioToSend:YES];
             self.contentView.slideToCancelButton.frame = self.slideToCancelOriginalFrame;
             self.contentView.slideToCancelButton.translatesAutoresizingMaskIntoConstraints = NO;
+            self.contentView.textView.text = @"";
             self.currentState = InputToolbarStateInitial;
             [self updateToolbar];
             
