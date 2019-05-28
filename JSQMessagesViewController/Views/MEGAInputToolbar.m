@@ -379,6 +379,7 @@ static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
             self.contentView.recordingTimeLabel.text = @"00:00";
             self.contentView.accessoryCameraButton.hidden = self.contentView.accessoryImageButton.hidden = self.contentView.accessoryUploadButton.hidden = self.contentView.textView.hidden = NO;
             self.contentView.recordingContainerView.hidden = self.contentView.slideToCancelButton.hidden = self.contentView.lockView.hidden = YES;
+            self.contentView.slideToCancelButton.alpha = 1.0;
             
             break;
             
@@ -611,6 +612,7 @@ static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
                 BOOL isRTLLanguage = UIApplication.sharedApplication.userInterfaceLayoutDirection == UIUserInterfaceLayoutDirectionRightToLeft;
                 frame.origin.x = isRTLLanguage ? frame.origin.x + xIncrement : frame.origin.x - xIncrement;
                 self.contentView.slideToCancelButton.frame = frame;
+                self.contentView.slideToCancelButton.alpha = 1.0 - xIncrement / 100;
                 if (xIncrement > 50.0f) {
                     [self.contentView.slideToCancelButton setTitleColor:UIColor.mnz_redMain forState:UIControlStateNormal];
                 } else {
