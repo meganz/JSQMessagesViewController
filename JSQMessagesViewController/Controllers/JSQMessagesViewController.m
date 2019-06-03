@@ -364,7 +364,10 @@ extern const CGFloat kTextContentViewHeight;
     }
 
     NSIndexPath *lastCell = [NSIndexPath indexPathForItem:([self.collectionView numberOfItemsInSection:0] - 1) inSection:0];
-    [self scrollToIndexPath:lastCell animated:animated];
+
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self scrollToIndexPath:lastCell animated:animated];
+    });
 }
 
 
