@@ -939,7 +939,14 @@ extern const CGFloat kTextContentViewHeight;
     if (CGRectIsNull(keyboardEndFrame)) {
         return;
     }
-
+    
+    CGFloat safeAreaBottomInset = 0.0f;
+    if (@available(iOS 11.0, *)) {
+        if (self.inputToolbar.contentView.textView.isFirstResponder) {
+            safeAreaBottomInset = UIApplication.sharedApplication.keyWindow.safeAreaInsets.bottom;
+        }
+    }
+    
     UIViewAnimationCurve animationCurve = [userInfo[UIKeyboardAnimationCurveUserInfoKey] integerValue];
     NSInteger animationCurveOption = (animationCurve << 16);
 
@@ -951,7 +958,7 @@ extern const CGFloat kTextContentViewHeight;
                      animations:^{
                          const UIEdgeInsets insets = self.additionalContentInset;
                          [self jsq_setCollectionViewInsetsTopValue:insets.top
-                                                       bottomValue:CGRectGetHeight(keyboardEndFrame) + insets.bottom];
+                                                       bottomValue:CGRectGetHeight(keyboardEndFrame) + insets.bottom - safeAreaBottomInset];
                      }
                      completion:nil];
 }
