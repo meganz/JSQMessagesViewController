@@ -365,9 +365,9 @@ extern const CGFloat kTextContentViewHeight;
 
     NSIndexPath *lastCell = [NSIndexPath indexPathForItem:([self.collectionView numberOfItemsInSection:0] - 1) inSection:0];
 
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self scrollToIndexPath:lastCell animated:animated];
-    });
+    [UIView animateWithDuration:animated ? 0.3 : 0.0 animations:^{
+        [self scrollToIndexPath:lastCell animated:NO];
+    }];
 }
 
 
@@ -757,7 +757,9 @@ extern const CGFloat kTextContentViewHeight;
 }
 
 - (void)messagesInputToolbar:(MEGAInputToolbar *)toolbar needsResizeToHeight:(CGFloat)newToolbarHeight {
-    self.toolbarHeightConstraint.constant = newToolbarHeight;
+    [UIView animateWithDuration:0.3 animations:^{
+        self.toolbarHeightConstraint.constant = newToolbarHeight;
+    }];
 }
 
 - (void)messagesInputToolbar:(MEGAInputToolbar *)toolbar didLoadContentView:(MEGAToolbarContentView *)toolbarContentView {
