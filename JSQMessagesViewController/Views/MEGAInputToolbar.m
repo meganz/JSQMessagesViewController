@@ -19,6 +19,12 @@ const CGFloat kTextViewHorizontalMargins = 34.0f;
 const CGFloat kMinimunRecordDuration = 1.0f;
 CGFloat kImagePickerViewHeight;
 
+const CGFloat kRecordImageUpDownTime = 0.4f;
+const CGFloat kRecordImageRotateTime = 0.1f;
+const CGFloat kGarbageAnimationTime = 0.3f;
+const CGFloat kGarbageBeginY = 100.0f;
+const CGFloat kCancelRecordingOffsetX = 100.0f;
+
 static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
 
 
@@ -295,10 +301,99 @@ static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
 }
 
 - (void)mnz_cancelRecording:(UIButton *)sender {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [self setFixedAnchorPointForHeaderGarbageView];
+    });
     [self stopRecordingAudioToSend:NO];
     self.contentView.textView.text = @"";
     self.currentState = InputToolbarStateInitial;
-    [self updateToolbar];
+    
+    CGRect originalFrame = self.contentView.recordButton.frame;
+    
+    [UIView animateWithDuration:kRecordImageUpDownTime delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+        CGRect frame = self.contentView.recordButton.frame;
+        frame.origin.y -= (2.5 * self.contentView.recordButton.frame.size.height);
+        self.contentView.recordButton.frame = frame;
+    } completion:^(BOOL finished) {
+        if (finished) {
+            [self showGarbage];
+        }
+    }];
+    
+    [UIView animateWithDuration:kRecordImageRotateTime delay:0.3 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+        CGAffineTransform transForm = CGAffineTransformMakeRotation(0.5 * M_PI);
+        self.contentView.recordButton.transform = transForm;
+    } completion:nil];
+    
+    [UIView animateWithDuration:kRecordImageUpDownTime delay:0.4 options:UIViewAnimationOptionCurveEaseIn animations:^{
+        self.contentView.recordButton.frame = originalFrame;
+        self.contentView.recordButton.alpha = 0.1f;
+    } completion:^(BOOL finished) {
+        self.contentView.recordButton.hidden = YES;
+        [self dismissGarbage];
+    }];
+    
+    [UIView animateWithDuration:kRecordImageRotateTime delay:0.4 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+        CGAffineTransform transForm = CGAffineTransformMakeRotation(1 * M_PI);
+        self.contentView.recordButton.transform = transForm;
+    } completion:nil];
+}
+
+#pragma mark - Animations cancel voice clip
+
+- (void)dismissGarbage {
+    self.contentView.garbageView.alpha = 1.0f;
+    [UIView animateWithDuration:kGarbageAnimationTime delay:0.0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+        self.contentView.headerGarbageView.transform = CGAffineTransformIdentity;
+        CGRect frame = self.contentView.garbageView.frame;
+        frame.origin.y = kGarbageBeginY;
+        self.contentView.garbageView.frame = frame;
+        self.contentView.garbageView.alpha = 0.0f;
+    } completion:^(BOOL finished) {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self updateToolbar];
+            
+            self.contentView.garbageView.hidden = YES;
+            self.contentView.recordButton.transform = CGAffineTransformIdentity;
+            self.contentView.recordButton.alpha = 1.0f;
+            self.contentView.recordButton.hidden = NO;
+        });
+    }];
+}
+
+- (void)showGarbage {
+    self.contentView.garbageView.hidden = NO;
+    self.contentView.garbageView.alpha = 0.0f;
+    
+    [UIView animateWithDuration:kGarbageAnimationTime delay:0.0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+        CGAffineTransform transForm = CGAffineTransformMakeRotation(-1 * M_PI_2);
+        self.contentView.headerGarbageView.transform = transForm;
+        CGRect frame = self.contentView.garbageView.frame;
+        frame.origin.y = self.contentView.recordingTimeLabel.frame.origin.y;
+        self.contentView.garbageView.frame = frame;
+        self.contentView.garbageView.alpha = 1.0f;
+    } completion:nil];
+}
+
+- (void)setFixedAnchorPointForHeaderGarbageView {
+    CGPoint anchorPoint = CGPointMake(0, 1);
+    CGPoint newPoint = CGPointMake(self.contentView.headerGarbageView.bounds.size.width * anchorPoint.x, self.contentView.headerGarbageView.bounds.size.height * anchorPoint.y);
+    CGPoint oldPoint = CGPointMake(self.contentView.headerGarbageView.bounds.size.width * self.contentView.headerGarbageView.layer.anchorPoint.x, self.contentView.headerGarbageView.bounds.size.height * self.contentView.headerGarbageView.layer.anchorPoint.y);
+    
+    newPoint = CGPointApplyAffineTransform(newPoint, self.contentView.headerGarbageView.transform);
+    oldPoint = CGPointApplyAffineTransform(oldPoint, self.contentView.headerGarbageView.transform);
+    
+    CGPoint position = self.contentView.headerGarbageView.layer.position;
+    
+    position.x -= oldPoint.x;
+    position.x += newPoint.x;
+    
+    position.y -= oldPoint.y;
+    position.y += newPoint.y;
+    
+    self.contentView.headerGarbageView.layer.position = position;
+    self.contentView.headerGarbageView.layer.anchorPoint = anchorPoint;
 }
 
 #pragma mark - Voice clips

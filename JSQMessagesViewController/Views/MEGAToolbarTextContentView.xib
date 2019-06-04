@@ -125,34 +125,44 @@
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PCQ-dy-pUZ">
                                     <rect key="frame" x="0.0" y="0.0" width="92" height="36"/>
                                     <subviews>
-                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="l5c-RX-VTV">
-                                            <rect key="frame" x="25" y="19.5" width="12" height="12"/>
-                                            <color key="backgroundColor" red="0.95294117649999999" green="0.047058823530000002" blue="0.078431372550000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                            <constraints>
-                                                <constraint firstAttribute="width" constant="12" id="UhN-Iz-IE6"/>
-                                                <constraint firstAttribute="height" constant="12" id="fpU-JW-CEu"/>
-                                            </constraints>
-                                            <userDefinedRuntimeAttributes>
-                                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                    <integer key="value" value="6"/>
-                                                </userDefinedRuntimeAttribute>
-                                            </userDefinedRuntimeAttributes>
-                                        </view>
                                         <label userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00:00" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uJd-TE-hLU">
-                                            <rect key="frame" x="46" y="15" width="46" height="21"/>
+                                            <rect key="frame" x="49" y="15" width="46" height="21"/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
+                                        <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BXC-LX-Ht2">
+                                            <rect key="frame" x="22" y="79" width="18" height="26"/>
+                                            <subviews>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="bucketLid" translatesAutoresizingMaskIntoConstraints="NO" id="ChV-AM-4dZ">
+                                                    <rect key="frame" x="0.0" y="0.0" width="18" height="4"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                </imageView>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="bucketBody" translatesAutoresizingMaskIntoConstraints="NO" id="rjm-P1-OkQ">
+                                                    <rect key="frame" x="0.0" y="0.0" width="18" height="25"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                </imageView>
+                                            </subviews>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </view>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="G3E-zc-1V4">
+                                            <rect key="frame" x="16" y="11" width="30" height="30"/>
+                                            <state key="normal" image="sendVoiceClipActive"/>
+                                        </button>
                                     </subviews>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
+                                        <constraint firstItem="uJd-TE-hLU" firstAttribute="leading" secondItem="G3E-zc-1V4" secondAttribute="trailing" constant="3" id="29d-r3-yLy"/>
                                         <constraint firstAttribute="width" constant="92" id="4G8-y9-sFD"/>
+                                        <constraint firstItem="uJd-TE-hLU" firstAttribute="leading" secondItem="BXC-LX-Ht2" secondAttribute="trailing" constant="9" id="5eR-TL-bgm"/>
                                         <constraint firstAttribute="bottom" secondItem="uJd-TE-hLU" secondAttribute="bottom" id="9me-z9-BIs"/>
-                                        <constraint firstItem="l5c-RX-VTV" firstAttribute="leading" secondItem="PCQ-dy-pUZ" secondAttribute="leading" constant="25" id="Pww-iW-717"/>
-                                        <constraint firstItem="uJd-TE-hLU" firstAttribute="leading" secondItem="l5c-RX-VTV" secondAttribute="trailing" constant="9" id="ZoI-F1-pGT"/>
-                                        <constraint firstItem="uJd-TE-hLU" firstAttribute="centerY" secondItem="l5c-RX-VTV" secondAttribute="centerY" id="c9y-Or-zTI"/>
+                                        <constraint firstItem="G3E-zc-1V4" firstAttribute="leading" secondItem="PCQ-dy-pUZ" secondAttribute="leading" constant="16" id="OU4-6t-BdF"/>
+                                        <constraint firstItem="BXC-LX-Ht2" firstAttribute="bottom" secondItem="uJd-TE-hLU" secondAttribute="bottom" constant="69" id="PWI-Ry-vnG"/>
+                                        <constraint firstItem="BXC-LX-Ht2" firstAttribute="top" secondItem="PCQ-dy-pUZ" secondAttribute="top" constant="79" id="Yn5-pW-eyx"/>
+                                        <constraint firstAttribute="trailing" secondItem="BXC-LX-Ht2" secondAttribute="trailing" constant="52" id="cJm-h8-6U0"/>
+                                        <constraint firstItem="BXC-LX-Ht2" firstAttribute="leading" secondItem="PCQ-dy-pUZ" secondAttribute="leading" constant="22" id="l3r-or-WkE"/>
+                                        <constraint firstItem="G3E-zc-1V4" firstAttribute="top" secondItem="PCQ-dy-pUZ" secondAttribute="top" constant="11" id="neU-0h-xDF"/>
                                     </constraints>
                                 </view>
                                 <button contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yqt-18-HR0">
@@ -243,14 +253,17 @@
                 <outlet property="accessoryCameraButton" destination="Q9K-U3-wwY" id="LGT-Ok-R6V"/>
                 <outlet property="accessoryImageButton" destination="fDU-tM-mKk" id="MFW-FI-uWa"/>
                 <outlet property="accessoryUploadButton" destination="Mas-Ji-t8P" id="ykU-jV-TJX"/>
+                <outlet property="bodyGarbageView" destination="rjm-P1-OkQ" id="oMm-Vu-Ckq"/>
                 <outlet property="contentViewHeightConstraint" destination="MlO-Yr-7I8" id="AaH-Cp-mMW"/>
+                <outlet property="garbageView" destination="BXC-LX-Ht2" id="88n-NF-cyg"/>
+                <outlet property="headerGarbageView" destination="ChV-AM-4dZ" id="gfx-Yl-HTk"/>
                 <outlet property="joinButton" destination="iOF-Cw-q0K" id="L0K-rG-PxW"/>
                 <outlet property="joinView" destination="p69-k2-jfV" id="Njb-w5-d6O"/>
                 <outlet property="lockView" destination="BWP-qA-B0h" id="U9p-mD-bcc"/>
                 <outlet property="opaqueContentView" destination="7c7-YZ-oiz" id="deN-Wx-R9O"/>
+                <outlet property="recordButton" destination="G3E-zc-1V4" id="b5Z-5U-MZr"/>
                 <outlet property="recordingContainerView" destination="PCQ-dy-pUZ" id="MCo-Oi-Qce"/>
                 <outlet property="recordingTimeLabel" destination="uJd-TE-hLU" id="T0n-H0-ist"/>
-                <outlet property="recordingView" destination="l5c-RX-VTV" id="7Xl-S9-JzI"/>
                 <outlet property="sendButton" destination="yqt-18-HR0" id="5gS-04-8WK"/>
                 <outlet property="slideToCancelButton" destination="vfR-cz-NSL" id="Khj-Ka-VPj"/>
                 <outlet property="textView" destination="FzB-DF-mS3" id="4Lm-7E-qbM"/>
@@ -261,10 +274,13 @@
         </view>
     </objects>
     <resources>
+        <image name="bucketBody" width="18" height="24"/>
+        <image name="bucketLid" width="18" height="5"/>
         <image name="button_camera_default" width="30" height="30"/>
         <image name="button_media_default" width="30" height="30"/>
         <image name="button_upload_default" width="30" height="30"/>
         <image name="lockRecording" width="30" height="30"/>
+        <image name="sendVoiceClipActive" width="30" height="30"/>
         <image name="sendVoiceClipInactive" width="30" height="30"/>
     </resources>
 </document>
