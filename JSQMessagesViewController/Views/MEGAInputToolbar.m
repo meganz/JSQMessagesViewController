@@ -24,8 +24,6 @@ static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
 @property (nonatomic) MEGAToolbarSelectedAssets *selectedAssets;
 @property (nonatomic) NSMutableArray<PHAsset *> *selectedAssetsArray;
 
-@property (nonatomic) CGFloat currentToolbarHeight;
-
 @end
 
 
@@ -65,6 +63,8 @@ static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
     // Scroll to bottom of the text view:
     if (self.contentView) {
         [self.contentView.textView scrollRangeToVisible:NSMakeRange([self.contentView.textView.text length], 0)];
+    } else {
+        [self.delegate messagesInputToolbar:self needsResizeToHeight:kImagePickerViewHeight];
     }
 }
 
@@ -347,12 +347,8 @@ static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
 
 - (void)resizeToolbarIfNeeded {
     CGFloat newToolbarHeight = [self heightToFitInWidth:self.contentView.textView.frame.size.width];
-    if (self.currentToolbarHeight != newToolbarHeight) {
-        self.contentView.contentViewHeightConstraint.constant = newToolbarHeight;
-        [self.delegate messagesInputToolbar:self needsResizeToHeight:newToolbarHeight];
-        
-        self.currentToolbarHeight = newToolbarHeight;
-    }
+    self.contentView.contentViewHeightConstraint.constant = newToolbarHeight;
+    [self.delegate messagesInputToolbar:self needsResizeToHeight:newToolbarHeight];
 }
 
 - (CGFloat)heightToFitInWidth:(CGFloat)width {
