@@ -23,10 +23,9 @@
                 <outlet property="jumpToBottomView" destination="Vhb-c9-1gI" id="rA8-B4-92p"/>
                 <outlet property="previewersLabel" destination="1qZ-4e-2yu" id="zEX-Mn-poT"/>
                 <outlet property="previewersView" destination="cz5-eJ-F1c" id="s4c-Ch-Int"/>
-                <outlet property="releaseToSendLabel" destination="mOP-QX-Ghy" id="0it-Un-Jfy"/>
-                <outlet property="tapAndHoldLabel" destination="G5b-D0-ilw" id="JXB-fE-r0w"/>
                 <outlet property="toolbarHeightConstraint" destination="NvI-ha-YOZ" id="RQb-BT-tSl"/>
                 <outlet property="tooltipConstraint" destination="6H1-N8-1bg" id="zOb-Pj-n4G"/>
+                <outlet property="tooltipLabel" destination="G5b-D0-ilw" id="JXB-fE-r0w"/>
                 <outlet property="tooltipView" destination="j66-nl-wGd" id="o4L-sq-AkE"/>
                 <outlet property="view" destination="mUa-cS-ru4" id="nki-T1-RTI"/>
             </connections>
@@ -84,12 +83,12 @@
                     </userDefinedRuntimeAttributes>
                 </view>
                 <view hidden="YES" clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cz5-eJ-F1c">
-                    <rect key="frame" x="151" y="56" width="73" height="34"/>
+                    <rect key="frame" x="150.66666666666666" y="56" width="73.666666666666657" height="34"/>
                     <subviews>
                         <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XBu-FV-Oqe">
-                            <rect key="frame" x="0.0" y="0.0" width="73" height="34"/>
+                            <rect key="frame" x="0.0" y="0.0" width="73.666666666666671" height="34"/>
                             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="DXj-ba-AcO">
-                                <rect key="frame" x="0.0" y="0.0" width="73" height="34"/>
+                                <rect key="frame" x="0.0" y="0.0" width="73.666666666666671" height="34"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="showHidePassword_white" translatesAutoresizingMaskIntoConstraints="NO" id="djq-hJ-uHe">
@@ -134,35 +133,26 @@
                     </userDefinedRuntimeAttributes>
                 </view>
                 <view clipsSubviews="YES" alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="j66-nl-wGd">
-                    <rect key="frame" x="69.333333333333343" y="652" width="293.66666666666663" height="34"/>
+                    <rect key="frame" x="242" y="652" width="121" height="34"/>
                     <subviews>
                         <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nJz-34-AhS">
-                            <rect key="frame" x="0.0" y="0.0" width="293.66666666666669" height="34"/>
+                            <rect key="frame" x="0.0" y="0.0" width="121" height="34"/>
                             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="PUy-6O-GjZ">
-                                <rect key="frame" x="0.0" y="0.0" width="293.66666666666669" height="34"/>
+                                <rect key="frame" x="0.0" y="0.0" width="121" height="34"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tap and hold" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="G5b-D0-ilw">
-                                        <rect key="frame" x="12" y="9.6666666666666288" width="73" height="14.666666666666664"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="voiceTip" translatesAutoresizingMaskIntoConstraints="NO" id="vkj-h9-yRq">
-                                        <rect key="frame" x="85.000000000000014" y="2" width="30" height="30"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="30" id="RSy-zc-UWa"/>
-                                            <constraint firstAttribute="height" constant="30" id="g9R-eE-cHY"/>
-                                        </constraints>
-                                    </imageView>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="to record, release to send" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mOP-QX-Ghy">
-                                        <rect key="frame" x="115.00000000000001" y="9.6666666666666288" width="145.66666666666669" height="14.666666666666664"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tap and hold" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="G5b-D0-ilw">
+                                        <rect key="frame" x="12" y="10" width="73" height="14.333333333333336"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="g3g-zD-ozq">
-                                        <rect key="frame" x="260.66666666666669" y="2" width="30" height="30"/>
+                                        <rect key="frame" x="88" y="2" width="30" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="30" id="CXX-rw-4sk"/>
+                                            <constraint firstAttribute="width" constant="30" id="Lyy-j9-xsj"/>
+                                        </constraints>
                                         <state key="normal" image="closeTip"/>
                                         <connections>
                                             <action selector="closeTooltipTapped:" destination="-1" eventType="touchUpInside" id="yOg-fu-0V5"/>
@@ -171,14 +161,10 @@
                                 </subviews>
                                 <constraints>
                                     <constraint firstItem="g3g-zD-ozq" firstAttribute="centerY" secondItem="PUy-6O-GjZ" secondAttribute="centerY" id="0bn-Xy-7cL"/>
-                                    <constraint firstItem="g3g-zD-ozq" firstAttribute="leading" secondItem="mOP-QX-Ghy" secondAttribute="trailing" id="5bg-wk-dkj"/>
                                     <constraint firstItem="G5b-D0-ilw" firstAttribute="centerY" secondItem="PUy-6O-GjZ" secondAttribute="centerY" id="6Cy-WG-8rf"/>
                                     <constraint firstItem="G5b-D0-ilw" firstAttribute="leading" secondItem="PUy-6O-GjZ" secondAttribute="leading" constant="12" id="JfJ-Ay-tyh"/>
-                                    <constraint firstItem="mOP-QX-Ghy" firstAttribute="leading" secondItem="vkj-h9-yRq" secondAttribute="trailing" id="Zoo-mc-xtC"/>
                                     <constraint firstAttribute="trailing" secondItem="g3g-zD-ozq" secondAttribute="trailing" constant="3" id="abu-NR-93W"/>
-                                    <constraint firstItem="vkj-h9-yRq" firstAttribute="centerY" secondItem="PUy-6O-GjZ" secondAttribute="centerY" id="j7G-Oh-3Il"/>
-                                    <constraint firstItem="mOP-QX-Ghy" firstAttribute="centerY" secondItem="PUy-6O-GjZ" secondAttribute="centerY" id="nhh-P6-6Om"/>
-                                    <constraint firstItem="vkj-h9-yRq" firstAttribute="leading" secondItem="G5b-D0-ilw" secondAttribute="trailing" id="qfw-xI-nos"/>
+                                    <constraint firstItem="g3g-zD-ozq" firstAttribute="leading" secondItem="G5b-D0-ilw" secondAttribute="trailing" constant="3" id="wI0-fC-G03"/>
                                 </constraints>
                             </view>
                             <blurEffect style="dark"/>
@@ -209,6 +195,7 @@
                 <constraint firstAttribute="trailing" secondItem="BoD-Az-3DM" secondAttribute="trailing" id="NYp-GV-CuO"/>
                 <constraint firstItem="wKn-I2-Jq7" firstAttribute="trailing" secondItem="l9u-2b-4LK" secondAttribute="trailing" id="O9u-TA-A0e"/>
                 <constraint firstItem="l9u-2b-4LK" firstAttribute="bottom" secondItem="Vhb-c9-1gI" secondAttribute="bottom" constant="107" id="XYY-oo-A3Q"/>
+                <constraint firstItem="j66-nl-wGd" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="wKn-I2-Jq7" secondAttribute="leading" constant="12" id="ZuA-fv-zyl"/>
                 <constraint firstItem="wKn-I2-Jq7" firstAttribute="bottom" secondItem="l9u-2b-4LK" secondAttribute="bottom" id="bdY-8K-8QO"/>
                 <constraint firstItem="l9u-2b-4LK" firstAttribute="top" secondItem="wKn-I2-Jq7" secondAttribute="top" id="dCQ-DM-Wdj"/>
                 <constraint firstItem="cz5-eJ-F1c" firstAttribute="centerX" secondItem="mUa-cS-ru4" secondAttribute="centerX" id="kFV-G7-b6z"/>
@@ -224,6 +211,5 @@
         <image name="closeTip" width="30" height="30"/>
         <image name="jumpBottom" width="32" height="32"/>
         <image name="showHidePassword_white" width="24" height="24"/>
-        <image name="voiceTip" width="30" height="30"/>
     </resources>
 </document>
