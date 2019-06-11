@@ -369,7 +369,10 @@ extern const CGFloat kTextContentViewHeight;
     }
 
     NSIndexPath *lastCell = [NSIndexPath indexPathForItem:([self.collectionView numberOfItemsInSection:0] - 1) inSection:0];
-    [self scrollToIndexPath:lastCell animated:animated];
+
+    [UIView animateWithDuration:animated ? 0.3 : 0.0 animations:^{
+        [self scrollToIndexPath:lastCell animated:NO];
+    }];
 }
 
 
@@ -771,7 +774,9 @@ extern const CGFloat kTextContentViewHeight;
 }
 
 - (void)messagesInputToolbar:(MEGAInputToolbar *)toolbar needsResizeToHeight:(CGFloat)newToolbarHeight {
-    self.toolbarHeightConstraint.constant = newToolbarHeight;
+    [UIView animateWithDuration:0.3 animations:^{
+        self.toolbarHeightConstraint.constant = newToolbarHeight;
+    }];
 }
 
 - (void)messagesInputToolbar:(MEGAInputToolbar *)toolbar didLoadContentView:(MEGAToolbarContentView *)toolbarContentView {
@@ -954,6 +959,13 @@ extern const CGFloat kTextContentViewHeight;
         return;
     }
     
+    CGFloat safeAreaBottomInset = 0.0f;
+    if (@available(iOS 11.0, *)) {
+        if (self.inputToolbar.contentView.textView.isFirstResponder) {
+            safeAreaBottomInset = UIApplication.sharedApplication.keyWindow.safeAreaInsets.bottom;
+        }
+    }
+    
     UIViewAnimationCurve animationCurve = [userInfo[UIKeyboardAnimationCurveUserInfoKey] integerValue];
     NSInteger animationCurveOption = (animationCurve << 16);
     
@@ -965,7 +977,7 @@ extern const CGFloat kTextContentViewHeight;
                      animations:^{
                          const UIEdgeInsets insets = self.additionalContentInset;
                          [self jsq_setCollectionViewInsetsTopValue:insets.top
-                                                       bottomValue:CGRectGetHeight(keyboardEndFrame) + insets.bottom];
+                                                       bottomValue:CGRectGetHeight(keyboardEndFrame) + insets.bottom - safeAreaBottomInset];
                      }
                      completion:nil];
 }
