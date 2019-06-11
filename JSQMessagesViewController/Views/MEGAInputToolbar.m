@@ -143,7 +143,6 @@ static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
     } else {
         imagePickerView.selectedAssetsCollectionView.frame = CGRectMake(0.0f, 1.0f, self.frame.size.width, kSelectedAssetsViewHeight - kButtonBarHeight);
         imagePickerView.sendButton.enabled = YES;
-        imagePickerView.sendButton.backgroundColor = [UIColor mnz_green00BFA5];
     }
     UIImage *sendButton = [UIImage imageNamed:@"sendButton"];
     [imagePickerView.sendButton setImage:sendButton.imageFlippedForRightToLeftLayoutDirection forState:UIControlStateNormal];
@@ -496,6 +495,7 @@ static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
         case InputToolbarStateWriting: {
             UIImage *sendButton = [UIImage imageNamed:@"sendButton"];
             [self.contentView.sendButton setImage:sendButton.imageFlippedForRightToLeftLayoutDirection forState:UIControlStateNormal];
+            self.contentView.recordingContainerView.hidden = self.contentView.slideToCancelButton.hidden = self.contentView.lockView.hidden = YES;
             
             break;
         }
