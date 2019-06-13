@@ -1,6 +1,8 @@
 
 #import "MEGAInputToolbar.h"
 
+#import "SVProgressHUD.h"
+
 #import "DevicePermissionsHelper.h"
 #import "NSDate+MNZCategory.h"
 #import "NSFileManager+MNZCategory.h"
@@ -407,6 +409,18 @@ static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
     }
     if (![[AVAudioSession sharedInstance] setActive:YES error:&error]) {
         MEGALogError(@"[Voice clips] Error activating audio session: %@", error);
+        AVAudioSessionErrorCode errorCode = error.code;
+        NSString *errorMessage;
+        switch (errorCode) {
+            case AVAudioSessionErrorCodeInsufficientPriority:
+                errorMessage = AMLocalizedString(@"It is not possible to record voice messages while there is a call in progress", @"Message shown when there is an ongoing call and the user tries to record a voice message");
+                break;
+                
+            default:
+                errorMessage = [NSString stringWithFormat:@"Error recording voice message: %td", errorCode];
+                break;
+        }
+        [SVProgressHUD showErrorWithStatus:errorMessage];
         return NO;
     }
     
