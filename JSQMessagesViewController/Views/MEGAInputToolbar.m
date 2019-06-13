@@ -304,10 +304,7 @@ static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
 }
 
 - (void)mnz_cancelRecording:(UIButton *)sender {
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        [self setFixedAnchorPointForHeaderGarbageView];
-    });
+    [self setFixedAnchorPointForHeaderGarbageView];
     [self stopRecordingAudioToSend:NO];
     self.contentView.textView.text = @"";
     self.currentState = InputToolbarStateInitial;
