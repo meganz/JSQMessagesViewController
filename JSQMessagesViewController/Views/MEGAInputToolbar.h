@@ -7,6 +7,13 @@
 
 @class MEGAInputToolbar;
 
+typedef NS_ENUM(NSUInteger, InputToolbarState) {
+    InputToolbarStateInitial,
+    InputToolbarStateWriting,
+    InputToolbarStateRecordingUnlocked,
+    InputToolbarStateRecordingLocked
+};
+
 /**
  *  The `MEGAInputToolbarDelegate` protocol defines methods for interacting with
  *  a `MEGAInputToolbar` object.
@@ -35,6 +42,25 @@
               toAttachAssets:(NSArray<PHAsset *>*_Nullable)assets;
 
 /**
+ *  Tells the delegate that the toolbar's `sendButton` has been tapped (not held)
+ *  to record a voice clip. An informative tooltip should be shown.
+ *
+ *  @param toolbar The object representing the toolbar sending this information.
+ *  @param sender  The button that received the touch event.
+ */
+- (void)messagesInputToolbar:(MEGAInputToolbar *_Nonnull)toolbar
+ didPressNotHeldRecordButton:(UIButton *_Nullable)sender;
+
+/**
+ *  Tells the delegate that there is a voice clip ready to be sent.
+ *
+ *  @param toolbar The object representing the toolbar sending this information.
+ *  @param path    The path of the voice clip.
+ */
+- (void)messagesInputToolbar:(MEGAInputToolbar *_Nonnull)toolbar
+    didRecordVoiceClipAtPath:(NSString *_Nonnull)voiceClipPath;
+
+/**
  *  Tells the delegate that one toolbar's `accessoryButton` has been pressed.
  *
  *  @param toolbar The object representing the toolbar sending this information.
@@ -50,7 +76,7 @@
  *  @param sender  The button that received the touch event.
  */
 - (void)messagesInputToolbar:(MEGAInputToolbar *_Nonnull)toolbar
-     didPressJoinButton:(UIButton *_Nonnull)sender;
+          didPressJoinButton:(UIButton *_Nonnull)sender;
 
 /**
  *  Tells the delegate that Photos framework failed fetching asset.
@@ -59,7 +85,16 @@
  *  @param error The error that received from Photos framework.
  */
 - (void)messagesInputToolbar:(MEGAInputToolbar *_Nonnull)toolbar
-     assetLoadFailed:(NSError *_Nonnull)error;
+             assetLoadFailed:(NSError *_Nonnull)error;
+
+/**
+ *  Tells the delegate that the state of the toolbar has changed.
+ *
+ *  @param toolbar The object representing the toolbar sending this information.
+ *  @param state The new state.
+ */
+- (void)messagesInputToolbar:(MEGAInputToolbar *_Nonnull)toolbar
+            didChangeToState:(InputToolbarState)state;
 
 @optional
 
@@ -94,6 +129,6 @@
 
 - (void)mnz_accesoryButtonPressed:(UIButton *_Nonnull)sender;
 - (void)mnz_setJoinViewHidden:(BOOL)hidden;
-- (void)mnz_setTypingIndicatorAttributedText:(NSAttributedString *)attributedText;
+- (void)mnz_setTypingIndicatorAttributedText:(NSAttributedString *_Nullable)attributedText;
 
 @end

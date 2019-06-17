@@ -159,6 +159,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (weak, nonatomic) IBOutlet UIView *previewersView;
 @property (weak, nonatomic) IBOutlet UILabel *previewersLabel;
 
+@property (weak, nonatomic) IBOutlet UIView *tooltipView;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *tooltipConstraint;
+@property (weak, nonatomic) IBOutlet UILabel *tooltipLabel;
+
 #pragma mark - Class methods
 
 /**

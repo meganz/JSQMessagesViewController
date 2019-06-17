@@ -328,6 +328,11 @@ extern const CGFloat kTextContentViewHeight;
     NSAssert(NO, @"Error! required method not implemented in subclass. Need to implement %s", __PRETTY_FUNCTION__);
 }
 
+- (void)didChangeToState:(InputToolbarState)state
+{
+    NSAssert(NO, @"Error! required method not implemented in subclass. Need to implement %s", __PRETTY_FUNCTION__);
+}
+
 - (void)finishSendingMessage
 {
     [self finishSendingMessageAnimated:YES];
@@ -741,6 +746,14 @@ extern const CGFloat kTextContentViewHeight;
     NSAssert(NO, @"Error! required method not implemented in subclass. Need to implement %s", __PRETTY_FUNCTION__);
 }
 
+- (void)messagesInputToolbar:(MEGAInputToolbar *)toolbar didPressNotHeldRecordButton:(UIButton *)sender {
+    NSAssert(NO, @"Error! required method not implemented in subclass. Need to implement %s", __PRETTY_FUNCTION__);
+}
+
+- (void)messagesInputToolbar:(MEGAInputToolbar *)toolbar didRecordVoiceClipAtPath:(NSString *)voiceClipPath {
+    NSAssert(NO, @"Error! required method not implemented in subclass. Need to implement %s", __PRETTY_FUNCTION__);
+}
+
 - (void)messagesInputToolbar:(MEGAInputToolbar *)toolbar assetLoadFailed:(NSError *)error {    
     NSString *message = [[[[[error.userInfo objectForKey:@"NSUnderlyingError"] userInfo] objectForKey:@"NSUnderlyingError"] userInfo] objectForKey:@"NSLocalizedDescription"];
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:AMLocalizedString(@"error", nil) message:message preferredStyle:UIAlertControllerStyleAlert];
@@ -754,6 +767,10 @@ extern const CGFloat kTextContentViewHeight;
 
 - (void)messagesInputToolbar:(MEGAInputToolbar *)toolbar didPressJoinButton:(UIButton *)sender {
     [self didPressJoinButton:sender];
+}
+
+- (void)messagesInputToolbar:(MEGAInputToolbar *)toolbar didChangeToState:(InputToolbarState)state {
+    [self didChangeToState:state];
 }
 
 - (void)messagesInputToolbar:(MEGAInputToolbar *)toolbar needsResizeToHeight:(CGFloat)newToolbarHeight {
@@ -935,9 +952,9 @@ extern const CGFloat kTextContentViewHeight;
 - (void)jsq_didReceiveKeyboardWillChangeFrameNotification:(NSNotification *)notification
 {
     NSDictionary *userInfo = [notification userInfo];
-
+    
     CGRect keyboardEndFrame = [userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
-
+    
     if (CGRectIsNull(keyboardEndFrame)) {
         return;
     }
@@ -951,9 +968,9 @@ extern const CGFloat kTextContentViewHeight;
     
     UIViewAnimationCurve animationCurve = [userInfo[UIKeyboardAnimationCurveUserInfoKey] integerValue];
     NSInteger animationCurveOption = (animationCurve << 16);
-
+    
     double animationDuration = [userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
-
+    
     [UIView animateWithDuration:animationDuration
                           delay:0.0
                         options:animationCurveOption
@@ -963,6 +980,12 @@ extern const CGFloat kTextContentViewHeight;
                                                        bottomValue:CGRectGetHeight(keyboardEndFrame) + insets.bottom - safeAreaBottomInset];
                      }
                      completion:nil];
+}
+
+#pragma mark - IBActions
+
+- (IBAction)closeTooltipTapped:(UIButton *)sender {
+    NSAssert(NO, @"Error! required method not implemented in subclass. Need to implement %s", __PRETTY_FUNCTION__);
 }
 
 @end
