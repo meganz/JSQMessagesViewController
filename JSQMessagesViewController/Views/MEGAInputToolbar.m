@@ -553,6 +553,17 @@ static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
     [self resizeToolbarIfNeeded];
 }
 
+- (void)mnz_lockRecordingIfNeeded {
+    if (self.currentState != InputToolbarStateRecordingUnlocked) {
+        return;
+    }
+    
+    self.contentView.slideToCancelButton.frame = self.slideToCancelOriginalFrame;
+    self.contentView.slideToCancelButton.translatesAutoresizingMaskIntoConstraints = NO;
+    self.currentState = InputToolbarStateRecordingLocked;
+    [self updateToolbar];
+}
+
 #pragma mark - MEGAToolbarAssetPickerDelegate
 
 - (void)assetPicker:(MEGAToolbarAssetPicker *)assetPicker didChangeSelectionTo:(NSMutableArray<PHAsset *> *)selectedAssetsArray {

@@ -130,5 +130,6 @@ typedef NS_ENUM(NSUInteger, InputToolbarState) {
 - (void)mnz_accesoryButtonPressed:(UIButton *_Nonnull)sender;
 - (void)mnz_setJoinViewHidden:(BOOL)hidden;
 - (void)mnz_setTypingIndicatorAttributedText:(NSAttributedString *_Nullable)attributedText;
+- (void)mnz_lockRecordingIfNeeded;
 
 @end
