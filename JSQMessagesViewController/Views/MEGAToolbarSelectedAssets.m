@@ -40,7 +40,9 @@ CGFloat kSelectedAssetCellSquareSize = 134.0f;
 - (void)setSelectionTo:(NSMutableArray<PHAsset *> *)selectedAssetsArray {
     self.selectedAssetsArray = selectedAssetsArray;
     [self.collectionView reloadData];
-    if (selectedAssetsArray.count > 0) {
+    
+    NSUInteger numberOfVisibleItems = (NSUInteger) (CGRectGetWidth(self.collectionView.bounds) / kSelectedAssetCellSquareSize);
+    if (selectedAssetsArray.count > numberOfVisibleItems) {
         [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:self.selectedAssetsArray.count-1 inSection:0] atScrollPosition:UICollectionViewScrollPositionRight animated:YES];
     }
 }
