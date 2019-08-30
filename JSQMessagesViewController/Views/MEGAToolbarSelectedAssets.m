@@ -43,8 +43,8 @@ CGFloat kSelectedAssetCellSquareSize = 134.0f;
     
     dispatch_async(dispatch_get_main_queue(), ^{
         if (selectedAssetsArray.count > 0) {
-            [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:self.selectedAssetsArray.count-1 inSection:0] atScrollPosition:UICollectionViewScrollPositionRight animated:YES];
-          }
+            [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:self.selectedAssetsArray.count - 1 inSection:0] atScrollPosition:UICollectionViewScrollPositionRight animated:YES];
+        }
     });
 }
 
