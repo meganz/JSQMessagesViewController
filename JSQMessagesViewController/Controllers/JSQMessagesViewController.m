@@ -774,8 +774,14 @@ extern const CGFloat kTextContentViewHeight;
 }
 
 - (void)messagesInputToolbar:(MEGAInputToolbar *)toolbar needsResizeToHeight:(CGFloat)newToolbarHeight {
+    CGFloat bottomPadding = 0;
+    if (@available(iOS 11.0, *)) {
+        UIWindow *window = UIApplication.sharedApplication.keyWindow;
+        bottomPadding = window.safeAreaInsets.bottom;
+    }
+    
     [UIView animateWithDuration:0.3 animations:^{
-        self.toolbarHeightConstraint.constant = newToolbarHeight;
+        self.toolbarHeightConstraint.constant = newToolbarHeight + bottomPadding;
     }];
 }
 
