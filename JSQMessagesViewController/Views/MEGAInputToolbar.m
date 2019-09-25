@@ -91,6 +91,15 @@ static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
     }
 }
 
+- (void)didMoveToWindow {
+    [super didMoveToWindow];
+    if (@available(iOS 11.0, *)) {
+        if (self.window.safeAreaLayoutGuide != nil) {
+            [[self bottomAnchor] constraintLessThanOrEqualToSystemSpacingBelowAnchor:self.window.safeAreaLayoutGuide.bottomAnchor multiplier:1.0].active = YES;
+        }
+    }
+}
+
 - (void)loadToolbarTextContentView {
     NSArray *nibViews = [[NSBundle bundleForClass:[MEGAToolbarContentView class]] loadNibNamed:@"MEGAToolbarTextContentView"
                                                                                          owner:nil
