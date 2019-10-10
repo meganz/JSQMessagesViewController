@@ -27,6 +27,7 @@
 
 #import "MEGAChatMessage+MNZCategory.h"
 #import "NSString+MNZCategory.h"
+@import CoreText;
 
 @interface JSQMessagesBubblesSizeCalculator ()
 
@@ -139,9 +140,12 @@
                                                           context:nil];
         } else if (((MEGAChatMessage *)messageData).attributedText.length > 0) {
             NSAttributedString *attributedString = ((MEGAChatMessage *)messageData).attributedText;
-            stringRect = [attributedString boundingRectWithSize:CGSizeMake(maximumTextWidth, CGFLOAT_MAX)
-                                                        options:(NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading)
-                                                        context:nil];
+
+            CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString( (CFAttributedStringRef)attributedString);
+            CGSize size = CTFramesetterSuggestFrameSizeWithConstraints(framesetter, CFRangeMake(0, 0), nil, CGSizeMake(maximumTextWidth, CGFLOAT_MAX), nil);
+            
+            stringRect = CGRectMake(0, 0, ceil(size.width), ceil(size.height));
+            CFRelease(framesetter);
         } else {
             stringRect = [[messageData text] boundingRectWithSize:CGSizeMake(maximumTextWidth, CGFLOAT_MAX)
                                                           options:(NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading)
