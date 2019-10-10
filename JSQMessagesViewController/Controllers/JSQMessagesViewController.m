@@ -148,7 +148,7 @@ extern const CGFloat kTextContentViewHeight;
 {
     self.view.backgroundColor = [UIColor whiteColor];
 
-    self.toolbarHeightConstraint.constant = self.inputToolbar.frame.size.height;
+    self.toolbarHeightConstraint.constant = self.inputToolbar.frame.size.height + [self safeAreaInsetsBottomPadding];
 
     self.collectionView.dataSource = self;
     self.collectionView.delegate = self;
@@ -236,7 +236,7 @@ extern const CGFloat kTextContentViewHeight;
 {
     [super viewWillAppear:animated];
     if (!self.inputToolbar.contentView.textView.hasText) {
-        self.toolbarHeightConstraint.constant = self.inputToolbar.frame.size.height;
+        self.toolbarHeightConstraint.constant = self.inputToolbar.frame.size.height + [self safeAreaInsetsBottomPadding];
     }
     [self.view layoutIfNeeded];
     [self.collectionView.collectionViewLayout invalidateLayout];
@@ -739,7 +739,7 @@ extern const CGFloat kTextContentViewHeight;
                     senderId:[self.collectionView.dataSource senderId]
            senderDisplayName:[self.collectionView.dataSource senderDisplayName]
                         date:[NSDate date]];
-    self.toolbarHeightConstraint.constant = kTextContentViewHeight;
+    self.toolbarHeightConstraint.constant = kTextContentViewHeight + [self safeAreaInsetsBottomPadding];
 }
 
 - (void)messagesInputToolbar:(MEGAInputToolbar *)toolbar didPressSendButton:(UIButton *)sender toAttachAssets:(NSArray<PHAsset *> *)assets {
@@ -774,14 +774,10 @@ extern const CGFloat kTextContentViewHeight;
 }
 
 - (void)messagesInputToolbar:(MEGAInputToolbar *)toolbar needsResizeToHeight:(CGFloat)newToolbarHeight {
-    CGFloat bottomPadding = 0;
-    if (@available(iOS 11.0, *)) {
-        UIWindow *window = UIApplication.sharedApplication.keyWindow;
-        bottomPadding = window.safeAreaInsets.bottom;
-    }
+    
     
     [UIView animateWithDuration:0.3 animations:^{
-        self.toolbarHeightConstraint.constant = newToolbarHeight + bottomPadding;
+        self.toolbarHeightConstraint.constant = newToolbarHeight + [self safeAreaInsetsBottomPadding];
     }];
 }
 
@@ -992,6 +988,17 @@ extern const CGFloat kTextContentViewHeight;
 
 - (IBAction)closeTooltipTapped:(UIButton *)sender {
     NSAssert(NO, @"Error! required method not implemented in subclass. Need to implement %s", __PRETTY_FUNCTION__);
+}
+
+#pragma mark - Private
+
+- (CGFloat)safeAreaInsetsBottomPadding {
+    CGFloat bottomPadding = 0;
+    if (@available(iOS 11.0, *)) {
+        UIWindow *window = UIApplication.sharedApplication.keyWindow;
+        bottomPadding = window.safeAreaInsets.bottom;
+    }
+    return bottomPadding;
 }
 
 @end
