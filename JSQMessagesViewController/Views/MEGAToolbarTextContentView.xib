@@ -243,8 +243,8 @@
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
                 <constraint firstItem="woe-C0-kGZ" firstAttribute="bottom" secondItem="lzz-Kj-bhf" secondAttribute="bottom" id="4n9-R8-ITr"/>
-                <constraint firstItem="lzz-Kj-bhf" firstAttribute="leading" secondItem="woe-C0-kGZ" secondAttribute="leading" id="F3G-zP-16Z"/>
-                <constraint firstItem="woe-C0-kGZ" firstAttribute="trailing" secondItem="lzz-Kj-bhf" secondAttribute="trailing" id="rQY-B0-zmo"/>
+                <constraint firstItem="lzz-Kj-bhf" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="CCT-8q-FXB"/>
+                <constraint firstItem="lzz-Kj-bhf" firstAttribute="trailing" secondItem="iN0-l3-epB" secondAttribute="trailing" id="dZs-mL-S9w"/>
                 <constraint firstItem="lzz-Kj-bhf" firstAttribute="top" secondItem="woe-C0-kGZ" secondAttribute="top" id="yBx-Na-4yZ"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
