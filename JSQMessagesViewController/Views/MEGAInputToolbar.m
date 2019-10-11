@@ -391,21 +391,14 @@ static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
 
 - (BOOL)startRecordingAudio {
     NSError *error;
+    if (![[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryRecord error:&error]) {
+        MEGALogError(@"[Voice clips] Error setting the category to AVAudioSessionCategoryRecord: %@", error);
+        return [self handleAVAudioSessionError:error];
+    }
+
     if (![[AVAudioSession sharedInstance] setActive:YES error:&error]) {
         MEGALogError(@"[Voice clips] Error activating audio session: %@", error);
-        AVAudioSessionErrorCode errorCode = error.code;
-        NSString *errorMessage;
-        switch (errorCode) {
-            case AVAudioSessionErrorCodeInsufficientPriority:
-                errorMessage = AMLocalizedString(@"It is not possible to record voice messages while there is a call in progress", @"Message shown when there is an ongoing call and the user tries to record a voice message");
-                break;
-                
-            default:
-                errorMessage = [NSString stringWithFormat:@"Error recording voice message: %td", errorCode];
-                break;
-        }
-        [SVProgressHUD showErrorWithStatus:errorMessage];
-        return NO;
+        return [self handleAVAudioSessionError:error];
     }
     
     AudioFormatID audioFormat = kAudioFormatMPEG4AAC;
@@ -419,18 +412,12 @@ static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
     }
     
     NSURL *destinationURL = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", [[NSDate date] mnz_formattedDefaultNameForMedia], extension]]];
-    NSDictionary *recordSettings = @{ AVNumberOfChannelsKey: @(1),
-                                      AVFormatIDKey: @(audioFormat),
-                                      AVSampleRateKey: @(16000),
-                                      AVLinearPCMBitDepthKey: @(8),
-                                      AVEncoderAudioQualityKey: @(AVAudioQualityMin),
-                                      AVEncoderBitRateKey: @(8000),
-                                      AVEncoderBitRateStrategyKey: AVAudioBitRateStrategy_Variable,
-                                      AVEncoderBitDepthHintKey: @(8),
-                                      AVSampleRateConverterAudioQualityKey: @(AVAudioQualityMin),
-                                      AVEncoderAudioQualityForVBRKey: @(AVAudioQualityMin)
-                                      };
     
+    NSDictionary *recordSettings = @{ AVFormatIDKey: @(audioFormat),
+                                        AVSampleRateKey: @(16000),
+                                        AVNumberOfChannelsKey: @(1),
+                                        AVEncoderAudioQualityKey: @(AVAudioQualityHigh)
+                                        };
     self.audioRecorder = [[AVAudioRecorder alloc] initWithURL:destinationURL settings:recordSettings error:&error];
     if (!self.audioRecorder) {
         MEGALogError(@"[Voice clips] Error instantiating audio recorder: %@", error);
@@ -756,6 +743,24 @@ static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
         default:
             break;
     }
+}
+
+#pragma mark - Private methods.
+
+- (BOOL)handleAVAudioSessionError:(NSError *)error {
+    AVAudioSessionErrorCode errorCode = error.code;
+    NSString *errorMessage;
+    switch (errorCode) {
+        case AVAudioSessionErrorCodeInsufficientPriority:
+            errorMessage = AMLocalizedString(@"It is not possible to record voice messages while there is a call in progress", @"Message shown when there is an ongoing call and the user tries to record a voice message");
+            break;
+            
+        default:
+            errorMessage = [NSString stringWithFormat:@"Error recording voice message: %td", errorCode];
+            break;
+    }
+    [SVProgressHUD showErrorWithStatus:errorMessage];
+    return NO;
 }
 
 @end
