@@ -756,7 +756,7 @@ static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
             break;
             
         default:
-            errorMessage = [NSString stringWithFormat:@"Error recording voice message: %td", errorCode];
+            errorMessage = error.localizedDescription;
             break;
     }
     [SVProgressHUD showErrorWithStatus:errorMessage];
