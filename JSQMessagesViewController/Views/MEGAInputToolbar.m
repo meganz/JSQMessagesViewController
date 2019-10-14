@@ -79,8 +79,6 @@ static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
                                                          self.contentView.textView.frame.origin.y,
                                                          newTextViewWidth,
                                                          self.contentView.textView.frame.size.height);
-        } else {
-            self.imagePickerView.frame = self.frame = CGRectMake(0.0f, 0.0f, [UIScreen mainScreen].bounds.size.width, kImagePickerViewHeight);
         }
     }
     // Scroll to bottom of the text view:
