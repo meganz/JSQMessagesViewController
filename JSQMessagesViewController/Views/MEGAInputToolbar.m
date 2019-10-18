@@ -389,10 +389,6 @@ static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
 
 - (BOOL)startRecordingAudio {
     NSError *error;
-    if (![[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryRecord error:&error]) {
-        MEGALogError(@"[Voice clips] Error setting the category to AVAudioSessionCategoryRecord: %@", error);
-        return [self handleAVAudioSessionError:error];
-    }
 
     if (![[AVAudioSession sharedInstance] setActive:YES error:&error]) {
         MEGALogError(@"[Voice clips] Error activating audio session: %@", error);
