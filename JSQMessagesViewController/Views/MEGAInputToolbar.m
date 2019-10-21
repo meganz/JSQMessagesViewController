@@ -390,6 +390,10 @@ static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
 - (BOOL)startRecordingAudio {
     NSError *error;
 
+    if (![AVAudioSession.sharedInstance setMode:AVAudioSessionModeDefault error:&error]) {
+        MEGALogError(@"[Voice clips] Error setting default mode: %@", error);
+    }
+    
     if (![[AVAudioSession sharedInstance] setActive:YES error:&error]) {
         MEGALogError(@"[Voice clips] Error activating audio session: %@", error);
         return [self handleAVAudioSessionError:error];
@@ -432,6 +436,10 @@ static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
     self.audioRecorder = nil;
     
     NSError *error;
+    if (![AVAudioSession.sharedInstance setMode:AVAudioSessionModeVoiceChat error:&error]) {
+        MEGALogError(@"[Voice clips] Error setting voice chat mode: %@", error);
+    }
+    
     if (![[AVAudioSession sharedInstance] setActive:NO withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation error:&error]) {
         MEGALogError(@"[Voice clips] Error deactivating audio session: %@", error);
     }
