@@ -27,7 +27,6 @@
 
 #import "MEGAChatMessage+MNZCategory.h"
 #import "NSString+MNZCategory.h"
-@import CoreText;
 
 @interface JSQMessagesBubblesSizeCalculator ()
 
@@ -140,12 +139,7 @@
                                                           context:nil];
         } else if (((MEGAChatMessage *)messageData).attributedText.length > 0) {
             NSAttributedString *attributedString = ((MEGAChatMessage *)messageData).attributedText;
-
-            CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString( (CFAttributedStringRef)attributedString);
-            CGSize size = CTFramesetterSuggestFrameSizeWithConstraints(framesetter, CFRangeMake(0, 0), nil, CGSizeMake(maximumTextWidth, CGFLOAT_MAX), nil);
-            
-            stringRect = CGRectMake(0, 0, ceil(size.width), ceil(size.height));
-            CFRelease(framesetter);
+            stringRect = [self boundingRectForAttributedText:attributedString withMaxWidth:maximumTextWidth];
         } else {
             stringRect = [[messageData text] boundingRectWithSize:CGSizeMake(maximumTextWidth, CGFLOAT_MAX)
                                                           options:(NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading)
@@ -169,8 +163,17 @@
     }
 
     [self.cache setObject:[NSValue valueWithCGSize:finalSize] forKey:@([messageData messageHash])];
-
+    
     return finalSize;
+}
+
+- (CGRect)boundingRectForAttributedText:(NSAttributedString *)attributedText withMaxWidth:(CGFloat)maxWidth {
+    UITextView *textView = UITextView.alloc.init;
+    textView.textContainerInset = UIEdgeInsetsZero;
+    textView.textContainer.lineFragmentPadding = 0.0f;
+    textView.attributedText = attributedText;
+    CGSize size = [textView sizeThatFits:CGSizeMake(maxWidth, CGFLOAT_MAX)];
+    return CGRectMake(0.0f, 0.0f, size.width, size.height);
 }
 
 - (CGSize)jsq_avatarSizeForMessageData:(id<JSQMessageData>)messageData
