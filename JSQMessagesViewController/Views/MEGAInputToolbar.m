@@ -15,7 +15,7 @@ extern const CGFloat kCellSquareSize;
 extern const CGFloat kCellInset;
 extern const NSUInteger kCellRows;
 const CGFloat kButtonBarHeight = 50.0f;
-const CGFloat kTextContentViewHeight = 80.0f;
+const CGFloat kTextContentViewHeight = 86.0f;
 const CGFloat kSelectedAssetsViewHeight = 200.0f;
 const CGFloat kTextViewHorizontalMargins = 34.0f;
 const CGFloat kMinimunRecordDuration = 1.0f;
@@ -588,8 +588,10 @@ static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
 }
 
 - (CGFloat)heightToFitInWidth:(CGFloat)width {
-    CGFloat originalTextViewHeight = 20.0f;
-    CGFloat maxTextViewHeight = 50.0f;
+    CGFloat lineHeight = 18.0f;
+    NSUInteger maxLinesWhenCollapsed = 5;
+    CGFloat originalTextViewHeight = 2.0f + lineHeight;
+    CGFloat maxTextViewHeight = maxLinesWhenCollapsed * lineHeight;
     CGSize sizeThatFits = [self.contentView.textView sizeThatFits:CGSizeMake(width, self.contentView.textView.frame.size.height)];
     CGFloat textViewHeightNeeded = sizeThatFits.height;
     textViewHeightNeeded = textViewHeightNeeded > maxTextViewHeight ? maxTextViewHeight : textViewHeightNeeded;
