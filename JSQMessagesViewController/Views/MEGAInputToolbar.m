@@ -482,6 +482,7 @@ static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
         case InputToolbarStateWriting: {
             UIImage *sendButton = [UIImage imageNamed:@"sendButton"];
             [self.contentView.sendButton setImage:sendButton.imageFlippedForRightToLeftLayoutDirection forState:UIControlStateNormal];
+            self.contentView.sendButton.enabled = self.contentView.textView.hasText;
             self.contentView.recordingContainerView.hidden = self.contentView.slideToCancelButton.hidden = self.contentView.lockView.hidden = YES;
             
             break;
@@ -576,7 +577,7 @@ static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
         return;
     }
     
-    self.currentState = [self.contentView.textView hasText] ? InputToolbarStateWriting : InputToolbarStateInitial;
+    self.currentState = self.contentView.textView.text.length ? InputToolbarStateWriting : InputToolbarStateInitial;
     [self updateToolbar];
     [self resizeToolbarIfNeeded];
 }
