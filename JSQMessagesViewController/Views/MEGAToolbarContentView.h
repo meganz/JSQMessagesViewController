@@ -49,6 +49,7 @@ typedef NS_ENUM(NSUInteger, MEGAChatAccessoryButton) {
 @property (weak, nonatomic) IBOutlet UIView *garbageView;
 @property (weak, nonatomic) IBOutlet UIButton *recordButton;
 @property (weak, nonatomic) IBOutlet UIButton *expandOrCollapseButton;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *textViewToTopConstraint;
+@property (weak, nonatomic) IBOutlet UIView *draggableView;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *draggableViewHeightConstraint;
 
 @end

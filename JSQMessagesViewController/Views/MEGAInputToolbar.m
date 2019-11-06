@@ -25,7 +25,12 @@ const CGFloat kRecordImageUpDownTime = 0.4f;
 const CGFloat kRecordImageRotateTime = 0.1f;
 const CGFloat kGarbageAnimationTime = 0.3f;
 const CGFloat kGarbageBeginY = 100.0f;
-const CGFloat kCancelRecordingOffsetX = 100.0f;
+
+const CGFloat kLineHeight = 18.0f;
+const NSUInteger kMaxLinesWhenCollapsed = 5;
+const CGFloat kOriginalTextViewHeight = 2.0f + kLineHeight;
+const CGFloat kMaxTextViewHeight = kMaxLinesWhenCollapsed * kLineHeight;
+const CGFloat kMaxToolbarHeight = kTextContentViewHeight - kOriginalTextViewHeight + kMaxTextViewHeight;
 
 static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
 
@@ -50,6 +55,8 @@ typedef NS_ENUM(NSUInteger, InputToolbarMode) {
 @property (nonatomic) NSDate *baseDate;
 @property (nonatomic) CGFloat currentToolbarHeight;
 @property (nonatomic) UINotificationFeedbackGenerator *hapticGenerator;
+@property (nonatomic) CGPoint panGestureInitialPoint;
+@property (nonatomic) CGFloat panGestureInitialToolbarHeight;
 
 @end
 
@@ -69,6 +76,7 @@ typedef NS_ENUM(NSUInteger, InputToolbarMode) {
         _hapticGenerator = [[UINotificationFeedbackGenerator alloc] init];
     }
     
+    self.panGestureInitialPoint = CGPointZero;
     [self loadToolbarTextContentView];
 }
 
@@ -544,7 +552,7 @@ typedef NS_ENUM(NSUInteger, InputToolbarMode) {
             self.currentMode = InputToolbarModeExpanded;
             UIImage *collapseImage = [UIImage imageNamed:@"collapse"];
             [self.contentView.expandOrCollapseButton setImage:collapseImage.imageFlippedForRightToLeftLayoutDirection forState:UIControlStateNormal];
-            self.contentView.textViewToTopConstraint.constant = 61.0f;
+            self.contentView.draggableViewHeightConstraint.constant = 45.0f;
         } else {
             [self.contentView.textView becomeFirstResponder];
         }
@@ -552,7 +560,7 @@ typedef NS_ENUM(NSUInteger, InputToolbarMode) {
         self.currentMode = InputToolbarModeCollapsed;
         UIImage *expandImage = [UIImage imageNamed:@"expand"];
         [self.contentView.expandOrCollapseButton setImage:expandImage.imageFlippedForRightToLeftLayoutDirection forState:UIControlStateNormal];
-        self.contentView.textViewToTopConstraint.constant = 16.0f;
+        self.contentView.draggableViewHeightConstraint.constant = 0.0f;
     }
     
     [self resizeToolbarIfNeeded];
@@ -597,21 +605,20 @@ typedef NS_ENUM(NSUInteger, InputToolbarMode) {
 
 - (void)resizeToolbarIfNeeded {
     CGFloat newToolbarHeight = [self heightToFitInWidth:self.contentView.textView.frame.size.width];
-    self.contentView.contentViewHeightConstraint.constant = newToolbarHeight;
+    [UIView animateWithDuration:0.3 animations:^{
+        self.contentView.contentViewHeightConstraint.constant = newToolbarHeight;
+        [self.contentView layoutIfNeeded];
+    }];
     [self.delegate messagesInputToolbar:self needsResizeToHeight:newToolbarHeight];
 }
 
 - (CGFloat)heightToFitInWidth:(CGFloat)width {
     if (self.currentMode == InputToolbarModeCollapsed) {
-        CGFloat lineHeight = 18.0f;
-        NSUInteger maxLinesWhenCollapsed = 5;
-        CGFloat originalTextViewHeight = 2.0f + lineHeight;
-        CGFloat maxTextViewHeight = maxLinesWhenCollapsed * lineHeight;
         CGSize sizeThatFits = [self.contentView.textView sizeThatFits:CGSizeMake(width, self.contentView.textView.frame.size.height)];
         CGFloat textViewHeightNeeded = sizeThatFits.height;
-        self.contentView.expandOrCollapseButton.hidden = textViewHeightNeeded / lineHeight < maxLinesWhenCollapsed;
-        textViewHeightNeeded = textViewHeightNeeded > maxTextViewHeight ? maxTextViewHeight : textViewHeightNeeded;
-        CGFloat newToolbarHeight = kTextContentViewHeight - originalTextViewHeight + textViewHeightNeeded;
+        self.contentView.expandOrCollapseButton.hidden = textViewHeightNeeded / kLineHeight < kMaxLinesWhenCollapsed;
+        textViewHeightNeeded = textViewHeightNeeded > kMaxTextViewHeight ? kMaxTextViewHeight : textViewHeightNeeded;
+        CGFloat newToolbarHeight = kTextContentViewHeight - kOriginalTextViewHeight + textViewHeightNeeded;
         return newToolbarHeight;
     } else {
         CGFloat topPadding = 0.0f;
@@ -654,6 +661,8 @@ typedef NS_ENUM(NSUInteger, InputToolbarMode) {
                           forControlEvents:UIControlEventTouchUpInside];
     
     [view.sendButton addGestureRecognizer:[[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)]];
+    
+    [view.draggableView addGestureRecognizer:[UIPanGestureRecognizer.alloc initWithTarget:self action:@selector(panGesture:)]];
 }
 
 - (void)removeTargetsFromView:(MEGAToolbarContentView *)view {
@@ -687,6 +696,10 @@ typedef NS_ENUM(NSUInteger, InputToolbarMode) {
     
     for (UIGestureRecognizer *gestureRecognizer in view.sendButton.gestureRecognizers) {
         [view.sendButton removeGestureRecognizer:gestureRecognizer];
+    }
+    
+    for (UIGestureRecognizer *gestureRecognizer in view.draggableView.gestureRecognizers) {
+        [view.draggableView removeGestureRecognizer:gestureRecognizer];
     }
 }
 
@@ -772,6 +785,50 @@ typedef NS_ENUM(NSUInteger, InputToolbarMode) {
             self.currentState = InputToolbarStateInitial;
             [self updateToolbar];
             
+            break;
+        }
+            
+        default:
+            break;
+    }
+}
+
+#pragma mark - UIPanGestureRecognizer
+
+- (void)panGesture:(UIPanGestureRecognizer *)panGestureRecognizer {
+    if (self.currentMode == InputToolbarModeCollapsed) {
+        return;
+    }
+    
+    CGPoint touchPoint = [panGestureRecognizer translationInView:self.contentView];
+    CGFloat verticalIncrement = touchPoint.y - self.panGestureInitialPoint.y;
+    
+    switch (panGestureRecognizer.state) {
+        case UIGestureRecognizerStateBegan:
+            self.panGestureInitialPoint = touchPoint;
+            self.panGestureInitialToolbarHeight = self.contentView.contentViewHeightConstraint.constant;
+            break;
+            
+        case UIGestureRecognizerStateChanged:
+            if (verticalIncrement > self.panGestureInitialToolbarHeight - kMaxToolbarHeight) {
+                return;
+            }
+            if (verticalIncrement > 0) {
+                self.contentView.contentViewHeightConstraint.constant = self.panGestureInitialToolbarHeight - verticalIncrement;
+            }
+            break;
+            
+        case UIGestureRecognizerStateEnded:
+        case UIGestureRecognizerStateCancelled: {
+            if (verticalIncrement > 50.0f) {
+                [self mnz_expandOrCollapseButtonPressed];
+            } else {
+                [UIView animateWithDuration:0.3 animations:^{
+                    self.contentView.contentViewHeightConstraint.constant = self.panGestureInitialToolbarHeight;
+                    [self.contentView layoutIfNeeded];
+                }];
+            }
+            self.panGestureInitialPoint = CGPointZero;
             break;
         }
             
