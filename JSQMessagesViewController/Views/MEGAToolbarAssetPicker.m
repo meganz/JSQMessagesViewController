@@ -7,7 +7,6 @@
 #import "DevicePermissionsHelper.h"
 #import "Helper.h"
 #import "NSString+MNZCategory.h"
-#import "UIColor+MNZCategory.h"
 #import "UIImage+MNZCategory.h"
 
 const CGFloat kCellSquareSize = 93.0f;
@@ -183,7 +182,7 @@ CGFloat kCollectionViewHeight;
             }
         }
     } else {
-        cell.backgroundView.layer.borderColor = [UIColor.mnz_green00BFA5 CGColor];
+        cell.backgroundView.layer.borderColor = [UIColor mnz_turquoiseForTraitCollection:UIScreen.mainScreen.traitCollection].CGColor;
         cell.backgroundView.layer.borderWidth = 2.0;
         cell.backgroundView.layer.opacity = 0.48;
         // Add checkmark:
@@ -192,7 +191,7 @@ CGFloat kCollectionViewHeight;
         [cell.contentView addSubview:checkView];
     }
     
-    cell.backgroundColor = [UIColor.mnz_green00BFA5 colorWithAlphaComponent:0.48];
+    cell.backgroundColor = [[UIColor mnz_turquoiseForTraitCollection:UIScreen.mainScreen.traitCollection] colorWithAlphaComponent:0.48];
     
     if ([self.requestIdIndexPathDictionary objectForKey:indexPath]) {
         [self drawAssetProgressInCell:cell indexPath:indexPath];
@@ -296,7 +295,7 @@ CGFloat kCollectionViewHeight;
     
     if (PHPhotoLibrary.authorizationStatus != PHAuthorizationStatusAuthorized) {
         NSString *text = AMLocalizedString(@"Please give the MEGA App permission to access Photos to share photos and videos.", @"Detailed explanation of why the user should give permission to access to the photos");
-        attributedString = [[NSAttributedString alloc] initWithString:text attributes:@{NSFontAttributeName:[UIFont mnz_SFUIRegularWithSize:14.0f], NSForegroundColorAttributeName:UIColor.mnz_black333333}];
+        attributedString = [NSAttributedString.alloc initWithString:text attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:14.0f], NSForegroundColorAttributeName:UIColor.mnz_label}];
     }
     
     return attributedString;
@@ -317,7 +316,7 @@ CGFloat kCollectionViewHeight;
     
     if (PHPhotoLibrary.authorizationStatus != PHAuthorizationStatusAuthorized) {
         NSString *text = AMLocalizedString(@"Allow Access", @"Button which triggers a request for a specific permission, that have been explained to the user beforehand");
-        attributedString = [[NSAttributedString alloc] initWithString:text attributes:@{NSFontAttributeName:[UIFont mnz_SFUISemiBoldWithSize:17.0f], NSForegroundColorAttributeName:UIColor.mnz_green899B9C}];
+        attributedString = [NSAttributedString.alloc initWithString:text attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:17.f weight:UIFontWeightSemibold], NSForegroundColorAttributeName:[UIColor mnz_turquoiseForTraitCollection:UIScreen.mainScreen.traitCollection]}];
     }
     
     return attributedString;
