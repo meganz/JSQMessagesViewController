@@ -192,10 +192,19 @@
                                     <color key="tintColor" red="0.59215686274509804" green="0.59215686274509804" blue="0.59215686274509804" alpha="1" colorSpace="calibratedRGB"/>
                                     <state key="normal" image="button_upload_default"/>
                                 </button>
+                                <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="y5I-6X-wKb">
+                                    <rect key="frame" x="331" y="16" width="28" height="28"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="28" id="R7C-xK-2aW"/>
+                                        <constraint firstAttribute="width" constant="28" id="ous-aU-yUa"/>
+                                    </constraints>
+                                    <state key="normal" title="Button" image="expand"/>
+                                </button>
                             </subviews>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
                                 <constraint firstItem="FzB-DF-mS3" firstAttribute="leading" secondItem="7c7-YZ-oiz" secondAttribute="leading" constant="16" id="06p-sS-vZy"/>
+                                <constraint firstItem="y5I-6X-wKb" firstAttribute="top" secondItem="7c7-YZ-oiz" secondAttribute="top" constant="16" id="0NO-x4-nTC"/>
                                 <constraint firstItem="Q9K-U3-wwY" firstAttribute="top" secondItem="FzB-DF-mS3" secondAttribute="bottom" constant="10" id="1iV-Dv-Tku"/>
                                 <constraint firstItem="Q9K-U3-wwY" firstAttribute="top" secondItem="PCQ-dy-pUZ" secondAttribute="bottom" constant="4" id="6XL-HD-4yp"/>
                                 <constraint firstAttribute="trailing" secondItem="yqt-18-HR0" secondAttribute="trailing" constant="6" id="7y7-jb-7gy"/>
@@ -208,6 +217,7 @@
                                 <constraint firstItem="FzB-DF-mS3" firstAttribute="top" secondItem="7c7-YZ-oiz" secondAttribute="top" constant="16" id="bPm-aX-d9z"/>
                                 <constraint firstItem="yqt-18-HR0" firstAttribute="leading" secondItem="FzB-DF-mS3" secondAttribute="trailing" constant="6" id="dKz-a8-jgP"/>
                                 <constraint firstAttribute="bottom" secondItem="Mas-Ji-t8P" secondAttribute="bottom" constant="9" id="hTq-uZ-Tzv"/>
+                                <constraint firstAttribute="trailing" secondItem="y5I-6X-wKb" secondAttribute="trailing" constant="16" id="haZ-o4-GCp"/>
                                 <constraint firstItem="vfR-cz-NSL" firstAttribute="centerX" secondItem="7c7-YZ-oiz" secondAttribute="centerX" id="jeA-PX-0KF"/>
                                 <constraint firstItem="Q9K-U3-wwY" firstAttribute="leading" secondItem="7c7-YZ-oiz" secondAttribute="leading" constant="16" id="jxc-el-ttc"/>
                                 <constraint firstItem="fDU-tM-mKk" firstAttribute="leading" secondItem="Q9K-U3-wwY" secondAttribute="trailing" constant="16" id="kj9-s9-rNQ"/>
@@ -253,6 +263,7 @@
                 <outlet property="accessoryUploadButton" destination="Mas-Ji-t8P" id="ykU-jV-TJX"/>
                 <outlet property="bodyGarbageView" destination="rjm-P1-OkQ" id="oMm-Vu-Ckq"/>
                 <outlet property="contentViewHeightConstraint" destination="MlO-Yr-7I8" id="AaH-Cp-mMW"/>
+                <outlet property="expandOrCollapseButton" destination="y5I-6X-wKb" id="i00-a2-Pmy"/>
                 <outlet property="garbageView" destination="BXC-LX-Ht2" id="88n-NF-cyg"/>
                 <outlet property="headerGarbageView" destination="ChV-AM-4dZ" id="gfx-Yl-HTk"/>
                 <outlet property="joinButton" destination="iOF-Cw-q0K" id="L0K-rG-PxW"/>
@@ -265,6 +276,7 @@
                 <outlet property="sendButton" destination="yqt-18-HR0" id="5gS-04-8WK"/>
                 <outlet property="slideToCancelButton" destination="vfR-cz-NSL" id="Khj-Ka-VPj"/>
                 <outlet property="textView" destination="FzB-DF-mS3" id="4Lm-7E-qbM"/>
+                <outlet property="textViewToTopConstraint" destination="bPm-aX-d9z" id="7t2-zB-CpD"/>
                 <outlet property="typingIndicatorLabel" destination="hZu-NL-NtO" id="Rx8-um-gIc"/>
                 <outlet property="typingIndicatorView" destination="J7o-7B-4nA" id="dwl-TV-csG"/>
             </connections>
@@ -277,6 +289,7 @@
         <image name="button_camera_default" width="30" height="30"/>
         <image name="button_media_default" width="30" height="30"/>
         <image name="button_upload_default" width="30" height="30.5"/>
+        <image name="expand" width="28" height="28.5"/>
         <image name="lockRecording" width="30" height="30"/>
         <image name="sendVoiceClipActive" width="30" height="30"/>
         <image name="sendVoiceClipInactive" width="30" height="30"/>

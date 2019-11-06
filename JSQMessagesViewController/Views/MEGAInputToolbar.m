@@ -29,6 +29,10 @@ const CGFloat kCancelRecordingOffsetX = 100.0f;
 
 static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
 
+typedef NS_ENUM(NSUInteger, InputToolbarMode) {
+    InputToolbarModeCollapsed,
+    InputToolbarModeExpanded
+};
 
 @interface MEGAInputToolbar ()
 
@@ -38,6 +42,7 @@ static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
 @property (nonatomic) NSMutableArray<PHAsset *> *selectedAssetsArray;
 
 @property (nonatomic) InputToolbarState currentState;
+@property (nonatomic) InputToolbarMode currentMode;
 @property (nonatomic) CGPoint longPressInitialPoint;
 @property (nonatomic) CGRect slideToCancelOriginalFrame;
 @property (nonatomic) AVAudioRecorder *audioRecorder;
@@ -68,21 +73,9 @@ static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
 }
 
 - (void)layoutSubviews {
-    if (self.frame.size.width > [UIScreen mainScreen].bounds.size.width) {
-        if (self.contentView) {
-            CGFloat newTextViewWidth = [UIScreen mainScreen].bounds.size.width-kTextViewHorizontalMargins;
-            self.contentView.frame = self.frame = CGRectMake(0.0f,
-                                                             0.0f,
-                                                             [UIScreen mainScreen].bounds.size.width,
-                                                             [self heightToFitInWidth:newTextViewWidth]);
-            self.contentView.textView.frame = CGRectMake(self.contentView.textView.frame.origin.x,
-                                                         self.contentView.textView.frame.origin.y,
-                                                         newTextViewWidth,
-                                                         self.contentView.textView.frame.size.height);
-        }
-    }
     // Scroll to bottom of the text view:
     if (self.contentView) {
+        [self resizeToolbarIfNeeded];
         [self.contentView.textView scrollRangeToVisible:NSMakeRange([self.contentView.textView.text length], 0)];
     } else {
         [self.delegate messagesInputToolbar:self needsResizeToHeight:kImagePickerViewHeight];
@@ -545,6 +538,26 @@ static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
     [self updateToolbar];
 }
 
+- (void)mnz_expandOrCollapseButtonPressed {
+    if (self.currentMode == InputToolbarModeCollapsed) {
+        if (self.contentView.textView.isFirstResponder) {
+            self.currentMode = InputToolbarModeExpanded;
+            UIImage *collapseImage = [UIImage imageNamed:@"collapse"];
+            [self.contentView.expandOrCollapseButton setImage:collapseImage.imageFlippedForRightToLeftLayoutDirection forState:UIControlStateNormal];
+            self.contentView.textViewToTopConstraint.constant = 61.0f;
+        } else {
+            [self.contentView.textView becomeFirstResponder];
+        }
+    } else {
+        self.currentMode = InputToolbarModeCollapsed;
+        UIImage *expandImage = [UIImage imageNamed:@"expand"];
+        [self.contentView.expandOrCollapseButton setImage:expandImage.imageFlippedForRightToLeftLayoutDirection forState:UIControlStateNormal];
+        self.contentView.textViewToTopConstraint.constant = 16.0f;
+    }
+    
+    [self resizeToolbarIfNeeded];
+}
+
 #pragma mark - MEGAToolbarAssetPickerDelegate
 
 - (void)assetPicker:(MEGAToolbarAssetPicker *)assetPicker didChangeSelectionTo:(NSMutableArray<PHAsset *> *)selectedAssetsArray {
@@ -589,15 +602,24 @@ static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
 }
 
 - (CGFloat)heightToFitInWidth:(CGFloat)width {
-    CGFloat lineHeight = 18.0f;
-    NSUInteger maxLinesWhenCollapsed = 5;
-    CGFloat originalTextViewHeight = 2.0f + lineHeight;
-    CGFloat maxTextViewHeight = maxLinesWhenCollapsed * lineHeight;
-    CGSize sizeThatFits = [self.contentView.textView sizeThatFits:CGSizeMake(width, self.contentView.textView.frame.size.height)];
-    CGFloat textViewHeightNeeded = sizeThatFits.height;
-    textViewHeightNeeded = textViewHeightNeeded > maxTextViewHeight ? maxTextViewHeight : textViewHeightNeeded;
-    CGFloat newToolbarHeight = kTextContentViewHeight - originalTextViewHeight + textViewHeightNeeded;
-    return newToolbarHeight;
+    if (self.currentMode == InputToolbarModeCollapsed) {
+        CGFloat lineHeight = 18.0f;
+        NSUInteger maxLinesWhenCollapsed = 5;
+        CGFloat originalTextViewHeight = 2.0f + lineHeight;
+        CGFloat maxTextViewHeight = maxLinesWhenCollapsed * lineHeight;
+        CGSize sizeThatFits = [self.contentView.textView sizeThatFits:CGSizeMake(width, self.contentView.textView.frame.size.height)];
+        CGFloat textViewHeightNeeded = sizeThatFits.height;
+        self.contentView.expandOrCollapseButton.hidden = textViewHeightNeeded / lineHeight < maxLinesWhenCollapsed;
+        textViewHeightNeeded = textViewHeightNeeded > maxTextViewHeight ? maxTextViewHeight : textViewHeightNeeded;
+        CGFloat newToolbarHeight = kTextContentViewHeight - originalTextViewHeight + textViewHeightNeeded;
+        return newToolbarHeight;
+    } else {
+        CGFloat topPadding = 0.0f;
+        if (@available(iOS 11.0, *)) {
+            topPadding = UIApplication.sharedApplication.keyWindow.safeAreaInsets.top;
+        }
+        return self.superview.superview.frame.size.height - self.superview.frame.size.height - topPadding + self.contentView.contentViewHeightConstraint.constant;
+    }
 }
 
 #pragma mark - Targets
@@ -627,6 +649,10 @@ static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
                                  action:@selector(mnz_cancelRecording:)
                        forControlEvents:UIControlEventTouchUpInside];
     
+    [view.expandOrCollapseButton addTarget:self
+                                    action:@selector(mnz_expandOrCollapseButtonPressed)
+                          forControlEvents:UIControlEventTouchUpInside];
+    
     [view.sendButton addGestureRecognizer:[[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)]];
 }
 
@@ -654,6 +680,10 @@ static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
     [view.slideToCancelButton removeTarget:self
                                     action:NULL
                           forControlEvents:UIControlEventTouchUpInside];
+    
+    [view.expandOrCollapseButton removeTarget:self
+                                       action:NULL
+                             forControlEvents:UIControlEventTouchUpInside];
     
     for (UIGestureRecognizer *gestureRecognizer in view.sendButton.gestureRecognizers) {
         [view.sendButton removeGestureRecognizer:gestureRecognizer];
