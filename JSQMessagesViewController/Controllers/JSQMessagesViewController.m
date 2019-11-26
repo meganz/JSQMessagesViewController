@@ -32,9 +32,8 @@
 
 #import "NSString+JSQMessages.h"
 #import "NSBundle+JSQMessages.h"
-
 #import <objc/runtime.h>
-
+#import <PureLayout/PureLayout.h>
 
 // Fixes rdar://26295020
 // See issue #1247 and Peter Steinberger's comment:
@@ -159,6 +158,13 @@ extern const CGFloat kTextContentViewHeight;
     self.inputToolbar.contentView.textView.delegate = self;
     self.inputToolbar.contentView.textView.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
     [self.inputToolbar removeFromSuperview];
+    
+    self.recordView = [MEGARecordView.alloc initWithFrame:CGRectMake(0, 0, 180, 180)];
+    [self.view addSubview:self.recordView];
+    [self.recordView autoSetDimensionsToSize:CGSizeMake(180, 180)];
+    [self.recordView autoCenterInSuperview];
+    self.inputToolbar.recordView = self.recordView;
+    self.recordView.hidden = YES;
 
     self.outgoingCellIdentifier = [JSQMessagesCollectionViewCellOutgoing cellReuseIdentifier];
     self.outgoingMediaCellIdentifier = [JSQMessagesCollectionViewCellOutgoing mediaCellReuseIdentifier];
@@ -770,6 +776,15 @@ extern const CGFloat kTextContentViewHeight;
 }
 
 - (void)messagesInputToolbar:(MEGAInputToolbar *)toolbar didChangeToState:(InputToolbarState)state {
+    switch (state) {
+        case InputToolbarStateInitial:
+            self.recordView.hidden = YES;
+            break;
+        case InputToolbarStateRecordingUnlocked:
+            self.recordView.hidden = NO;
+        default:
+            break;
+    }
     [self didChangeToState:state];
 }
 
