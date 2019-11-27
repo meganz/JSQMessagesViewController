@@ -25,7 +25,15 @@ class MEGARecordView: UIView {
         let view = nib.instantiate(withOwner: self, options: nil)[0] as! UIView
         view.frame = bounds
         addSubview(view)
-        backgroundColor = #colorLiteral(red: 0.1450980392, green: 0.1450980392, blue: 0.1450980392, alpha: 0.7764875856)
+        if #available(iOS 13, *) {
+            view.backgroundColor = UIColor.clear
+            let effectView = UIVisualEffectView.init(frame: bounds)
+            effectView.effect = UIBlurEffect.init(style:.systemChromeMaterialDark)
+            addSubview(effectView)
+            sendSubviewToBack(effectView)
+        } else {
+            view.backgroundColor = #colorLiteral(red: 0.1450980392, green: 0.1450980392, blue: 0.1450980392, alpha: 0.7764875856)
+        }
         layer.cornerRadius = 8
         layer.masksToBounds = true
         return view
