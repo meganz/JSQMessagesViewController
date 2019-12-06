@@ -159,7 +159,7 @@ extern const CGFloat kTextContentViewHeight;
     self.inputToolbar.contentView.textView.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
     [self.inputToolbar removeFromSuperview];
     
-    self.recordView = [MEGARecordView.alloc initWithFrame:CGRectMake(0, 0, 180, 180)];
+    self.recordView = MEGARecordView.recordView;
     [self.view addSubview:self.recordView];
     [self.recordView autoSetDimensionsToSize:CGSizeMake(180, 180)];
     [self.recordView autoCenterInSuperview];
