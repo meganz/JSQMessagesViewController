@@ -21,7 +21,7 @@ class MEGARecordView: UIView {
     
     @objc var currentVolume: Float = 0.0 {
         didSet {
-            let imageNumber = Int(round(currentVolume * 6.0))
+            let imageNumber = min(Int(round(currentVolume * 6.0)), 6)
             volumeIcon.image = UIImage(named: "feedbackBars\(imageNumber)")
         }
     }
