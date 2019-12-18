@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina4_7" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -116,6 +114,10 @@
                                     <fontDescription key="fontDescription" name="SFUIText-Regular" family="SF UI Text" pointSize="15"/>
                                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                 </textView>
+                                <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6S7-7I-VvM">
+                                    <rect key="frame" x="164" y="24" width="46" height="30"/>
+                                    <state key="normal" title="Button"/>
+                                </button>
                                 <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vfR-cz-NSL">
                                     <rect key="frame" x="130.5" y="10" width="114" height="30"/>
                                     <state key="normal" title="&lt; Slide to cancel">
@@ -179,17 +181,17 @@
                                         </userDefinedRuntimeAttribute>
                                     </userDefinedRuntimeAttributes>
                                 </button>
-                                <button opaque="NO" tag="11" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Q9K-U3-wwY" userLabel="Camera">
+                                <button opaque="NO" tag="11" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Q9K-U3-wwY" userLabel="Camera">
                                     <rect key="frame" x="16" y="40" width="30" height="30"/>
                                     <color key="tintColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <state key="normal" image="button_camera_default"/>
                                 </button>
-                                <button opaque="NO" tag="12" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fDU-tM-mKk" userLabel="Media">
+                                <button opaque="NO" tag="12" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fDU-tM-mKk" userLabel="Media">
                                     <rect key="frame" x="62" y="40" width="30" height="30"/>
                                     <color key="tintColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <state key="normal" image="button_media_default"/>
                                 </button>
-                                <button opaque="NO" tag="13" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mas-Ji-t8P" userLabel="Upload">
+                                <button opaque="NO" tag="13" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mas-Ji-t8P" userLabel="Upload">
                                     <rect key="frame" x="108" y="40" width="30" height="30"/>
                                     <color key="tintColor" red="0.59215686274509804" green="0.59215686274509804" blue="0.59215686274509804" alpha="1" colorSpace="calibratedRGB"/>
                                     <state key="normal" image="button_upload_default"/>
@@ -202,12 +204,16 @@
                                 <constraint firstItem="Q9K-U3-wwY" firstAttribute="top" secondItem="PCQ-dy-pUZ" secondAttribute="bottom" constant="4" id="6XL-HD-4yp"/>
                                 <constraint firstAttribute="trailing" secondItem="yqt-18-HR0" secondAttribute="trailing" constant="6" id="7y7-jb-7gy"/>
                                 <constraint firstAttribute="bottom" secondItem="fDU-tM-mKk" secondAttribute="bottom" constant="9" id="Dva-Hg-ioB"/>
+                                <constraint firstItem="6S7-7I-VvM" firstAttribute="top" secondItem="7c7-YZ-oiz" secondAttribute="top" constant="24" id="MUp-Jc-E5o"/>
+                                <constraint firstItem="6S7-7I-VvM" firstAttribute="centerX" secondItem="7c7-YZ-oiz" secondAttribute="centerX" id="Ml2-6u-aUw"/>
                                 <constraint firstAttribute="height" constant="79" id="MlO-Yr-7I8"/>
                                 <constraint firstItem="PCQ-dy-pUZ" firstAttribute="leading" secondItem="7c7-YZ-oiz" secondAttribute="leading" id="OA3-fw-Jui"/>
                                 <constraint firstItem="vfR-cz-NSL" firstAttribute="centerY" secondItem="yqt-18-HR0" secondAttribute="centerY" id="OgQ-aB-xBy"/>
                                 <constraint firstAttribute="bottom" secondItem="Q9K-U3-wwY" secondAttribute="bottom" constant="9" id="VYN-rV-XTf"/>
+                                <constraint firstItem="6S7-7I-VvM" firstAttribute="centerX" secondItem="vfR-cz-NSL" secondAttribute="centerX" id="Vfd-HI-Pmm"/>
                                 <constraint firstItem="FzB-DF-mS3" firstAttribute="top" secondItem="7c7-YZ-oiz" secondAttribute="top" constant="10" id="bPm-aX-d9z"/>
                                 <constraint firstItem="yqt-18-HR0" firstAttribute="leading" secondItem="FzB-DF-mS3" secondAttribute="trailing" constant="6" id="dKz-a8-jgP"/>
+                                <constraint firstItem="6S7-7I-VvM" firstAttribute="centerY" secondItem="7c7-YZ-oiz" secondAttribute="centerY" id="fQa-Tt-sCr"/>
                                 <constraint firstAttribute="bottom" secondItem="Mas-Ji-t8P" secondAttribute="bottom" constant="9" id="hTq-uZ-Tzv"/>
                                 <constraint firstItem="vfR-cz-NSL" firstAttribute="centerX" secondItem="7c7-YZ-oiz" secondAttribute="centerX" id="jeA-PX-0KF"/>
                                 <constraint firstItem="Q9K-U3-wwY" firstAttribute="leading" secondItem="7c7-YZ-oiz" secondAttribute="leading" constant="16" id="jxc-el-ttc"/>
@@ -215,6 +221,7 @@
                                 <constraint firstItem="PCQ-dy-pUZ" firstAttribute="top" secondItem="7c7-YZ-oiz" secondAttribute="top" id="neP-Yt-umR"/>
                                 <constraint firstItem="yqt-18-HR0" firstAttribute="top" secondItem="7c7-YZ-oiz" secondAttribute="top" constant="10" id="rnv-Dy-O6D"/>
                                 <constraint firstItem="Mas-Ji-t8P" firstAttribute="leading" secondItem="fDU-tM-mKk" secondAttribute="trailing" constant="16" id="vKJ-U6-uli"/>
+                                <constraint firstItem="6S7-7I-VvM" firstAttribute="leading" secondItem="Mas-Ji-t8P" secondAttribute="trailing" constant="26" id="zXU-rf-yet"/>
                             </constraints>
                         </view>
                     </subviews>
@@ -256,6 +263,7 @@
                 <outlet property="bodyGarbageView" destination="rjm-P1-OkQ" id="oMm-Vu-Ckq"/>
                 <outlet property="contentViewHeightConstraint" destination="MlO-Yr-7I8" id="AaH-Cp-mMW"/>
                 <outlet property="garbageView" destination="BXC-LX-Ht2" id="88n-NF-cyg"/>
+                <outlet property="gifyButton" destination="6S7-7I-VvM" id="sSV-Qz-0Bq"/>
                 <outlet property="headerGarbageView" destination="ChV-AM-4dZ" id="gfx-Yl-HTk"/>
                 <outlet property="joinButton" destination="iOF-Cw-q0K" id="L0K-rG-PxW"/>
                 <outlet property="joinView" destination="p69-k2-jfV" id="Njb-w5-d6O"/>
@@ -278,7 +286,7 @@
         <image name="bucketLid" width="18" height="5"/>
         <image name="button_camera_default" width="30" height="30"/>
         <image name="button_media_default" width="30" height="30"/>
-        <image name="button_upload_default" width="30" height="30"/>
+        <image name="button_upload_default" width="30" height="30.5"/>
         <image name="lockRecording" width="30" height="30"/>
         <image name="sendVoiceClipActive" width="30" height="30"/>
         <image name="sendVoiceClipInactive" width="30" height="30"/>
