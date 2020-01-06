@@ -469,8 +469,6 @@ static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
     double lowPassResults = pow(10, (0.05 * [self.audioRecorder peakPowerForChannel:0]));
 
     self.recordView.currentVolume = lowPassResults;
-    
-    
 }
 
 #pragma mark - Toolbar state

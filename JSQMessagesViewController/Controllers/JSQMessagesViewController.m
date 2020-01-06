@@ -162,7 +162,8 @@ extern const CGFloat kTextContentViewHeight;
     self.recordView = MEGARecordView.recordView;
     [self.view addSubview:self.recordView];
     [self.recordView autoSetDimensionsToSize:CGSizeMake(180, 180)];
-    [self.recordView autoCenterInSuperview];
+    [self.recordView autoAlignAxis:ALAxisHorizontal toSameAxisOfView:self.view withOffset:-44];
+    [self.recordView autoAlignAxisToSuperviewAxis:ALAxisVertical];
     self.inputToolbar.recordView = self.recordView;
     self.recordView.hidden = YES;
 
