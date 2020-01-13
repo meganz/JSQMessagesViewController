@@ -4,6 +4,7 @@
 #import "MEGAToolbarAssetPicker.h"
 #import "MEGAToolbarContentView.h"
 #import "MEGAToolbarSelectedAssets.h"
+#import "MEGA-Swift.h"
 
 @class MEGAInputToolbar;
 
@@ -112,6 +113,7 @@ typedef NS_ENUM(NSUInteger, InputToolbarState) {
  */
 @interface MEGAInputToolbar : UIToolbar <MEGAToolbarAssetPickerDelegate>
 
+@property (weak, nonatomic, nullable) MEGARecordView *recordView;
 /**
  *  The object that acts as the delegate of the toolbar.
  */

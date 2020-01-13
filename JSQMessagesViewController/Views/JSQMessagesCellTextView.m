@@ -109,19 +109,33 @@
 #pragma mark - UITextViewDelegate
 
 - (BOOL)textView:(UITextView *)textView shouldInteractWithURL:(NSURL *)URL inRange:(NSRange)characterRange interaction:(UITextItemInteraction)interaction {
-    BOOL shouldInteract = YES;
+    
+    BOOL recognizedTapGesture = NO;
+    for (UIGestureRecognizer *recognizer in textView.gestureRecognizers) {
+        if ([recognizer isKindOfClass:UITapGestureRecognizer.class] && recognizer.state == UIGestureRecognizerStateEnded) {
+            recognizedTapGesture = YES;
+            break;
+        }
+    }
+    if (!recognizedTapGesture) {
+        // Tap gesture is not being recognized, this must be an early
+        // check when touches begin. Leave the link handling alone.
+        return YES;
+    }
+
+    // Do custom action here
     switch (interaction) {
         case UITextItemInteractionInvokeDefaultAction:
             MEGALinkManager.linkURL = URL;
             [MEGALinkManager processLinkURL:URL];
-            shouldInteract = NO;
             break;
             
         default:
             break;
     }
     
-    return shouldInteract;
+    return NO;
+    
 }
 
 @end

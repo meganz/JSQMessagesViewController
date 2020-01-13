@@ -417,8 +417,9 @@ static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
         MEGALogError(@"[Voice clips] Error instantiating audio recorder: %@", error);
         return NO;
     }
+    self.audioRecorder.meteringEnabled = YES;
     
-    self.timer = [NSTimer timerWithTimeInterval:1.0f target:self selector:@selector(updateRecordingTimeLabel) userInfo:nil repeats:YES];
+    self.timer = [NSTimer timerWithTimeInterval:0.1f target:self selector:@selector(updateRecordingTimeLabel) userInfo:nil repeats:YES];
     [NSRunLoop.mainRunLoop addTimer:self.timer forMode:NSRunLoopCommonModes];
     self.baseDate = [NSDate date];
     
@@ -453,7 +454,13 @@ static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
 
 - (void)updateRecordingTimeLabel {
     NSTimeInterval interval = ([NSDate date].timeIntervalSince1970 - self.baseDate.timeIntervalSince1970);
-    self.contentView.recordingTimeLabel.text = [NSString mnz_stringFromTimeInterval:interval];
+    NSString *time = [NSString mnz_stringFromTimeInterval:interval];
+    self.contentView.recordingTimeLabel.text = time;
+    self.recordView.timeLabel.text = time;
+    [self.audioRecorder updateMeters];
+    double lowPassResults = pow(10, (0.05 * [self.audioRecorder peakPowerForChannel:0]));
+
+    self.recordView.currentVolume = lowPassResults;
 }
 
 #pragma mark - Toolbar state
