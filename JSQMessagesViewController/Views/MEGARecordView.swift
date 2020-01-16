@@ -5,6 +5,7 @@ class MEGARecordView: UIView {
     @IBOutlet weak var timeLabel: UILabel!
     @IBOutlet weak var volumeIcon: UIImageView!
     @IBOutlet weak var blurView: UIVisualEffectView!
+    @IBOutlet weak var recordingLabel: UILabel!
     
     @objc static var recordView: MEGARecordView? {
         let bundle = Bundle(for: MEGARecordView.self)
@@ -17,6 +18,8 @@ class MEGARecordView: UIView {
         
         layer.cornerRadius = 8
         layer.masksToBounds = true
+        
+        recordingLabel.text = NSLocalizedString("Recording...", comment: "Label indicating that a voice clip is being recorded. String as short as possible.")
     }
     
     @objc var currentVolume: Float = 0.0 {
