@@ -72,11 +72,8 @@ typedef NS_ENUM(NSUInteger, InputToolbarMode) {
     
     kImagePickerViewHeight = kButtonBarHeight + (kCellRows+1)*kCellInset + kCellRows*kCellSquareSize;
     _selectedAssetsArray = [NSMutableArray new];
-    if (@available(iOS 10.0, *)) {
-        _hapticGenerator = [[UINotificationFeedbackGenerator alloc] init];
-    }
-    
-    self.panGestureInitialPoint = CGPointZero;
+    _hapticGenerator = UINotificationFeedbackGenerator.alloc.init;
+
     [self loadToolbarTextContentView];
 }
 
@@ -180,9 +177,7 @@ typedef NS_ENUM(NSUInteger, InputToolbarMode) {
         switch (self.currentState) {
             case InputToolbarStateInitial:
                 [self.delegate messagesInputToolbar:self didPressNotHeldRecordButton:sender];
-                if (@available(iOS 10.0, *)) {
-                    [self.hapticGenerator notificationOccurred:UINotificationFeedbackTypeError];
-                }
+                [self.hapticGenerator notificationOccurred:UINotificationFeedbackTypeError];
                 break;
                 
             case InputToolbarStateWriting:
@@ -422,8 +417,9 @@ typedef NS_ENUM(NSUInteger, InputToolbarMode) {
         MEGALogError(@"[Voice clips] Error instantiating audio recorder: %@", error);
         return NO;
     }
+    self.audioRecorder.meteringEnabled = YES;
     
-    self.timer = [NSTimer timerWithTimeInterval:1.0f target:self selector:@selector(updateRecordingTimeLabel) userInfo:nil repeats:YES];
+    self.timer = [NSTimer timerWithTimeInterval:0.1f target:self selector:@selector(updateRecordingTimeLabel) userInfo:nil repeats:YES];
     [NSRunLoop.mainRunLoop addTimer:self.timer forMode:NSRunLoopCommonModes];
     self.baseDate = [NSDate date];
     
@@ -449,20 +445,22 @@ typedef NS_ENUM(NSUInteger, InputToolbarMode) {
     MEGALogDebug(@"[Voice clips] Stop recording: send %d, duration - %f", send, audioPlayer.duration);
     if (send && audioPlayer.duration >= kMinimunRecordDuration) {
         [self.delegate messagesInputToolbar:self didRecordVoiceClipAtPath:clipURL.path];
-        if (@available(iOS 10.0, *)) {
-            [self.hapticGenerator notificationOccurred:UINotificationFeedbackTypeSuccess];
-        }
+        [self.hapticGenerator notificationOccurred:UINotificationFeedbackTypeSuccess];
     } else {
         [NSFileManager.defaultManager mnz_removeItemAtPath:clipURL.path];
-        if (@available(iOS 10.0, *)) {
-            [self.hapticGenerator notificationOccurred:UINotificationFeedbackTypeError];
-        }
+        [self.hapticGenerator notificationOccurred:UINotificationFeedbackTypeError];
     }
 }
 
 - (void)updateRecordingTimeLabel {
     NSTimeInterval interval = ([NSDate date].timeIntervalSince1970 - self.baseDate.timeIntervalSince1970);
-    self.contentView.recordingTimeLabel.text = [NSString mnz_stringFromTimeInterval:interval];
+    NSString *time = [NSString mnz_stringFromTimeInterval:interval];
+    self.contentView.recordingTimeLabel.text = time;
+    self.recordView.timeLabel.text = time;
+    [self.audioRecorder updateMeters];
+    double lowPassResults = pow(10, (0.05 * [self.audioRecorder peakPowerForChannel:0]));
+
+    self.recordView.currentVolume = lowPassResults;
 }
 
 #pragma mark - Toolbar state
