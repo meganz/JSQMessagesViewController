@@ -551,6 +551,7 @@ typedef NS_ENUM(NSUInteger, InputToolbarMode) {
             UIImage *collapseImage = [UIImage imageNamed:@"collapse"];
             [self.contentView.expandOrCollapseButton setImage:collapseImage.imageFlippedForRightToLeftLayoutDirection forState:UIControlStateNormal];
             self.contentView.draggableViewHeightConstraint.constant = 45.0f;
+            self.contentView.opaqueContentView.layer.cornerRadius = 13.0f;
         } else {
             [self.contentView.textView becomeFirstResponder];
         }
@@ -559,6 +560,7 @@ typedef NS_ENUM(NSUInteger, InputToolbarMode) {
         UIImage *expandImage = [UIImage imageNamed:@"expand"];
         [self.contentView.expandOrCollapseButton setImage:expandImage.imageFlippedForRightToLeftLayoutDirection forState:UIControlStateNormal];
         self.contentView.draggableViewHeightConstraint.constant = 0.0f;
+        self.contentView.opaqueContentView.layer.cornerRadius = 0.0f;
     }
     
     [self resizeToolbarIfNeeded];
