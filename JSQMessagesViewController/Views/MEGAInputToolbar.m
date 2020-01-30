@@ -15,7 +15,7 @@ extern const CGFloat kCellSquareSize;
 extern const CGFloat kCellInset;
 extern const NSUInteger kCellRows;
 const CGFloat kButtonBarHeight = 50.0f;
-const CGFloat kTextContentViewHeight = 80.0f;
+const CGFloat kTextContentViewHeight = 86.0f;
 const CGFloat kSelectedAssetsViewHeight = 200.0f;
 const CGFloat kTextViewHorizontalMargins = 34.0f;
 const CGFloat kMinimunRecordDuration = 1.0f;
@@ -25,10 +25,19 @@ const CGFloat kRecordImageUpDownTime = 0.4f;
 const CGFloat kRecordImageRotateTime = 0.1f;
 const CGFloat kGarbageAnimationTime = 0.3f;
 const CGFloat kGarbageBeginY = 100.0f;
-const CGFloat kCancelRecordingOffsetX = 100.0f;
+
+const CGFloat kLineHeight = 18.0f;
+const NSUInteger kMaxLinesWhenCollapsed = 5;
+const CGFloat kOriginalTextViewHeight = 2.0f + kLineHeight;
+const CGFloat kMaxTextViewHeight = kMaxLinesWhenCollapsed * kLineHeight;
+const CGFloat kMaxToolbarHeight = kTextContentViewHeight - kOriginalTextViewHeight + kMaxTextViewHeight;
 
 static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
 
+typedef NS_ENUM(NSUInteger, InputToolbarMode) {
+    InputToolbarModeCollapsed,
+    InputToolbarModeExpanded
+};
 
 @interface MEGAInputToolbar ()
 
@@ -38,6 +47,7 @@ static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
 @property (nonatomic) NSMutableArray<PHAsset *> *selectedAssetsArray;
 
 @property (nonatomic) InputToolbarState currentState;
+@property (nonatomic) InputToolbarMode currentMode;
 @property (nonatomic) CGPoint longPressInitialPoint;
 @property (nonatomic) CGRect slideToCancelOriginalFrame;
 @property (nonatomic) AVAudioRecorder *audioRecorder;
@@ -45,6 +55,8 @@ static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
 @property (nonatomic) NSDate *baseDate;
 @property (nonatomic) CGFloat currentToolbarHeight;
 @property (nonatomic) UINotificationFeedbackGenerator *hapticGenerator;
+@property (nonatomic) CGPoint panGestureInitialPoint;
+@property (nonatomic) CGFloat panGestureInitialToolbarHeight;
 
 @end
 
@@ -66,21 +78,9 @@ static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
 }
 
 - (void)layoutSubviews {
-    if (self.frame.size.width > [UIScreen mainScreen].bounds.size.width) {
-        if (self.contentView) {
-            CGFloat newTextViewWidth = [UIScreen mainScreen].bounds.size.width-kTextViewHorizontalMargins;
-            self.contentView.frame = self.frame = CGRectMake(0.0f,
-                                                             0.0f,
-                                                             [UIScreen mainScreen].bounds.size.width,
-                                                             [self heightToFitInWidth:newTextViewWidth]);
-            self.contentView.textView.frame = CGRectMake(self.contentView.textView.frame.origin.x,
-                                                         self.contentView.textView.frame.origin.y,
-                                                         newTextViewWidth,
-                                                         self.contentView.textView.frame.size.height);
-        }
-    }
     // Scroll to bottom of the text view:
     if (self.contentView) {
+        [self resizeToolbarIfNeeded];
         [self.contentView.textView scrollRangeToVisible:NSMakeRange([self.contentView.textView.text length], 0)];
     } else {
         [self.delegate messagesInputToolbar:self needsResizeToHeight:kImagePickerViewHeight];
@@ -204,6 +204,10 @@ static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
 }
 
 - (void)mnz_accesoryButtonPressed:(UIButton *)sender {
+    if (self.currentMode == InputToolbarModeExpanded) {
+        [self mnz_expandOrCollapseButtonPressed];
+    }
+    
     switch (sender.tag) {
         case MEGAChatAccessoryButtonText:
             if (self.imagePickerView) {
@@ -481,6 +485,7 @@ static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
         case InputToolbarStateWriting: {
             UIImage *sendButton = [UIImage imageNamed:@"sendButton"];
             [self.contentView.sendButton setImage:sendButton.imageFlippedForRightToLeftLayoutDirection forState:UIControlStateNormal];
+            self.contentView.sendButton.enabled = self.contentView.textView.hasText;
             self.contentView.recordingContainerView.hidden = self.contentView.slideToCancelButton.hidden = self.contentView.lockView.hidden = YES;
             
             break;
@@ -543,6 +548,30 @@ static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
     [self updateToolbar];
 }
 
+- (void)mnz_expandOrCollapseButtonPressed {
+    if (self.currentMode == InputToolbarModeCollapsed) {
+        if (self.contentView.textView.isFirstResponder) {
+            self.currentMode = InputToolbarModeExpanded;
+            UIImage *collapseImage = [UIImage imageNamed:@"collapse"];
+            [self.contentView.expandOrCollapseButton setImage:collapseImage.imageFlippedForRightToLeftLayoutDirection forState:UIControlStateNormal];
+            self.contentView.draggableViewHeightConstraint.constant = 45.0f;
+            self.contentView.opaqueContentView.layer.cornerRadius = 13.0f;
+            self.contentView.shadowContentView.hidden = NO;
+        } else {
+            [self.contentView.textView becomeFirstResponder];
+        }
+    } else {
+        self.currentMode = InputToolbarModeCollapsed;
+        UIImage *expandImage = [UIImage imageNamed:@"expand"];
+        [self.contentView.expandOrCollapseButton setImage:expandImage.imageFlippedForRightToLeftLayoutDirection forState:UIControlStateNormal];
+        self.contentView.draggableViewHeightConstraint.constant = 0.0f;
+        self.contentView.opaqueContentView.layer.cornerRadius = 0.0f;
+        self.contentView.shadowContentView.hidden = YES;
+    }
+    
+    [self resizeToolbarIfNeeded];
+}
+
 #pragma mark - MEGAToolbarAssetPickerDelegate
 
 - (void)assetPicker:(MEGAToolbarAssetPicker *)assetPicker didChangeSelectionTo:(NSMutableArray<PHAsset *> *)selectedAssetsArray {
@@ -575,7 +604,7 @@ static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
         return;
     }
     
-    self.currentState = [self.contentView.textView hasText] ? InputToolbarStateWriting : InputToolbarStateInitial;
+    self.currentState = self.contentView.textView.text.length ? InputToolbarStateWriting : InputToolbarStateInitial;
     [self updateToolbar];
     [self resizeToolbarIfNeeded];
 }
@@ -583,17 +612,25 @@ static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
 - (void)resizeToolbarIfNeeded {
     CGFloat newToolbarHeight = [self heightToFitInWidth:self.contentView.textView.frame.size.width];
     self.contentView.contentViewHeightConstraint.constant = newToolbarHeight;
+    [self.contentView layoutIfNeeded];
     [self.delegate messagesInputToolbar:self needsResizeToHeight:newToolbarHeight];
 }
 
 - (CGFloat)heightToFitInWidth:(CGFloat)width {
-    CGFloat originalTextViewHeight = 20.0f;
-    CGFloat maxTextViewHeight = 50.0f;
-    CGSize sizeThatFits = [self.contentView.textView sizeThatFits:CGSizeMake(width, self.contentView.textView.frame.size.height)];
-    CGFloat textViewHeightNeeded = sizeThatFits.height;
-    textViewHeightNeeded = textViewHeightNeeded > maxTextViewHeight ? maxTextViewHeight : textViewHeightNeeded;
-    CGFloat newToolbarHeight = kTextContentViewHeight - originalTextViewHeight + textViewHeightNeeded;
-    return newToolbarHeight;
+    if (self.currentMode == InputToolbarModeCollapsed) {
+        CGSize sizeThatFits = [self.contentView.textView sizeThatFits:CGSizeMake(width, self.contentView.textView.frame.size.height)];
+        CGFloat textViewHeightNeeded = sizeThatFits.height;
+        self.contentView.expandOrCollapseButton.hidden = textViewHeightNeeded / kLineHeight < kMaxLinesWhenCollapsed;
+        textViewHeightNeeded = textViewHeightNeeded > kMaxTextViewHeight ? kMaxTextViewHeight : textViewHeightNeeded;
+        CGFloat newToolbarHeight = kTextContentViewHeight - kOriginalTextViewHeight + textViewHeightNeeded;
+        return newToolbarHeight;
+    } else {
+        CGFloat topPadding = 0.0f;
+        if (@available(iOS 11.0, *)) {
+            topPadding = UIApplication.sharedApplication.keyWindow.safeAreaInsets.top;
+        }
+        return self.superview.superview.frame.size.height - self.superview.frame.size.height - topPadding + self.contentView.contentViewHeightConstraint.constant;
+    }
 }
 
 #pragma mark - Targets
@@ -623,7 +660,13 @@ static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
                                  action:@selector(mnz_cancelRecording:)
                        forControlEvents:UIControlEventTouchUpInside];
     
+    [view.expandOrCollapseButton addTarget:self
+                                    action:@selector(mnz_expandOrCollapseButtonPressed)
+                          forControlEvents:UIControlEventTouchUpInside];
+    
     [view.sendButton addGestureRecognizer:[[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)]];
+    
+    [view.draggableView addGestureRecognizer:[UIPanGestureRecognizer.alloc initWithTarget:self action:@selector(panGesture:)]];
 }
 
 - (void)removeTargetsFromView:(MEGAToolbarContentView *)view {
@@ -651,8 +694,16 @@ static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
                                     action:NULL
                           forControlEvents:UIControlEventTouchUpInside];
     
+    [view.expandOrCollapseButton removeTarget:self
+                                       action:NULL
+                             forControlEvents:UIControlEventTouchUpInside];
+    
     for (UIGestureRecognizer *gestureRecognizer in view.sendButton.gestureRecognizers) {
         [view.sendButton removeGestureRecognizer:gestureRecognizer];
+    }
+    
+    for (UIGestureRecognizer *gestureRecognizer in view.draggableView.gestureRecognizers) {
+        [view.draggableView removeGestureRecognizer:gestureRecognizer];
     }
 }
 
@@ -738,6 +789,50 @@ static NSString * const kMEGAUIKeyInputCarriageReturn = @"\r";
             self.currentState = InputToolbarStateInitial;
             [self updateToolbar];
             
+            break;
+        }
+            
+        default:
+            break;
+    }
+}
+
+#pragma mark - UIPanGestureRecognizer
+
+- (void)panGesture:(UIPanGestureRecognizer *)panGestureRecognizer {
+    if (self.currentMode == InputToolbarModeCollapsed) {
+        return;
+    }
+    
+    CGPoint touchPoint = [panGestureRecognizer translationInView:self.contentView];
+    CGFloat verticalIncrement = touchPoint.y - self.panGestureInitialPoint.y;
+    
+    switch (panGestureRecognizer.state) {
+        case UIGestureRecognizerStateBegan:
+            self.panGestureInitialPoint = touchPoint;
+            self.panGestureInitialToolbarHeight = self.contentView.contentViewHeightConstraint.constant;
+            break;
+            
+        case UIGestureRecognizerStateChanged:
+            if (verticalIncrement > self.panGestureInitialToolbarHeight - kMaxToolbarHeight) {
+                return;
+            }
+            if (verticalIncrement > 0) {
+                self.contentView.contentViewHeightConstraint.constant = self.panGestureInitialToolbarHeight - verticalIncrement;
+            }
+            break;
+            
+        case UIGestureRecognizerStateEnded:
+        case UIGestureRecognizerStateCancelled: {
+            if (verticalIncrement > 50.0f) {
+                [self mnz_expandOrCollapseButtonPressed];
+            } else {
+                [UIView animateWithDuration:0.3 animations:^{
+                    self.contentView.contentViewHeightConstraint.constant = self.panGestureInitialToolbarHeight;
+                    [self.contentView layoutIfNeeded];
+                }];
+            }
+            self.panGestureInitialPoint = CGPointZero;
             break;
         }
             
