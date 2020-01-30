@@ -204,6 +204,10 @@ typedef NS_ENUM(NSUInteger, InputToolbarMode) {
 }
 
 - (void)mnz_accesoryButtonPressed:(UIButton *)sender {
+    if (self.currentMode == InputToolbarModeExpanded) {
+        [self mnz_expandOrCollapseButtonPressed];
+    }
+    
     switch (sender.tag) {
         case MEGAChatAccessoryButtonText:
             if (self.imagePickerView) {
@@ -607,10 +611,8 @@ typedef NS_ENUM(NSUInteger, InputToolbarMode) {
 
 - (void)resizeToolbarIfNeeded {
     CGFloat newToolbarHeight = [self heightToFitInWidth:self.contentView.textView.frame.size.width];
-    [UIView animateWithDuration:0.3 animations:^{
-        self.contentView.contentViewHeightConstraint.constant = newToolbarHeight;
-        [self.contentView layoutIfNeeded];
-    }];
+    self.contentView.contentViewHeightConstraint.constant = newToolbarHeight;
+    [self.contentView layoutIfNeeded];
     [self.delegate messagesInputToolbar:self needsResizeToHeight:newToolbarHeight];
 }
 
