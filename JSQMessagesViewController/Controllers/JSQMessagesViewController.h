@@ -278,6 +278,11 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)scrollToIndexPath:(NSIndexPath *)indexPath animated:(BOOL)animated;
 
 /**
+* Asks if the InputToolbar can record audio. Forbidden if there is an active MEGA call for example.
+*/
+- (BOOL)canRecordAudio;
+
+/**
  Call to super required.
  */
 - (void)viewDidLoad NS_REQUIRES_SUPER;

@@ -97,6 +97,13 @@ typedef NS_ENUM(NSUInteger, InputToolbarState) {
 - (void)messagesInputToolbar:(MEGAInputToolbar *_Nonnull)toolbar
             didChangeToState:(InputToolbarState)state;
 
+/**
+ *  Asks the delegate if there is some reason to forbid recording audio.
+ *
+ *  @param toolbar The object representing the toolbar sending this information.
+ */
+- (BOOL)messagesInputToolbarCanRecordVoiceClip:(MEGAInputToolbar *_Nonnull)toolbar;
+
 @optional
 
 - (void)messagesInputToolbar:(MEGAInputToolbar *_Nonnull)toolbar
