@@ -46,10 +46,8 @@
     self.textContainer.lineFragmentPadding = 0;
     self.linkTextAttributes = @{ NSForegroundColorAttributeName : [UIColor whiteColor],
                                  NSUnderlineStyleAttributeName : @(NSUnderlineStyleSingle | NSUnderlinePatternSolid) };
-    if (@available(iOS 10.0, *)) {
-        self.adjustsFontForContentSizeCategory = YES;
-    }
-
+    self.adjustsFontForContentSizeCategory = YES;
+    
     self.delegate = self;
 }
 
@@ -111,6 +109,9 @@
 #pragma mark - UITextViewDelegate
 
 - (BOOL)textView:(UITextView *)textView shouldInteractWithURL:(NSURL *)URL inRange:(NSRange)characterRange interaction:(UITextItemInteraction)interaction {
+    if ([URL.scheme.lowercaseString isEqualToString:@"x-apple-data-detectors"]) {
+        return YES;
+    }
     
     BOOL recognizedTapGesture = NO;
     for (UIGestureRecognizer *recognizer in textView.gestureRecognizers) {

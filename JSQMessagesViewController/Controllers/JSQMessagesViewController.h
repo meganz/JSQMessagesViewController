@@ -21,6 +21,7 @@
 #import "JSQMessagesCollectionView.h"
 #import "JSQMessagesCollectionViewFlowLayout.h"
 #import "MEGAInputToolbar.h"
+#import "MEGA-Swift.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -162,6 +163,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (weak, nonatomic) IBOutlet UIView *tooltipView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *tooltipConstraint;
 @property (weak, nonatomic) IBOutlet UILabel *tooltipLabel;
+@property (strong, nonatomic) MEGARecordView *recordView;
 
 #pragma mark - Class methods
 
