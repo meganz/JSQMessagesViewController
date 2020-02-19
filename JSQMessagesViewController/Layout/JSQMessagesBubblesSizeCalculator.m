@@ -25,6 +25,8 @@
 
 #import "UIImage+JSQMessages.h"
 
+#import "MEGAChatMessage+MNZCategory.h"
+#import "NSString+MNZCategory.h"
 
 @interface JSQMessagesBubblesSizeCalculator ()
 
@@ -115,11 +117,35 @@
 
         CGFloat horizontalInsetsTotal = horizontalContainerInsets + horizontalFrameInsets + spacingBetweenAvatarAndBubble;
         CGFloat maximumTextWidth = [self textBubbleWidthForLayout:layout] - avatarSize.width - layout.messageBubbleLeftRightMargin - horizontalInsetsTotal;
+        
+        const CGFloat kMaxBubbleWidth = 566.0f;
+        CGFloat displaySize = [[UIScreen mainScreen] bounds].size.width - 92; // 75 + 17, by design
+        if (displaySize > kMaxBubbleWidth) {
+            displaySize = kMaxBubbleWidth;
+        }
 
-        CGRect stringRect = [[messageData text] boundingRectWithSize:CGSizeMake(maximumTextWidth, CGFLOAT_MAX)
-                                                             options:(NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading)
-                                                          attributes:@{ NSFontAttributeName : layout.messageBubbleFont }
-                                                             context:nil];
+        displaySize -= horizontalInsetsTotal;
+        if (maximumTextWidth > displaySize) {
+            maximumTextWidth = displaySize;
+        }
+
+        CGRect stringRect;
+        UIFont *messageFont = layout.messageBubbleFont;
+        if ([[messageData text] mnz_isPureEmojiString]) {
+            messageFont = [UIFont mnz_defaultFontForPureEmojiStringWithEmojis:[[messageData text] mnz_emojiCount]];
+            stringRect = [[messageData text] boundingRectWithSize:CGSizeMake(maximumTextWidth, CGFLOAT_MAX)
+                                                          options:(NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading)
+                                                       attributes:@{ NSFontAttributeName : messageFont }
+                                                          context:nil];
+        } else if (((MEGAChatMessage *)messageData).attributedText.length > 0) {
+            NSAttributedString *attributedString = ((MEGAChatMessage *)messageData).attributedText;
+            stringRect = [self boundingRectForAttributedText:attributedString withMaxWidth:maximumTextWidth];
+        } else {
+            stringRect = [[messageData text] boundingRectWithSize:CGSizeMake(maximumTextWidth, CGFLOAT_MAX)
+                                                          options:(NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading)
+                                                       attributes:@{ NSFontAttributeName : messageFont }
+                                                          context:nil];
+        }
 
         CGSize stringSize = CGRectIntegral(stringRect).size;
 
@@ -137,8 +163,17 @@
     }
 
     [self.cache setObject:[NSValue valueWithCGSize:finalSize] forKey:@([messageData messageHash])];
-
+    
     return finalSize;
+}
+
+- (CGRect)boundingRectForAttributedText:(NSAttributedString *)attributedText withMaxWidth:(CGFloat)maxWidth {
+    UITextView *textView = UITextView.alloc.init;
+    textView.textContainerInset = UIEdgeInsetsZero;
+    textView.textContainer.lineFragmentPadding = 0.0f;
+    textView.attributedText = attributedText;
+    CGSize size = [textView sizeThatFits:CGSizeMake(maxWidth, CGFLOAT_MAX)];
+    return CGRectMake(0.0f, 0.0f, size.width, size.height);
 }
 
 - (CGSize)jsq_avatarSizeForMessageData:(id<JSQMessageData>)messageData

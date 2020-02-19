@@ -82,6 +82,14 @@ NS_ASSUME_NONNULL_BEGIN
 @property (assign, nonatomic) CGSize outgoingAvatarViewSize;
 
 /**
+ *  The height of the `unreadMessagesLabel` of a `JSQMessagesCollectionViewCell`.
+ *  This value should be greater than or equal to `0.0`.
+ *
+ *  @see JSQMessagesCollectionViewCell.
+ */
+@property (assign, nonatomic) CGFloat unreadMessagesLabelHeight;
+
+/**
  *  The height of the `cellTopLabel` of a `JSQMessagesCollectionViewCell`.
  *  This value should be greater than or equal to `0.0`.
  *

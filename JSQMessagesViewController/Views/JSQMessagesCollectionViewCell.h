@@ -103,6 +103,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  *  Returns the label that is pinned to the top of the cell.
+ *  This label is most commonly used to display the number of unread messages.
+ */
+@property (weak, nonatomic, readonly, nullable) JSQMessagesLabel *unreadMessagesLabel;
+
+/**
+ *  Returns the label that is pinned just above the messageBubbleTopLabel, and below the unreadMessagesLabel.
  *  This label is most commonly used to display message timestamps.
  */
 @property (weak, nonatomic, readonly, nullable) JSQMessagesLabel *cellTopLabel;
@@ -167,6 +173,11 @@ NS_ASSUME_NONNULL_BEGIN
  *  Returns the accessory button of the cell.
  */
 @property (weak, nonatomic, readonly, nullable) UIButton *accessoryButton;
+
+/**
+ *  Returns the accessory button of the cell.
+ */
+@property (weak, nonatomic, readonly, nullable) UIImageView *selectionImageView;
 
 /**
  *  The media view of the cell. This view displays the contents of a media message.

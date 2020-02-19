@@ -32,9 +32,8 @@
 
 #import "NSString+JSQMessages.h"
 #import "NSBundle+JSQMessages.h"
-
 #import <objc/runtime.h>
-
+#import <PureLayout/PureLayout.h>
 
 // Fixes rdar://26295020
 // See issue #1247 and Peter Steinberger's comment:
@@ -107,13 +106,12 @@ static void JSQInstallWorkaroundForSheetPresentationIssue26295020(void) {
     }
 }
 
+extern const CGFloat kTextContentViewHeight;
 
-@interface JSQMessagesViewController () <JSQMessagesInputToolbarDelegate>
+@interface JSQMessagesViewController () <MEGAInputToolbarDelegate>
 
 @property (weak, nonatomic) IBOutlet JSQMessagesCollectionView *collectionView;
-@property (strong, nonatomic) IBOutlet JSQMessagesInputToolbar *inputToolbar;
-
-@property (nonatomic) NSLayoutConstraint *toolbarHeightConstraint;
+@property (strong, nonatomic) IBOutlet MEGAInputToolbar *inputToolbar;
 
 @property (strong, nonatomic) NSIndexPath *selectedIndexPathForMenu;
 
@@ -149,7 +147,7 @@ static void JSQInstallWorkaroundForSheetPresentationIssue26295020(void) {
 {
     self.view.backgroundColor = [UIColor whiteColor];
 
-    self.toolbarHeightConstraint.constant = self.inputToolbar.preferredDefaultHeight;
+    self.toolbarHeightConstraint.constant = self.inputToolbar.frame.size.height + [self safeAreaInsetsBottomPadding];
 
     self.collectionView.dataSource = self;
     self.collectionView.delegate = self;
@@ -160,8 +158,14 @@ static void JSQInstallWorkaroundForSheetPresentationIssue26295020(void) {
     self.inputToolbar.contentView.textView.delegate = self;
     self.inputToolbar.contentView.textView.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
     [self.inputToolbar removeFromSuperview];
-
-    self.automaticallyScrollsToMostRecentMessage = YES;
+    
+    self.recordView = MEGARecordView.recordView;
+    [self.view addSubview:self.recordView];
+    [self.recordView autoSetDimensionsToSize:CGSizeMake(180, 180)];
+    [self.recordView autoAlignAxis:ALAxisHorizontal toSameAxisOfView:self.view withOffset:-44];
+    [self.recordView autoAlignAxisToSuperviewAxis:ALAxisVertical];
+    self.inputToolbar.recordView = self.recordView;
+    self.recordView.hidden = YES;
 
     self.outgoingCellIdentifier = [JSQMessagesCollectionViewCellOutgoing cellReuseIdentifier];
     self.outgoingMediaCellIdentifier = [JSQMessagesCollectionViewCellOutgoing mediaCellReuseIdentifier];
@@ -239,17 +243,11 @@ static void JSQInstallWorkaroundForSheetPresentationIssue26295020(void) {
 {
     [super viewWillAppear:animated];
     if (!self.inputToolbar.contentView.textView.hasText) {
-        self.toolbarHeightConstraint.constant = self.inputToolbar.preferredDefaultHeight;
+        self.toolbarHeightConstraint.constant = self.inputToolbar.frame.size.height + [self safeAreaInsetsBottomPadding];
     }
     [self.view layoutIfNeeded];
     [self.collectionView.collectionViewLayout invalidateLayout];
-
-    if (self.automaticallyScrollsToMostRecentMessage) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self scrollToBottomAnimated:NO];
-            [self.collectionView.collectionViewLayout invalidateLayoutWithContext:[JSQMessagesCollectionViewFlowLayoutInvalidationContext context]];
-        });
-    }
+    
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -332,6 +330,16 @@ static void JSQInstallWorkaroundForSheetPresentationIssue26295020(void) {
     NSAssert(NO, @"Error! required method not implemented in subclass. Need to implement %s", __PRETTY_FUNCTION__);
 }
 
+- (void)didPressJoinButton:(UIButton *)sender
+{
+    NSAssert(NO, @"Error! required method not implemented in subclass. Need to implement %s", __PRETTY_FUNCTION__);
+}
+
+- (void)didChangeToState:(InputToolbarState)state
+{
+    NSAssert(NO, @"Error! required method not implemented in subclass. Need to implement %s", __PRETTY_FUNCTION__);
+}
+
 - (void)finishSendingMessage
 {
     [self finishSendingMessageAnimated:YES];
@@ -343,14 +351,7 @@ static void JSQInstallWorkaroundForSheetPresentationIssue26295020(void) {
     textView.text = nil;
     [textView.undoManager removeAllActions];
 
-    [[NSNotificationCenter defaultCenter] postNotificationName:UITextViewTextDidChangeNotification object:textView];
-
-    [self.collectionView.collectionViewLayout invalidateLayoutWithContext:[JSQMessagesCollectionViewFlowLayoutInvalidationContext context]];
-    [self.collectionView reloadData];
-
-    if (self.automaticallyScrollsToMostRecentMessage) {
-        [self scrollToBottomAnimated:animated];
-    }
+    [self scrollToBottomAnimated:animated];
 }
 
 - (void)finishReceivingMessage
@@ -365,10 +366,6 @@ static void JSQInstallWorkaroundForSheetPresentationIssue26295020(void) {
     [self.collectionView.collectionViewLayout invalidateLayoutWithContext:[JSQMessagesCollectionViewFlowLayoutInvalidationContext context]];
     [self.collectionView reloadData];
 
-    if (self.automaticallyScrollsToMostRecentMessage && ![self jsq_isMenuVisible]) {
-        [self scrollToBottomAnimated:animated];
-    }
-
     UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, [NSBundle jsq_localizedStringForKey:@"new_message_received_accessibility_announcement"]);
 }
 
@@ -379,7 +376,10 @@ static void JSQInstallWorkaroundForSheetPresentationIssue26295020(void) {
     }
 
     NSIndexPath *lastCell = [NSIndexPath indexPathForItem:([self.collectionView numberOfItemsInSection:0] - 1) inSection:0];
-    [self scrollToIndexPath:lastCell animated:animated];
+
+    [UIView animateWithDuration:animated ? 0.3 : 0.0 animations:^{
+        [self scrollToIndexPath:lastCell animated:NO];
+    }];
 }
 
 
@@ -432,6 +432,11 @@ static void JSQInstallWorkaroundForSheetPresentationIssue26295020(void) {
     return [messageSenderId isEqualToString:[self.collectionView.dataSource senderId]];
 }
 
+- (BOOL)canRecordAudio {
+    NSAssert(NO, @"Error! required method not implemented in subclass. Need to implement %s", __PRETTY_FUNCTION__);
+    return NO;
+}
+
 #pragma mark - JSQMessages collection view data source
 
 - (NSString *)senderDisplayName
@@ -466,6 +471,11 @@ static void JSQInstallWorkaroundForSheetPresentationIssue26295020(void) {
 - (id<JSQMessageAvatarImageDataSource>)collectionView:(JSQMessagesCollectionView *)collectionView avatarImageDataForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     NSAssert(NO, @"ERROR: required method not implemented: %s", __PRETTY_FUNCTION__);
+    return nil;
+}
+
+- (NSAttributedString *)collectionView:(JSQMessagesCollectionView *)collectionView attributedTextForUnreadMessagesLabelAtIndexPath:(NSIndexPath *)indexPath
+{
     return nil;
 }
 
@@ -555,17 +565,19 @@ static void JSQInstallWorkaroundForSheetPresentationIssue26295020(void) {
         }
     }
 
+    cell.unreadMessagesLabel.attributedText = [collectionView.dataSource collectionView:collectionView attributedTextForUnreadMessagesLabelAtIndexPath:indexPath];
     cell.cellTopLabel.attributedText = [collectionView.dataSource collectionView:collectionView attributedTextForCellTopLabelAtIndexPath:indexPath];
     cell.messageBubbleTopLabel.attributedText = [collectionView.dataSource collectionView:collectionView attributedTextForMessageBubbleTopLabelAtIndexPath:indexPath];
     cell.cellBottomLabel.attributedText = [collectionView.dataSource collectionView:collectionView attributedTextForCellBottomLabelAtIndexPath:indexPath];
 
-    CGFloat bubbleTopLabelInset = (avatarImageDataSource != nil) ? 60.0f : 15.0f;
-
+    cell.cellTopLabel.textInsets = UIEdgeInsetsMake(13.0f, 0.0f, 0.0f, 0.0f);
+    
+    BOOL isRTLLanguage = ([UIApplication sharedApplication].userInterfaceLayoutDirection == UIUserInterfaceLayoutDirectionRightToLeft);
     if (isOutgoingMessage) {
-        cell.messageBubbleTopLabel.textInsets = UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, bubbleTopLabelInset);
+        cell.messageBubbleTopLabel.textInsets = isRTLLanguage ? UIEdgeInsetsMake(0.0f, 4.0f, 0.0f, 0.0f) : UIEdgeInsetsMake(0.0f, -4.0f, 0.0f, 0.0f);
     }
     else {
-        cell.messageBubbleTopLabel.textInsets = UIEdgeInsetsMake(0.0f, bubbleTopLabelInset, 0.0f, 0.0f);
+        cell.messageBubbleTopLabel.textInsets = isRTLLanguage ? UIEdgeInsetsMake(0.0f, -28.0f, 0.0f, 0.0f) : UIEdgeInsetsMake(0.0f, 28.0f, 0.0f, 0.0f);
     }
 
     cell.textView.dataDetectorTypes = UIDataDetectorTypeAll;
@@ -653,13 +665,6 @@ static void JSQInstallWorkaroundForSheetPresentationIssue26295020(void) {
     JSQMessagesCollectionViewCell *selectedCell = (JSQMessagesCollectionViewCell *)[collectionView cellForItemAtIndexPath:indexPath];
     selectedCell.textView.selectable = NO;
     
-    //  it will reset the font and fontcolor when selectable is NO
-    //  however, the actual font and fontcolor in textView do not get changed
-    //  in order to preserve link colors, we need to re-assign the font and fontcolor when selectable is NO
-    //  see GitHub issues #1675 and #1759
-    selectedCell.textView.textColor = selectedCell.textView.textColor;
-    selectedCell.textView.font = selectedCell.textView.font;
-
     return YES;
 }
 
@@ -704,6 +709,11 @@ static void JSQInstallWorkaroundForSheetPresentationIssue26295020(void) {
     return [collectionViewLayout sizeForItemAtIndexPath:indexPath];
 }
 
+- (CGFloat)collectionView:(JSQMessagesCollectionView *)collectionView layout:(JSQMessagesCollectionViewFlowLayout *)collectionViewLayout heightForUnreadMessagesLabelAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 0.0f;
+}
+
 - (CGFloat)collectionView:(JSQMessagesCollectionView *)collectionView
                    layout:(JSQMessagesCollectionViewFlowLayout *)collectionViewLayout heightForCellTopLabelAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -734,32 +744,70 @@ static void JSQInstallWorkaroundForSheetPresentationIssue26295020(void) {
 
 #pragma mark - Input toolbar delegate
 
-- (void)messagesInputToolbar:(JSQMessagesInputToolbar *)toolbar didPressLeftBarButton:(UIButton *)sender
+- (void)messagesInputToolbar:(MEGAInputToolbar *)toolbar didPressSendButton:(UIButton *)sender
 {
-    if (toolbar.sendButtonLocation == JSQMessagesInputSendButtonLocationLeft) {
-        [self didPressSendButton:sender
-                 withMessageText:[self jsq_currentlyComposedMessageText]
-                        senderId:[self.collectionView.dataSource senderId]
-               senderDisplayName:[self.collectionView.dataSource senderDisplayName]
-                            date:[NSDate date]];
-    }
-    else {
-        [self didPressAccessoryButton:sender];
-    }
+    [self didPressSendButton:sender
+             withMessageText:[self jsq_currentlyComposedMessageText]
+                    senderId:[self.collectionView.dataSource senderId]
+           senderDisplayName:[self.collectionView.dataSource senderDisplayName]
+                        date:[NSDate date]];
+    self.toolbarHeightConstraint.constant = kTextContentViewHeight + [self safeAreaInsetsBottomPadding];
 }
 
-- (void)messagesInputToolbar:(JSQMessagesInputToolbar *)toolbar didPressRightBarButton:(UIButton *)sender
-{
-    if (toolbar.sendButtonLocation == JSQMessagesInputSendButtonLocationRight) {
-        [self didPressSendButton:sender
-                 withMessageText:[self jsq_currentlyComposedMessageText]
-                        senderId:[self.collectionView.dataSource senderId]
-               senderDisplayName:[self.collectionView.dataSource senderDisplayName]
-                            date:[NSDate date]];
+- (void)messagesInputToolbar:(MEGAInputToolbar *)toolbar didPressSendButton:(UIButton *)sender toAttachAssets:(NSArray<PHAsset *> *)assets {
+    NSAssert(NO, @"Error! required method not implemented in subclass. Need to implement %s", __PRETTY_FUNCTION__);
+}
+
+- (void)messagesInputToolbar:(MEGAInputToolbar *)toolbar didPressNotHeldRecordButton:(UIButton *)sender {
+    NSAssert(NO, @"Error! required method not implemented in subclass. Need to implement %s", __PRETTY_FUNCTION__);
+}
+
+- (void)messagesInputToolbar:(MEGAInputToolbar *)toolbar didRecordVoiceClipAtPath:(NSString *)voiceClipPath {
+    NSAssert(NO, @"Error! required method not implemented in subclass. Need to implement %s", __PRETTY_FUNCTION__);
+}
+
+- (void)messagesInputToolbar:(MEGAInputToolbar *)toolbar assetLoadFailed:(NSError *)error {    
+    NSString *message = [[[[[error.userInfo objectForKey:@"NSUnderlyingError"] userInfo] objectForKey:@"NSUnderlyingError"] userInfo] objectForKey:@"NSLocalizedDescription"];
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:AMLocalizedString(@"error", nil) message:message preferredStyle:UIAlertControllerStyleAlert];
+    [alertController addAction:[UIAlertAction actionWithTitle:AMLocalizedString(@"ok", nil) style:UIAlertActionStyleCancel handler:nil]];
+    [self presentViewController:alertController animated:YES completion:nil];
+}
+
+- (void)messagesInputToolbar:(MEGAInputToolbar *)toolbar didPressAccessoryButton:(UIButton *)sender {
+    [self didPressAccessoryButton:sender];
+}
+
+- (void)messagesInputToolbar:(MEGAInputToolbar *)toolbar didPressJoinButton:(UIButton *)sender {
+    [self didPressJoinButton:sender];
+}
+
+- (void)messagesInputToolbar:(MEGAInputToolbar *)toolbar didChangeToState:(InputToolbarState)state {
+    switch (state) {
+        case InputToolbarStateInitial:
+            self.recordView.hidden = YES;
+            break;
+        case InputToolbarStateRecordingUnlocked:
+            self.recordView.hidden = NO;
+        default:
+            break;
     }
-    else {
-        [self didPressAccessoryButton:sender];
-    }
+    [self didChangeToState:state];
+}
+
+- (void)messagesInputToolbar:(MEGAInputToolbar *)toolbar needsResizeToHeight:(CGFloat)newToolbarHeight {
+    
+    
+    [UIView animateWithDuration:0.3 animations:^{
+        self.toolbarHeightConstraint.constant = newToolbarHeight + [self safeAreaInsetsBottomPadding];
+    }];
+}
+
+- (void)messagesInputToolbar:(MEGAInputToolbar *)toolbar didLoadContentView:(MEGAToolbarContentView *)toolbarContentView {
+    [self customToolbarContentView];
+}
+
+- (BOOL)messagesInputToolbarCanRecordVoiceClip:(MEGAInputToolbar *_Nonnull)toolbar {
+    return [self canRecordAudio];
 }
 
 - (NSString *)jsq_currentlyComposedMessageText
@@ -769,6 +817,10 @@ static void JSQInstallWorkaroundForSheetPresentationIssue26295020(void) {
     [self.inputToolbar.contentView.textView.inputDelegate selectionDidChange:self.inputToolbar.contentView.textView];
 
     return [self.inputToolbar.contentView.textView.text jsq_stringByTrimingWhitespace];
+}
+
+- (void)customToolbarContentView {
+    NSAssert(NO, @"Error! required method not implemented in subclass. Need to implement %s", __PRETTY_FUNCTION__);
 }
 
 #pragma mark - Input
@@ -792,10 +844,6 @@ static void JSQInstallWorkaroundForSheetPresentationIssue26295020(void) {
     }
 
     [textView becomeFirstResponder];
-
-    if (self.automaticallyScrollsToMostRecentMessage) {
-        [self scrollToBottomAnimated:YES];
-    }
 }
 
 - (void)textViewDidChange:(UITextView *)textView
@@ -931,27 +979,51 @@ static void JSQInstallWorkaroundForSheetPresentationIssue26295020(void) {
 - (void)jsq_didReceiveKeyboardWillChangeFrameNotification:(NSNotification *)notification
 {
     NSDictionary *userInfo = [notification userInfo];
-
+    
     CGRect keyboardEndFrame = [userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
-
+    
     if (CGRectIsNull(keyboardEndFrame)) {
         return;
     }
-
+    
+    CGFloat safeAreaBottomInset = 0.0f;
+    if (@available(iOS 11.0, *)) {
+        if (self.inputToolbar.contentView.textView.isFirstResponder) {
+            safeAreaBottomInset = UIApplication.sharedApplication.keyWindow.safeAreaInsets.bottom;
+        }
+    }
+    
     UIViewAnimationCurve animationCurve = [userInfo[UIKeyboardAnimationCurveUserInfoKey] integerValue];
     NSInteger animationCurveOption = (animationCurve << 16);
-
+    
     double animationDuration = [userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
-
+    
     [UIView animateWithDuration:animationDuration
                           delay:0.0
                         options:animationCurveOption
                      animations:^{
                          const UIEdgeInsets insets = self.additionalContentInset;
                          [self jsq_setCollectionViewInsetsTopValue:insets.top
-                                                       bottomValue:CGRectGetHeight(keyboardEndFrame) + insets.bottom];
+                                                       bottomValue:CGRectGetHeight(keyboardEndFrame) + insets.bottom - safeAreaBottomInset];
                      }
                      completion:nil];
+}
+
+#pragma mark - IBActions
+
+- (IBAction)closeTooltipTapped:(UIButton *)sender {
+    NSAssert(NO, @"Error! required method not implemented in subclass. Need to implement %s", __PRETTY_FUNCTION__);
+}
+
+#pragma mark - Private
+
+- (CGFloat)safeAreaInsetsBottomPadding {
+    CGFloat bottomPadding = 0;
+    if (@available(iOS 11.0, *)) {
+        UIWindow *window = UIApplication.sharedApplication.keyWindow;
+        bottomPadding = window.safeAreaInsets.bottom;
+    }
+    return bottomPadding;
 }
 
 @end

@@ -26,6 +26,8 @@
 {
     [self setTranslatesAutoresizingMaskIntoConstraints:NO];
     self.textInsets = UIEdgeInsetsZero;
+    
+    self.adjustsFontForContentSizeCategory = YES;
 }
 
 - (instancetype)initWithFrame:(CGRect)frame

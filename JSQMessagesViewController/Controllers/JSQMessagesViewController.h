@@ -20,13 +20,14 @@
 
 #import "JSQMessagesCollectionView.h"
 #import "JSQMessagesCollectionViewFlowLayout.h"
-#import "JSQMessagesInputToolbar.h"
+#import "MEGAInputToolbar.h"
+#import "MEGA-Swift.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 /**
  *  The `JSQMessagesViewController` class is an abstract class that represents a view controller whose content consists of
- *  a `JSQMessagesCollectionView` and `JSQMessagesInputToolbar` and is specialized to display a messaging interface.
+ *  a `JSQMessagesCollectionView` and `MEGAInputToolbar` and is specialized to display a messaging interface.
  *
  *  @warning This class is intended to be subclassed. You should not use it directly.
  */
@@ -44,7 +45,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  Returns the input toolbar view object managed by this view controller.
  *  This view controller is the toolbar's delegate.
  */
-@property (strong, nonatomic, readonly) JSQMessagesInputToolbar *inputToolbar;
+@property (strong, nonatomic, readonly) MEGAInputToolbar *inputToolbar;
 
 /**
  *  Specifies whether or not the view controller should automatically scroll to the most recent message
@@ -153,6 +154,17 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (assign, nonatomic) UIEdgeInsets additionalContentInset;
 
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *toolbarHeightConstraint;
+@property (weak, nonatomic) IBOutlet UIView *jumpToBottomView;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *jumpToBottomConstraint;
+@property (weak, nonatomic) IBOutlet UIView *previewersView;
+@property (weak, nonatomic) IBOutlet UILabel *previewersLabel;
+
+@property (weak, nonatomic) IBOutlet UIView *tooltipView;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *tooltipConstraint;
+@property (weak, nonatomic) IBOutlet UILabel *tooltipLabel;
+@property (strong, nonatomic) MEGARecordView *recordView;
+
 #pragma mark - Class methods
 
 /**
@@ -194,7 +206,7 @@ NS_ASSUME_NONNULL_BEGIN
                       date:(NSDate *)date;
 
 /**
- *  This method is called when the user taps the accessory button on the `inputToolbar`.
+ *  This method is called when the user taps one accessory button on the `inputToolbar`.
  *
  *  @param sender The accessory button that was pressed by the user.
  */
@@ -264,6 +276,11 @@ NS_ASSUME_NONNULL_BEGIN
  * @param animated Pass `YES` if you want to animate scrolling, `NO` otherwise.
  */
 - (void)scrollToIndexPath:(NSIndexPath *)indexPath animated:(BOOL)animated;
+
+/**
+* Asks if the InputToolbar can record audio. Forbidden if there is an active MEGA call for example.
+*/
+- (BOOL)canRecordAudio;
 
 /**
  Call to super required.

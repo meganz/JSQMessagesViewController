@@ -18,6 +18,12 @@
 
 #import "JSQMessagesCellTextView.h"
 
+#import "MEGALinkManager.h"
+
+@interface JSQMessagesCellTextView () <UITextViewDelegate>
+
+@end
+
 @implementation JSQMessagesCellTextView
 
 - (void)awakeFromNib
@@ -40,6 +46,9 @@
     self.textContainer.lineFragmentPadding = 0;
     self.linkTextAttributes = @{ NSForegroundColorAttributeName : [UIColor whiteColor],
                                  NSUnderlineStyleAttributeName : @(NSUnderlineStyleSingle | NSUnderlinePatternSolid) };
+    self.adjustsFontForContentSizeCategory = YES;
+    
+    self.delegate = self;
 }
 
 - (void)setSelectedRange:(NSRange)selectedRange
@@ -83,6 +92,95 @@
 - (BOOL)canPerformAction:(SEL)action withSender:(id)sender {
     [UIMenuController sharedMenuController].menuItems = nil;
     return [super canPerformAction:action withSender:sender];
+}
+
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
+    //  ignore longpress to prevent copy/define/etc. menu from showing
+    NSUInteger glyphIndex = [self.layoutManager glyphIndexForPoint:point inTextContainer:self.textContainer fractionOfDistanceThroughGlyph:nil];
+    NSUInteger characterIndex = [self.layoutManager characterIndexForGlyphAtIndex:glyphIndex];
+    if (characterIndex < self.textStorage.length) {
+        if ([self.textStorage attribute:NSLinkAttributeName atIndex:characterIndex effectiveRange:nil]) {
+            return self;
+        }
+    }
+    return nil;
+}
+
+#pragma mark - UITextViewDelegate
+
+- (BOOL)textView:(UITextView *)textView shouldInteractWithURL:(NSURL *)URL inRange:(NSRange)characterRange interaction:(UITextItemInteraction)interaction {
+    if ([URL.scheme.lowercaseString isEqualToString:@"x-apple-data-detectors"]) {
+        return YES;
+    }
+    
+    BOOL recognizedTapGesture = NO;
+    for (UIGestureRecognizer *recognizer in textView.gestureRecognizers) {
+        if ([recognizer isKindOfClass:UITapGestureRecognizer.class] && recognizer.state == UIGestureRecognizerStateEnded) {
+            recognizedTapGesture = YES;
+            break;
+        }
+    }
+    if (!recognizedTapGesture) {
+        // Tap gesture is not being recognized, this must be an early
+        // check when touches begin. Leave the link handling alone.
+        return YES;
+    }
+
+    // Do custom action here
+    switch (interaction) {
+        case UITextItemInteractionInvokeDefaultAction:
+            MEGALinkManager.linkURL = URL;
+            [MEGALinkManager processLinkURL:URL];
+            break;
+            
+        default:
+            break;
+    }
+    
+    return NO;
+    
+}
+
+@end
+
+// Hack to disable the draggability on UITextViews
+
+#import <objc/runtime.h>
+
+@implementation UIDragInteraction (TextLimitations)
++ (void)load
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        
+        Class class = [self class];
+        
+        SEL originalSelector = @selector(isEnabled);
+        SEL swizzledSelector = @selector(restrictIsEnabled);
+        
+        Method originalMethod = class_getInstanceMethod(class, originalSelector);
+        Method swizzledMethod = class_getInstanceMethod(class, swizzledSelector);
+        
+        BOOL didAddMethod =
+        class_addMethod(class,
+                        originalSelector,
+                        method_getImplementation(swizzledMethod),
+                        method_getTypeEncoding(swizzledMethod));
+        
+        if (didAddMethod) {
+            class_replaceMethod(class,
+                                swizzledSelector,
+                                method_getImplementation(originalMethod),
+                                method_getTypeEncoding(originalMethod));
+        } else {
+            method_exchangeImplementations(originalMethod, swizzledMethod);
+        }
+    });
+}
+
+-(BOOL)restrictIsEnabled
+{
+    return NO;
 }
 
 @end
