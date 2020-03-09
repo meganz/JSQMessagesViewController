@@ -377,46 +377,52 @@ typedef NS_ENUM(NSUInteger, InputToolbarMode) {
 #pragma mark - Voice clips
 
 - (BOOL)startRecordingAudio {
-    NSError *error;
 
-    if (![AVAudioSession.sharedInstance setMode:AVAudioSessionModeDefault error:&error]) {
-        MEGALogError(@"[Voice clips] Error setting default mode: %@", error);
-    }
-    
-    if (![[AVAudioSession sharedInstance] setActive:YES error:&error]) {
-        MEGALogError(@"[Voice clips] Error activating audio session: %@", error);
-        return [self handleAVAudioSessionError:error];
-    }
-    
-    AudioFormatID audioFormat = kAudioFormatMPEG4AAC;
-    NSString *extension = @"m4a";
-    
-    if (![NSFileManager.defaultManager fileExistsAtPath:NSTemporaryDirectory()]) {
-        if (![NSFileManager.defaultManager createDirectoryAtPath:NSTemporaryDirectory() withIntermediateDirectories:YES attributes:nil error:&error]) {
-            MEGALogError(@"[Voice clips] Error creating temporary directory: %@", error);
+    if ([self.delegate messagesInputToolbarCanRecordVoiceClip:self]) {
+        NSError *error;
+
+        if (![AVAudioSession.sharedInstance setMode:AVAudioSessionModeDefault error:&error]) {
+            MEGALogError(@"[Voice clips] Error setting default mode: %@", error);
+        }
+        
+        if (![[AVAudioSession sharedInstance] setActive:YES error:&error]) {
+            MEGALogError(@"[Voice clips] Error activating audio session: %@", error);
+            return [self handleAVAudioSessionError:error];
+        }
+        
+        AudioFormatID audioFormat = kAudioFormatMPEG4AAC;
+        NSString *extension = @"m4a";
+        
+        if (![NSFileManager.defaultManager fileExistsAtPath:NSTemporaryDirectory()]) {
+            if (![NSFileManager.defaultManager createDirectoryAtPath:NSTemporaryDirectory() withIntermediateDirectories:YES attributes:nil error:&error]) {
+                MEGALogError(@"[Voice clips] Error creating temporary directory: %@", error);
+                return NO;
+            }
+        }
+        
+        NSURL *destinationURL = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", [[NSDate date] mnz_formattedDefaultNameForMedia], extension]]];
+        
+        NSDictionary *recordSettings = @{ AVFormatIDKey: @(audioFormat),
+                                            AVSampleRateKey: @(16000),
+                                            AVNumberOfChannelsKey: @(1),
+                                            AVEncoderAudioQualityKey: @(AVAudioQualityHigh)
+                                            };
+        self.audioRecorder = [[AVAudioRecorder alloc] initWithURL:destinationURL settings:recordSettings error:&error];
+        if (!self.audioRecorder) {
+            MEGALogError(@"[Voice clips] Error instantiating audio recorder: %@", error);
             return NO;
         }
-    }
-    
-    NSURL *destinationURL = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", [[NSDate date] mnz_formattedDefaultNameForMedia], extension]]];
-    
-    NSDictionary *recordSettings = @{ AVFormatIDKey: @(audioFormat),
-                                        AVSampleRateKey: @(16000),
-                                        AVNumberOfChannelsKey: @(1),
-                                        AVEncoderAudioQualityKey: @(AVAudioQualityHigh)
-                                        };
-    self.audioRecorder = [[AVAudioRecorder alloc] initWithURL:destinationURL settings:recordSettings error:&error];
-    if (!self.audioRecorder) {
-        MEGALogError(@"[Voice clips] Error instantiating audio recorder: %@", error);
+        self.audioRecorder.meteringEnabled = YES;
+        
+        self.timer = [NSTimer timerWithTimeInterval:0.1f target:self selector:@selector(updateRecordingTimeLabel) userInfo:nil repeats:YES];
+        [NSRunLoop.mainRunLoop addTimer:self.timer forMode:NSRunLoopCommonModes];
+        self.baseDate = [NSDate date];
+        
+        return [self.audioRecorder record];
+    } else {
+        [SVProgressHUD showErrorWithStatus:AMLocalizedString(@"It is not possible to record voice messages while there is a call in progress", @"Message shown when there is an ongoing call and the user tries to record a voice message")];
         return NO;
     }
-    self.audioRecorder.meteringEnabled = YES;
-    
-    self.timer = [NSTimer timerWithTimeInterval:0.1f target:self selector:@selector(updateRecordingTimeLabel) userInfo:nil repeats:YES];
-    [NSRunLoop.mainRunLoop addTimer:self.timer forMode:NSRunLoopCommonModes];
-    self.baseDate = [NSDate date];
-    
-    return [self.audioRecorder record];
 }
 
 - (void)stopRecordingAudioToSend:(BOOL)send {
