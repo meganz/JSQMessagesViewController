@@ -432,6 +432,11 @@ extern const CGFloat kTextContentViewHeight;
     return [messageSenderId isEqualToString:[self.collectionView.dataSource senderId]];
 }
 
+- (BOOL)canRecordAudio {
+    NSAssert(NO, @"Error! required method not implemented in subclass. Need to implement %s", __PRETTY_FUNCTION__);
+    return NO;
+}
+
 #pragma mark - JSQMessages collection view data source
 
 - (NSString *)senderDisplayName
@@ -799,6 +804,10 @@ extern const CGFloat kTextContentViewHeight;
 
 - (void)messagesInputToolbar:(MEGAInputToolbar *)toolbar didLoadContentView:(MEGAToolbarContentView *)toolbarContentView {
     [self customToolbarContentView];
+}
+
+- (BOOL)messagesInputToolbarCanRecordVoiceClip:(MEGAInputToolbar *_Nonnull)toolbar {
+    return [self canRecordAudio];
 }
 
 - (NSString *)jsq_currentlyComposedMessageText

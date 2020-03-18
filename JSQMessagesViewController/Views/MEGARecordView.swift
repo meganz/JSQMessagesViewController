@@ -19,7 +19,7 @@ class MEGARecordView: UIView {
         layer.cornerRadius = 8
         layer.masksToBounds = true
         
-        recordingLabel.text = NSLocalizedString("Recording...", comment: "Label indicating that a voice clip is being recorded. String as short as possible.")
+        recordingLabel.text = AMLocalizedString("Recording...", "Label indicating that a voice clip is being recorded. String as short as possible.")
     }
     
     @objc var currentVolume: Float = 0.0 {

@@ -109,6 +109,9 @@
 #pragma mark - UITextViewDelegate
 
 - (BOOL)textView:(UITextView *)textView shouldInteractWithURL:(NSURL *)URL inRange:(NSRange)characterRange interaction:(UITextItemInteraction)interaction {
+    if ([URL.scheme.lowercaseString isEqualToString:@"x-apple-data-detectors"]) {
+        return YES;
+    }
     
     BOOL recognizedTapGesture = NO;
     for (UIGestureRecognizer *recognizer in textView.gestureRecognizers) {
