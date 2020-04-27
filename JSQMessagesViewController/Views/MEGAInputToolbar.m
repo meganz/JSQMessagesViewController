@@ -181,6 +181,9 @@ typedef NS_ENUM(NSUInteger, InputToolbarMode) {
                 break;
                 
             case InputToolbarStateWriting:
+                if (self.currentMode == InputToolbarModeExpanded) {
+                    [self mnz_expandOrCollapseButtonPressed];
+                }
                 [self.delegate messagesInputToolbar:self didPressSendButton:sender];
                 break;
                 
