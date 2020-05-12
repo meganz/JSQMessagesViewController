@@ -165,7 +165,7 @@ CGFloat kCollectionViewHeight;
             [cell.backgroundView addSubview:playView];
             UILabel *durationLabel = [[UILabel alloc] initWithFrame:CGRectMake(15.0f, kCellSquareSize-17.5f, 48.0f, 15.0f)];
             durationLabel.text = [NSString mnz_stringFromTimeInterval:currentAsset.duration];
-            durationLabel.font = [UIFont mnz_SFUIRegularWithSize:12.0f];
+            durationLabel.font = [UIFont systemFontOfSize:12.0f];
             durationLabel.textColor = [UIColor whiteColor];
             [cell.backgroundView addSubview:durationLabel];
         }
