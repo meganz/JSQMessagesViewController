@@ -510,7 +510,7 @@ typedef NS_ENUM(NSUInteger, InputToolbarMode) {
             UIImage *sendButton = [UIImage imageNamed:@"sendButton"];
             [self.contentView.sendButton setImage:sendButton.imageFlippedForRightToLeftLayoutDirection forState:UIControlStateNormal];
             [self.contentView.slideToCancelButton setTitle:AMLocalizedString(@"cancel", @"Button title to cancel something") forState:UIControlStateNormal];
-            [self.contentView.slideToCancelButton setTitleColor:[UIColor mnz_redMainForTraitCollection:(self.traitCollection)] forState:UIControlStateNormal];
+            [self.contentView.slideToCancelButton setTitleColor:[UIColor mnz_redForTraitCollection:(self.traitCollection)] forState:UIControlStateNormal];
             self.contentView.lockView.hidden = YES;
             
             break;
@@ -776,7 +776,7 @@ typedef NS_ENUM(NSUInteger, InputToolbarMode) {
                 self.contentView.slideToCancelButton.frame = frame;
                 self.contentView.slideToCancelButton.alpha = 1.0 - xIncrement / 100;
                 if (xIncrement > 50.0f) {
-                    [self.contentView.slideToCancelButton setTitleColor:[UIColor mnz_redMainForTraitCollection:(self.traitCollection)] forState:UIControlStateNormal];
+                    [self.contentView.slideToCancelButton setTitleColor:[UIColor mnz_redForTraitCollection:(self.traitCollection)] forState:UIControlStateNormal];
                 } else {
                     [self.contentView.slideToCancelButton setTitleColor:[UIColor mnz_primaryGrayForTraitCollection:self.traitCollection] forState:UIControlStateNormal];
                 }

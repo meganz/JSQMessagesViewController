@@ -27,7 +27,7 @@
 #pragma mark - Private
 
 - (void)updateAppearance {
-    self.topSeparatorView.backgroundColor = [UIColor mnz_separatorColorForTraitCollection:self.traitCollection];
+    self.topSeparatorView.backgroundColor = [UIColor mnz_separatorForTraitCollection:self.traitCollection];
     
     self.backgroundColor = self.opaqueContentView.backgroundColor = UIColor.mnz_background;
     
