@@ -29,7 +29,7 @@
 - (void)updateAppearance {
     self.topSeparatorView.backgroundColor = [UIColor mnz_separatorForTraitCollection:self.traitCollection];
     
-    self.backgroundColor = self.opaqueContentView.backgroundColor = UIColor.mnz_background;
+    self.backgroundColor = self.opaqueContentView.backgroundColor = [UIColor mnz_secondaryBackgroundForTraitCollection:self.traitCollection];
     
     self.selectedAssetsCollectionView.backgroundColor = self.collectionView.backgroundColor = UIColor.mnz_background;
     
