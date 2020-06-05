@@ -34,6 +34,7 @@
 #import "NSBundle+JSQMessages.h"
 #import <objc/runtime.h>
 #import <PureLayout/PureLayout.h>
+#import "MEGA-Swift.h"
 
 // Fixes rdar://26295020
 // See issue #1247 and Peter Steinberger's comment:
