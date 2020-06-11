@@ -181,6 +181,9 @@ typedef NS_ENUM(NSUInteger, InputToolbarMode) {
                 break;
                 
             case InputToolbarStateWriting:
+                if (self.currentMode == InputToolbarModeExpanded) {
+                    [self mnz_expandOrCollapseButtonPressed];
+                }
                 [self.delegate messagesInputToolbar:self didPressSendButton:sender];
                 break;
                 
@@ -608,7 +611,7 @@ typedef NS_ENUM(NSUInteger, InputToolbarMode) {
     CGFloat newToolbarHeight = [self heightToFitInWidth:self.contentView.textView.frame.size.width];
     self.contentView.contentViewHeightConstraint.constant = newToolbarHeight;
     [self.contentView layoutIfNeeded];
-    [self.delegate messagesInputToolbar:self needsResizeToHeight:newToolbarHeight];
+    [self.delegate messagesInputToolbar:self needsResizeToHeight:newToolbarHeight + (self.contentView.typingIndicatorView.hidden ? 0 : self.contentView.typingIndicatorView.frame.size.height)];
 }
 
 - (CGFloat)heightToFitInWidth:(CGFloat)width {
