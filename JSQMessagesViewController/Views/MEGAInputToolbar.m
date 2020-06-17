@@ -244,39 +244,20 @@ typedef NS_ENUM(NSUInteger, InputToolbarMode) {
                 if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusNotDetermined) {
                     [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
                         dispatch_async(dispatch_get_main_queue(), ^{
-                            if (!self.imagePickerView) {
-                                [self.contentView.textView removeObserver:self forKeyPath:@"text"];
-                                [self.contentView removeFromSuperview];
-                                [self loadToolbarImagePickerView];
+                            if (status == PHAuthorizationStatusAuthorized) {
+                                [self.delegate messagesInputToolbar:self didPressAccessoryButton:sender];
+                            } else {
+                                [self showImagePickerViewIfRequired];
                             }
                         });
                     }];
+                } else if (PHPhotoLibrary.authorizationStatus != PHAuthorizationStatusAuthorized) {
+                    [self showImagePickerViewIfRequired];
                 } else {
-                    if (!self.imagePickerView) {
-                        BOOL keyboardWasPresent = [self.contentView.textView isFirstResponder];
-                        [self.contentView.textView removeObserver:self forKeyPath:@"text"];
-                        [self.contentView removeFromSuperview];
-                        [self loadToolbarImagePickerView];
-                        if (!keyboardWasPresent) {
-                            self.imagePickerView.frame = CGRectMake(
-                                                                    self.imagePickerView.frame.origin.x,
-                                                                    self.imagePickerView.frame.origin.y + (kImagePickerViewHeight - kButtonBarHeight),
-                                                                    self.imagePickerView.frame.size.width,
-                                                                    self.imagePickerView.frame.size.height);
-                            [UIView animateWithDuration:0.2f
-                                             animations:^{
-                                                 self.imagePickerView.frame = CGRectMake(
-                                                                                         self.imagePickerView.frame.origin.x,
-                                                                                         self.imagePickerView.frame.origin.y - (kImagePickerViewHeight - kButtonBarHeight),
-                                                                                         self.imagePickerView.frame.size.width,
-                                                                                         self.imagePickerView.frame.size.height);
-                                             }
-                                             completion:nil];
-                        }
-                    }
+                    [self.delegate messagesInputToolbar:self didPressAccessoryButton:sender];
                 }
             }
-            [self.delegate messagesInputToolbar:self didPressAccessoryButton:sender];
+  
             break;
             
         default:
@@ -288,6 +269,14 @@ typedef NS_ENUM(NSUInteger, InputToolbarMode) {
             }
             [self.delegate messagesInputToolbar:self didPressAccessoryButton:sender];
             break;
+    }
+}
+
+- (void)showImagePickerViewIfRequired {
+    if (!self.imagePickerView) {
+        [self.contentView.textView removeObserver:self forKeyPath:@"text"];
+        [self.contentView removeFromSuperview];
+        [self loadToolbarImagePickerView];
     }
 }
 
