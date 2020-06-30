@@ -4,10 +4,10 @@
 #import "PWProgressView.h"
 #import "UIScrollView+EmptyDataSet.h"
 
+#import "EmptyStateView.h"
 #import "DevicePermissionsHelper.h"
 #import "Helper.h"
 #import "NSString+MNZCategory.h"
-#import "UIColor+MNZCategory.h"
 #import "UIImage+MNZCategory.h"
 
 const CGFloat kCellSquareSize = 93.0f;
@@ -165,7 +165,7 @@ CGFloat kCollectionViewHeight;
             [cell.backgroundView addSubview:playView];
             UILabel *durationLabel = [[UILabel alloc] initWithFrame:CGRectMake(15.0f, kCellSquareSize-17.5f, 48.0f, 15.0f)];
             durationLabel.text = [NSString mnz_stringFromTimeInterval:currentAsset.duration];
-            durationLabel.font = [UIFont mnz_SFUIRegularWithSize:12.0f];
+            durationLabel.font = [UIFont systemFontOfSize:12.0f];
             durationLabel.textColor = [UIColor whiteColor];
             [cell.backgroundView addSubview:durationLabel];
         }
@@ -183,7 +183,7 @@ CGFloat kCollectionViewHeight;
             }
         }
     } else {
-        cell.backgroundView.layer.borderColor = [UIColor.mnz_green00BFA5 CGColor];
+        cell.backgroundView.layer.borderColor = [UIColor mnz_turquoiseForTraitCollection:UIScreen.mainScreen.traitCollection].CGColor;
         cell.backgroundView.layer.borderWidth = 2.0;
         cell.backgroundView.layer.opacity = 0.48;
         // Add checkmark:
@@ -192,7 +192,7 @@ CGFloat kCollectionViewHeight;
         [cell.contentView addSubview:checkView];
     }
     
-    cell.backgroundColor = [UIColor.mnz_green00BFA5 colorWithAlphaComponent:0.48];
+    cell.backgroundColor = [[UIColor mnz_turquoiseForTraitCollection:UIScreen.mainScreen.traitCollection] colorWithAlphaComponent:0.48];
     
     if ([self.requestIdIndexPathDictionary objectForKey:indexPath]) {
         [self drawAssetProgressInCell:cell indexPath:indexPath];
@@ -291,18 +291,26 @@ CGFloat kCollectionViewHeight;
 
 #pragma mark - DZNEmptyDataSetSource
 
-- (NSAttributedString *)titleForEmptyDataSet:(UIScrollView *)scrollView {
-    NSAttributedString *attributedString = nil;
+- (nullable UIView *)customViewForEmptyDataSet:(UIScrollView *)scrollView {
+    EmptyStateView *emptyStateView = [EmptyStateView.alloc initWithImage:self.imageForEmptyState title:self.titleForEmptyState description:nil buttonTitle:self.buttonTitleForEmptyState];
+    [emptyStateView.button addTarget:self action:@selector(buttonTouchUpInsideEmptyState) forControlEvents:UIControlEventTouchUpInside];
     
-    if (PHPhotoLibrary.authorizationStatus != PHAuthorizationStatusAuthorized) {
-        NSString *text = AMLocalizedString(@"Please give the MEGA App permission to access Photos to share photos and videos.", @"Detailed explanation of why the user should give permission to access to the photos");
-        attributedString = [[NSAttributedString alloc] initWithString:text attributes:@{NSFontAttributeName:[UIFont mnz_SFUIRegularWithSize:14.0f], NSForegroundColorAttributeName:UIColor.mnz_black333333}];
-    }
-    
-    return attributedString;
+    return emptyStateView;
 }
 
-- (UIImage *)imageForEmptyDataSet:(UIScrollView *)scrollView {
+#pragma mark - Empty State
+
+- (NSString *)titleForEmptyState {
+    NSString *title = nil;
+    
+    if (PHPhotoLibrary.authorizationStatus != PHAuthorizationStatusAuthorized) {
+        title = AMLocalizedString(@"Please give the MEGA App permission to access Photos to share photos and videos.", @"Detailed explanation of why the user should give permission to access to the photos");
+    }
+    
+    return title;
+}
+
+- (UIImage *)imageForEmptyState {
     UIImage *image = nil;
     
     if (PHPhotoLibrary.authorizationStatus != PHAuthorizationStatusAuthorized) {
@@ -312,37 +320,17 @@ CGFloat kCollectionViewHeight;
     return image;
 }
 
-- (NSAttributedString *)buttonTitleForEmptyDataSet:(UIScrollView *)scrollView forState:(UIControlState)state {
-    NSAttributedString *attributedString = nil;
+- (NSString *)buttonTitleForEmptyState {
+    NSString *buttonTitle = nil;
     
     if (PHPhotoLibrary.authorizationStatus != PHAuthorizationStatusAuthorized) {
-        NSString *text = AMLocalizedString(@"Allow Access", @"Button which triggers a request for a specific permission, that have been explained to the user beforehand");
-        attributedString = [[NSAttributedString alloc] initWithString:text attributes:@{NSFontAttributeName:[UIFont mnz_SFUISemiBoldWithSize:17.0f], NSForegroundColorAttributeName:UIColor.mnz_green899B9C}];
+        buttonTitle = AMLocalizedString(@"Allow Access", @"Button which triggers a request for a specific permission, that have been explained to the user beforehand");
     }
     
-    return attributedString;
+    return buttonTitle;
 }
 
-- (UIImage *)buttonBackgroundImageForEmptyDataSet:(UIScrollView *)scrollView forState:(UIControlState)state {
-    UIImage *image = nil;
-    
-    if (PHPhotoLibrary.authorizationStatus != PHAuthorizationStatusAuthorized) {
-        UIEdgeInsets capInsets = [Helper capInsetsForEmptyStateButton];
-        UIEdgeInsets rectInsets = [Helper rectInsetsForEmptyStateButton];
-        
-        image = [[[UIImage imageNamed:@"emptyStateButtonGrey"] resizableImageWithCapInsets:capInsets resizingMode:UIImageResizingModeStretch] imageWithAlignmentRectInsets:rectInsets];
-    }
-    
-    return image;
-}
-
-- (UIColor *)backgroundColorForEmptyDataSet:(UIScrollView *)scrollView {
-    return UIColor.whiteColor;
-}
-
-#pragma mark - DZNEmptyDataSetDelegate
-
-- (void)emptyDataSet:(UIScrollView *)scrollView didTapButton:(UIButton *)button {
+- (void)buttonTouchUpInsideEmptyState {
     [DevicePermissionsHelper alertPhotosPermission];
 }
 

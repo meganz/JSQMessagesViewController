@@ -7,7 +7,7 @@
 #import "NSDate+MNZCategory.h"
 #import "NSFileManager+MNZCategory.h"
 #import "NSString+MNZCategory.h"
-#import "UIColor+MNZCategory.h"
+#import "MEGA-Swift.h"
 
 static void * kMEGAInputToolbarKeyValueObservingContext = &kMEGAInputToolbarKeyValueObservingContext;
 
@@ -472,7 +472,7 @@ typedef NS_ENUM(NSUInteger, InputToolbarMode) {
         case InputToolbarStateInitial:
             [self.contentView.sendButton setImage:[UIImage imageNamed:@"sendVoiceClipInactive"] forState:UIControlStateNormal];
             [self.contentView.slideToCancelButton setTitle:AMLocalizedString(@"< Slide to cancel", @"Text shown in the chat toolbar while the user is recording a voice clip. The < character should be > in RTL languages.") forState:UIControlStateNormal];
-            [self.contentView.slideToCancelButton setTitleColor:UIColor.mnz_gray666666 forState:UIControlStateNormal];
+            [self.contentView.slideToCancelButton setTitleColor:[UIColor mnz_primaryGrayForTraitCollection:self.traitCollection] forState:UIControlStateNormal];
             self.contentView.recordingTimeLabel.text = @"00:00";
             self.contentView.accessoryCameraButton.hidden = self.contentView.accessoryImageButton.hidden = self.contentView.accessoryUploadButton.hidden = self.contentView.textView.hidden = NO;
             self.contentView.recordingContainerView.hidden = self.contentView.slideToCancelButton.hidden = self.contentView.lockView.hidden = YES;
@@ -500,7 +500,7 @@ typedef NS_ENUM(NSUInteger, InputToolbarMode) {
             UIImage *sendButton = [UIImage imageNamed:@"sendButton"];
             [self.contentView.sendButton setImage:sendButton.imageFlippedForRightToLeftLayoutDirection forState:UIControlStateNormal];
             [self.contentView.slideToCancelButton setTitle:AMLocalizedString(@"cancel", @"Button title to cancel something") forState:UIControlStateNormal];
-            [self.contentView.slideToCancelButton setTitleColor:UIColor.mnz_redMain forState:UIControlStateNormal];
+            [self.contentView.slideToCancelButton setTitleColor:[UIColor mnz_redForTraitCollection:(self.traitCollection)] forState:UIControlStateNormal];
             self.contentView.lockView.hidden = YES;
             
             break;
@@ -766,9 +766,9 @@ typedef NS_ENUM(NSUInteger, InputToolbarMode) {
                 self.contentView.slideToCancelButton.frame = frame;
                 self.contentView.slideToCancelButton.alpha = 1.0 - xIncrement / 100;
                 if (xIncrement > 50.0f) {
-                    [self.contentView.slideToCancelButton setTitleColor:UIColor.mnz_redMain forState:UIControlStateNormal];
+                    [self.contentView.slideToCancelButton setTitleColor:[UIColor mnz_redForTraitCollection:(self.traitCollection)] forState:UIControlStateNormal];
                 } else {
-                    [self.contentView.slideToCancelButton setTitleColor:UIColor.mnz_gray666666 forState:UIControlStateNormal];
+                    [self.contentView.slideToCancelButton setTitleColor:[UIColor mnz_primaryGrayForTraitCollection:self.traitCollection] forState:UIControlStateNormal];
                 }
             }
             

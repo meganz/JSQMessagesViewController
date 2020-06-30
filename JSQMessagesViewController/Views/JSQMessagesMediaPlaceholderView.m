@@ -33,7 +33,7 @@
     spinner.color = [lightGrayColor jsq_colorByDarkeningColorWithValue:0.4f];
     
     JSQMessagesMediaPlaceholderView *view = [[JSQMessagesMediaPlaceholderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 200.0f, 120.0f)
-                                                                                   backgroundColor:lightGrayColor
+                                                                                   backgroundColor:[UIColor mnz_secondaryBackgroundForTraitCollection:UIScreen.mainScreen.traitCollection]
                                                                              activityIndicatorView:spinner];
     return view;
 }

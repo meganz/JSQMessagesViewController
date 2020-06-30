@@ -3,7 +3,7 @@
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16086"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -27,7 +27,6 @@
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
-                        <color key="backgroundColor" red="0.98039215686274506" green="0.98039215686274506" blue="0.98039215686274506" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="29V-cv-OvV" firstAttribute="leading" secondItem="3Uf-lF-8hR" secondAttribute="leading" constant="17" id="LZa-dm-V6v"/>
                             <constraint firstItem="29V-cv-OvV" firstAttribute="top" secondItem="3Uf-lF-8hR" secondAttribute="top" priority="750" constant="12" id="UuO-uk-i7V"/>
@@ -48,7 +47,7 @@
                             <constraint firstAttribute="height" constant="46" id="fKS-MR-YPI"/>
                         </constraints>
                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="bubble top label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ufa-bF-l1Y" userLabel="Bubble top label" customClass="JSQMessagesLabel">
@@ -58,7 +57,7 @@
                             <constraint firstAttribute="height" constant="20" id="fal-sy-hrK"/>
                         </constraints>
                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="btS-p8-B7Z" userLabel="Bubble container">
@@ -69,12 +68,10 @@
                             </imageView>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="KYU-B8-cUW" customClass="JSQMessagesCellTextView">
                                 <rect key="frame" x="0.0" y="0.0" width="242" height="94"/>
-                                <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
                         </subviews>
-                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="KYU-B8-cUW" secondAttribute="trailing" id="4qS-03-PFO"/>
                             <constraint firstAttribute="bottom" secondItem="KYU-B8-cUW" secondAttribute="bottom" id="B2v-Gq-Y1L"/>
@@ -94,7 +91,6 @@
                                 <rect key="frame" x="0.0" y="0.0" width="24" height="24"/>
                             </imageView>
                         </subviews>
-                        <color key="backgroundColor" red="0.3333333432674408" green="0.3333333432674408" blue="0.3333333432674408" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="w23-sL-0Rh" firstAttribute="leading" secondItem="Da1-09-wR4" secondAttribute="leading" id="6zm-sH-cOT"/>
                             <constraint firstAttribute="trailing" secondItem="w23-sL-0Rh" secondAttribute="trailing" id="JgK-7W-L10"/>
@@ -106,12 +102,11 @@
                     </view>
                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="cell bottom label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UPz-5x-c1T" userLabel="Cell bottom label" customClass="JSQMessagesLabel">
                         <rect key="frame" x="0.0" y="204" width="312" height="20"/>
-                        <color key="backgroundColor" red="0.66666668653488159" green="0.66666668653488159" blue="0.66666668653488159" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="20" id="xPR-Ph-Ze9"/>
                         </constraints>
                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Md1-I7-2AZ" userLabel="Accessory button">

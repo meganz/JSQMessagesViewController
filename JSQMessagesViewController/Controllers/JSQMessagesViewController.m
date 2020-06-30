@@ -34,6 +34,7 @@
 #import "NSBundle+JSQMessages.h"
 #import <objc/runtime.h>
 #import <PureLayout/PureLayout.h>
+#import "MEGA-Swift.h"
 
 // Fixes rdar://26295020
 // See issue #1247 and Peter Steinberger's comment:
@@ -988,9 +989,7 @@ extern const CGFloat kTextContentViewHeight;
     
     CGFloat safeAreaBottomInset = 0.0f;
     if (@available(iOS 11.0, *)) {
-        if (self.inputToolbar.contentView.textView.isFirstResponder) {
-            safeAreaBottomInset = UIApplication.sharedApplication.keyWindow.safeAreaInsets.bottom;
-        }
+        safeAreaBottomInset = UIApplication.sharedApplication.keyWindow.safeAreaInsets.bottom;
     }
     
     UIViewAnimationCurve animationCurve = [userInfo[UIKeyboardAnimationCurveUserInfoKey] integerValue];
@@ -1020,8 +1019,9 @@ extern const CGFloat kTextContentViewHeight;
 - (CGFloat)safeAreaInsetsBottomPadding {
     CGFloat bottomPadding = 0;
     if (@available(iOS 11.0, *)) {
-        UIWindow *window = UIApplication.sharedApplication.keyWindow;
-        bottomPadding = window.safeAreaInsets.bottom;
+        if (!self.inputToolbar.contentView.textView.isFirstResponder) {
+            bottomPadding = UIApplication.sharedApplication.keyWindow.safeAreaInsets.bottom;
+        }
     }
     return bottomPadding;
 }

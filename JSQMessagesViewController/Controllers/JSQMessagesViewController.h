@@ -21,7 +21,6 @@
 #import "JSQMessagesCollectionView.h"
 #import "JSQMessagesCollectionViewFlowLayout.h"
 #import "MEGAInputToolbar.h"
-#import "MEGA-Swift.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

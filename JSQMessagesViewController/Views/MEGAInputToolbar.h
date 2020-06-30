@@ -4,9 +4,8 @@
 #import "MEGAToolbarAssetPicker.h"
 #import "MEGAToolbarContentView.h"
 #import "MEGAToolbarSelectedAssets.h"
-#import "MEGA-Swift.h"
 
-@class MEGAInputToolbar;
+@class MEGAInputToolbar, MEGARecordView;
 
 typedef NS_ENUM(NSUInteger, InputToolbarState) {
     InputToolbarStateInitial,
