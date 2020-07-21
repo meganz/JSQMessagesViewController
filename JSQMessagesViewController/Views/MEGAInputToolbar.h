@@ -1,6 +1,7 @@
 
 #import <UIKit/UIKit.h>
 
+#import "JoinViewState.h"
 #import "MEGAToolbarAssetPicker.h"
 #import "MEGAToolbarContentView.h"
 #import "MEGAToolbarSelectedAssets.h"
@@ -136,7 +137,7 @@ typedef NS_ENUM(NSUInteger, InputToolbarState) {
 @property (weak, nonatomic, readonly, nullable) MEGAToolbarContentView *imagePickerView;
 
 - (void)mnz_accesoryButtonPressed:(UIButton *_Nonnull)sender;
-- (void)mnz_setJoinViewHidden:(BOOL)hidden;
+- (void)mnz_setJoinViewState:(JoinViewState)newState;
 - (void)mnz_setTypingIndicatorAttributedText:(NSAttributedString *_Nullable)attributedText;
 - (void)mnz_lockRecordingIfNeeded;
 

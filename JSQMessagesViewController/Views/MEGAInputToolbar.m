@@ -510,15 +510,47 @@ typedef NS_ENUM(NSUInteger, InputToolbarMode) {
     [self.delegate messagesInputToolbar:self didChangeToState:self.currentState];
 }
 
-- (void)mnz_setJoinViewHidden:(BOOL)hidden {
-    if (!hidden && !self.contentView) {
+- (void)mnz_setJoinViewState:(JoinViewState)newState {
+    if (newState != JoinViewStateHidden && !self.contentView) {
         self.selectedAssetsArray = [NSMutableArray new];
         [self assetPicker:nil didChangeSelectionTo:self.selectedAssetsArray];
         [self.imagePickerView removeFromSuperview];
         [self loadToolbarTextContentView];
     }
-    self.contentView.opaqueContentView.hidden = !hidden;
-    self.contentView.joinView.hidden = hidden;
+    
+    switch (newState) {
+        case JoinViewStateDefault:
+            self.contentView.opaqueContentView.hidden = YES;
+            self.contentView.joinView.hidden = NO;
+            self.contentView.joinButton.hidden = NO;
+            self.contentView.joiningOrLeavingView.hidden = YES;
+            break;
+            
+        case JoinViewStateHidden:
+            self.contentView.opaqueContentView.hidden = NO;
+            self.contentView.joinView.hidden = YES;
+            break;
+            
+        case JoinViewStateJoining:
+        case JoinViewStateLeaving: {
+            self.contentView.opaqueContentView.hidden = YES;
+            self.contentView.joinView.hidden = NO;
+            self.contentView.joinButton.hidden = YES;
+            self.contentView.joiningOrLeavingView.hidden = NO;
+            self.contentView.joiningOrLeavingLabel.text = newState == JoinViewStateJoining ? AMLocalizedString(@"Joining...", @"Label shown while joining a public chat") : AMLocalizedString(@"Leaving...", @"Label shown while leaving a public chat");
+            
+            for (UIView *view in self.contentView.joiningOrLeavingActivityIndicatorContainerView.subviews) {
+                [view removeFromSuperview];
+            }
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                UIActivityIndicatorView *activityIndicator = UIActivityIndicatorView.mnz_init;
+                [activityIndicator startAnimating];
+                [self.contentView.joiningOrLeavingActivityIndicatorContainerView addSubview:activityIndicator];
+            });
+            
+            break;
+        }
+    }
 }
 
 - (void)mnz_setTypingIndicatorAttributedText:(NSAttributedString *)attributedText {
