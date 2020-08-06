@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
@@ -70,6 +70,34 @@
                         <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="p69-k2-jfV">
                             <rect key="frame" x="0.0" y="75" width="375" height="85"/>
                             <subviews>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6EP-GR-c2U">
+                                    <rect key="frame" x="143" y="33" width="89.5" height="19.5"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Joining..." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="feT-Ba-5J1">
+                                            <rect key="frame" x="0.0" y="0.0" width="65.5" height="19.5"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="o8N-nh-K8c">
+                                            <rect key="frame" x="69.5" y="-0.5" width="20" height="20"/>
+                                            <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="20" id="0TH-fn-oOA"/>
+                                                <constraint firstAttribute="width" constant="20" id="FH7-r1-2kk"/>
+                                            </constraints>
+                                        </view>
+                                    </subviews>
+                                    <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                    <constraints>
+                                        <constraint firstItem="o8N-nh-K8c" firstAttribute="centerY" secondItem="6EP-GR-c2U" secondAttribute="centerY" id="0br-mP-gqz"/>
+                                        <constraint firstItem="feT-Ba-5J1" firstAttribute="top" secondItem="6EP-GR-c2U" secondAttribute="top" id="5BN-EX-TrT"/>
+                                        <constraint firstItem="o8N-nh-K8c" firstAttribute="leading" secondItem="feT-Ba-5J1" secondAttribute="trailing" constant="4" id="U85-gV-mIk"/>
+                                        <constraint firstAttribute="bottom" secondItem="feT-Ba-5J1" secondAttribute="bottom" id="Zbn-1P-lHO"/>
+                                        <constraint firstItem="feT-Ba-5J1" firstAttribute="leading" secondItem="6EP-GR-c2U" secondAttribute="leading" id="uZa-Vz-D6j"/>
+                                        <constraint firstAttribute="trailing" secondItem="o8N-nh-K8c" secondAttribute="trailing" id="wEy-a0-G05"/>
+                                    </constraints>
+                                </view>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iOF-Cw-q0K">
                                     <rect key="frame" x="43.5" y="17.5" width="288" height="50"/>
                                     <constraints>
@@ -83,6 +111,8 @@
                             </subviews>
                             <constraints>
                                 <constraint firstItem="iOF-Cw-q0K" firstAttribute="centerY" secondItem="p69-k2-jfV" secondAttribute="centerY" id="CcU-CU-uTB"/>
+                                <constraint firstItem="6EP-GR-c2U" firstAttribute="centerY" secondItem="p69-k2-jfV" secondAttribute="centerY" id="DbD-1U-hsN"/>
+                                <constraint firstItem="6EP-GR-c2U" firstAttribute="centerX" secondItem="p69-k2-jfV" secondAttribute="centerX" id="Gm8-ZB-LlM"/>
                                 <constraint firstItem="iOF-Cw-q0K" firstAttribute="centerX" secondItem="p69-k2-jfV" secondAttribute="centerX" id="vjx-jE-NIK"/>
                             </constraints>
                             <viewLayoutGuide key="safeArea" id="gWN-Og-zg2"/>
@@ -261,6 +291,9 @@
                 <outlet property="headerGarbageView" destination="ChV-AM-4dZ" id="gfx-Yl-HTk"/>
                 <outlet property="joinButton" destination="iOF-Cw-q0K" id="L0K-rG-PxW"/>
                 <outlet property="joinView" destination="p69-k2-jfV" id="Njb-w5-d6O"/>
+                <outlet property="joiningOrLeavingActivityIndicatorContainerView" destination="o8N-nh-K8c" id="VxR-gL-Atn"/>
+                <outlet property="joiningOrLeavingLabel" destination="feT-Ba-5J1" id="nMd-jf-nUC"/>
+                <outlet property="joiningOrLeavingView" destination="6EP-GR-c2U" id="c3w-9N-rRe"/>
                 <outlet property="lockView" destination="BWP-qA-B0h" id="U9p-mD-bcc"/>
                 <outlet property="opaqueContentView" destination="7c7-YZ-oiz" id="deN-Wx-R9O"/>
                 <outlet property="recordButton" destination="G3E-zc-1V4" id="b5Z-5U-MZr"/>
@@ -283,7 +316,7 @@
         <image name="button_camera_default" width="30" height="30"/>
         <image name="button_media_default" width="30" height="30"/>
         <image name="button_upload_default" width="30" height="30"/>
-        <image name="expand" width="28" height="28.5"/>
+        <image name="expand" width="28" height="28"/>
         <image name="lockRecording" width="30" height="30"/>
         <image name="sendVoiceClipActive" width="30" height="30"/>
         <image name="sendVoiceClipInactive" width="30" height="30"/>

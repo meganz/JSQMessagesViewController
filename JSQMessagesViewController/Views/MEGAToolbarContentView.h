@@ -22,6 +22,10 @@ typedef NS_ENUM(NSUInteger, MEGAChatAccessoryButton) {
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *contentViewHeightConstraint;
 @property (weak, nonatomic) IBOutlet UIView *joinView;
 @property (weak, nonatomic) IBOutlet UIButton *joinButton;
+@property (weak, nonatomic) IBOutlet UIView *joiningOrLeavingView;
+@property (weak, nonatomic) IBOutlet UILabel *joiningOrLeavingLabel;
+@property (weak, nonatomic) IBOutlet UIView *joiningOrLeavingActivityIndicatorContainerView;
+
 
 /**
  *  The text view in which the user composes a message.
