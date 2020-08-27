@@ -287,8 +287,12 @@
     return [super becomeFirstResponder];
 }
 
-- (BOOL)canPerformAction:(SEL)action withSender:(id)sender {
+- (BOOL)canPerformAction:(SEL)action withSender:(id)sender
+{
     [UIMenuController sharedMenuController].menuItems = nil;
+    if (action == @selector(paste:)) {
+        return [UIPasteboard generalPasteboard].string != nil || [UIPasteboard generalPasteboard].image != nil;
+    }
     return [super canPerformAction:action withSender:sender];
 }
 
